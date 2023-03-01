@@ -11,10 +11,10 @@ export default function Layout({ children }: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header></Header>
       <div className="layout">
+        <Header />
         {children}
+        <Footer />
       </div>
-      <Footer></Footer>
     </>);
 }

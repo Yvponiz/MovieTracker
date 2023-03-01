@@ -69,7 +69,6 @@ main {
 }
 
 #cards .card:hover {
-  transform: scale(1.05);
   z-index: 5;
 }
 
@@ -159,8 +158,13 @@ main {
 .searchPageContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  min-height: 100vh;
+}
+
+.searchPageContainer .card:hover {
+  transform: scale(1.1);
 }
 
 /*==================== LAYOUT ====================*/
@@ -187,6 +191,7 @@ main {
   width: 100%;
   background-color: rgb(40, 40, 40);
   padding: 30px;
+  margin-top: auto;
 }
 
 @media (prefers-color-scheme: dark) {
