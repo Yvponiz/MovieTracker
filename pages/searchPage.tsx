@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect, FormEvent } from "react";
 import { Media } from "../models/media";
 import { addMouseMoveEffectToCards } from "../utils/mouseOver";
-import Layout from "../component/layout";
+import Layout from "../components/layout";
 
 const Search: NextPage = () => {
   const [inputValue, setInputValue] = useState("");

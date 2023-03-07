@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Link from 'next/link';
 import { useEffect } from 'react';
-import Layout from '../component/layout';
+import Layout from '../components/layout';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 
 const Home: NextPage = () => {
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
 
           <div className='card'>
             <div className='card-content'>
-              <Link href="">Coming Soon</Link>
+              <Link href="">Sign Up</Link>
             </div>
           </div>
 

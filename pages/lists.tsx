@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import AliceCarousel from 'react-alice-carousel';
-import Layout from '../component/layout';
+import Layout from '../components/layout';
 import { Media } from '../models/media';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 
