@@ -37,7 +37,7 @@ const Home: NextPage = () => {
 
           <div className='card'>
             <div className='card-content'>
-              <Link href="">Login</Link>
+              <Link href="/login">Login</Link>
             </div>
           </div>
 

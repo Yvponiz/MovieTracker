@@ -179,6 +179,66 @@ main {
   transform: scale(1.1);
 }
 
+/*==================== LOGIN ====================*/
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-page input {
+  margin: 5px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-page label {
+  font-size: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  width: 500px;
+  height: 500px;
+  padding: 50px;
+  background: rgba(97, 97, 107, 0.5);
+  border-radius: 15px;
+  border-style: groove;
+  text-align: center;
+}
+
+.login-page button {
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1em;
+}
+
+.submit-button {
+  cursor: pointer;
+  padding: 0.5em 0.5em;
+  border-radius: 15px;
+  margin-top: 1rem;
+  text-align: center;
+  color: white;
+  background-color: var(--bg-color);
+  border: 1px solid var(--card-color);
+  transition: background-color 0.3s, color 0.3s ease-in-out;
+  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+
+.submit-button:hover {
+  border: 1px solid darkblue;
+  color: darkblue;
+  background-color: rgba(97, 97, 107, 0.5);
+}
+
+
 /*==================== LAYOUT ====================*/
 
 .layout {
