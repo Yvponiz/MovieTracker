@@ -155,6 +155,11 @@ main {
   padding: 10px;
 }
 
+.searchPageContainer button {
+  padding: 10px;
+  border-radius: 8px;
+}
+
 .searchPageContainer {
   display: flex;
   flex-direction: column;

@@ -10,7 +10,7 @@ import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 const List: NextPage = () => {
   const [searchResult, setSearchResult] = useState<Media[]>([]);
   const carousel = useRef(null);
-  
+
   const ImageItems = searchResult?.map((movie: Media) => (
     <div key={movie.id} className="card">
       <div className="card-content">

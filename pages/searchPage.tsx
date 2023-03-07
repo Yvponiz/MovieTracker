@@ -9,10 +9,11 @@ const Search: NextPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [searchResult, setSearchResult] = useState<Media[]>([]);
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
+  const [addedToList, setAddedToList] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    fetch(`/api/search?q=${inputValue}`)
+    fetch(`/api/searchMedia?q=${inputValue}`)
       .then((res) => res.json())
       .then((data) => setSearchResult(data.results as Media[]));
   };
@@ -23,9 +24,8 @@ const Search: NextPage = () => {
     );
   };
 
-  const handleAddToListClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.stopPropagation();
-    console.log("pepepe")
+  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, media: Media) => {
+    e.stopPropagation();
   };
 
   const openSelectedStyle = (mediaId: number): React.CSSProperties => ({
@@ -65,7 +65,7 @@ const Search: NextPage = () => {
               style={openSelectedStyle(media.id)}
             >
               <div className="card-content">
-                {media.media_type === "movie" ? <p>{media.title}</p> : <p>{media.name}</p>}
+                {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
 
                 <Image
                   src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
@@ -80,7 +80,11 @@ const Search: NextPage = () => {
                 }
 
                 {selectedMovieId === media.id && (
-                  <button onClick={handleAddToListClick}>Add to list</button>
+                  <button
+                    onClick={(e) => { handleAddToListClick(e, media) }}
+                    style={{ backgroundColor: addedToList ? "green" : "" }}>
+                    {addedToList ? "Added!" : "Add to list"}
+                  </button>
                 )}
               </div>
             </div>
