@@ -45,7 +45,11 @@ export default class MemoryStore implements SessionStore {
         }
         sessionDocument!.uuid = sid
         sessionDocument!.data = JSON.stringify(sess)
-        await sessionCollection.insertOne(sessionDocument)
+        await sessionCollection.updateOne(
+            { _id: new ObjectId(sessionDocument._id) },
+            { $set: sessionDocument },
+            { upsert: true }
+        );
     }
 
     async destroy(sid: string) {
@@ -53,7 +57,7 @@ export default class MemoryStore implements SessionStore {
         const database = client.db("movietracker");
         const sessionCollection = database.collection('session');
         let sessionDocument = await sessionCollection.findOne({ uuid: sid });
-        if(sessionDocument){
+        if (sessionDocument) {
             await sessionCollection.deleteOne(sessionDocument);
         }
     }
