@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { User } from '../../models/user';
-import { ObjectId } from 'mongodb';
-import cookie from 'cookie';
 import bcrypt from 'bcrypt';
 import client from "../../utils/DButils";
 import { getSession } from '../../utils/getSession';

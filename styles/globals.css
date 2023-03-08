@@ -52,6 +52,11 @@ main {
   gap: 15px;
 }
 
+.greet {
+  font-size: 25px;
+  margin-bottom: 50px;
+}
+
 /*==================== CARDS ====================*/
 #cards {
   display: flex;
@@ -140,6 +145,15 @@ main {
   cursor: pointer;
   background-color: var(--card-color);
   border-radius: inherit;
+}
+
+/*==================== INDEX ====================*/
+
+.index-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /*==================== SEARCH ====================*/

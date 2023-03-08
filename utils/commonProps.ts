@@ -1,3 +1,4 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from './getSession'
 
 export type GreetingProps = {
@@ -11,7 +12,7 @@ export type UserProps = {
     email: string;
 };
 
-export default async function getServerSideProps({ req, res }) {
+export default async function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
     const session = await getSession(req, res);
 
     return {

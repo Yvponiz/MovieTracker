@@ -1,5 +1,4 @@
 import { Media } from "./media"
-
 export interface User {
     id: string,
     username: string,
