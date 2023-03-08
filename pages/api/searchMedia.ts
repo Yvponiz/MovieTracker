@@ -24,6 +24,5 @@ export default async function handler(
     results: filteredResults
   }
 
-  DButils.run();
   res.status(200).json(searchData)
 }

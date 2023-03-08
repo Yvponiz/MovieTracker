@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import * as dotenv from "dotenv";
+import { NextApiRequest, NextApiResponse } from 'next';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ export async function run() {
     const database = client.db('movietracker');
     const users = database.collection('users');
     // const movies = database.collection('movies');
-    // // Query for a movie that has the title 'Back to the Future'
+  
     const query = { name: 'viande' };
     const movie = await users.findOne(query);
     console.log(movie);

@@ -183,6 +183,7 @@ main {
 
 .login-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -198,6 +199,26 @@ main {
 
 .login-page label {
   font-size: 20px;
+}
+
+.login-page p {
+  margin: 20px 0 0 0;
+}
+
+.error {
+  border-radius: 15px;
+  border: 1px solid red;
+  color: red;
+  padding: 5px;
+  margin: 0;
+}
+
+.success {
+  border-radius: 15px;
+  border: 1px solid green;
+  color: green;
+  padding: 5px;
+  margin: 0;
 }
 
 .form {
@@ -217,6 +238,7 @@ main {
   border: none;
   background-color: rgba(0, 0, 0, 0);
   font-size: 1em;
+  cursor: pointer;
 }
 
 .submit-button {

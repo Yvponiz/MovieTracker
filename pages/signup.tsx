@@ -1,39 +1,47 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { FormEvent, useState } from "react"
 
-function onSubmit(event: FormEvent, state: { username: string; email: string; password: string }) {
-  event.preventDefault()
-  fetch("/api/signup",
-    {
-      body: JSON.stringify(state),
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).catch((response) => response.json())
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "success") {
-        window.location.href = "/"
-      }
-      else if (data.status === "erreur") {
-        window.alert(data.errors.join("\n"))
-      }
-    })
-}
-
 const SignUp: NextPage = () => {
+  const router = useRouter();
+  const [showError, setShowDiv] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState('');
   const [state, changeState] = useState({
     username: '',
     email: '',
     password: '',
+    confPassword: ''
   })
 
+  function onSubmit(event: FormEvent, state: { username: string; email: string; password: string, confPassword: string }) {
+    event.preventDefault()
+    fetch("/api/signup",
+      {
+        body: JSON.stringify(state),
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).catch((response) => response.json())
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setShowSuccess(!showSuccess);
+          setTimeout(()=> router.push('/'), 3000);
+        }
+        else if (data.status === "erreur") {
+          setShowDiv(!showError);
+          setError(data.errors.join("\n"));
+        }
+      })
+  }
+
   return (
-    
     <div className="login-page">
-      <form className="form" action="/" method="post" onSubmit={(event) => onSubmit(event, state)}>
+      <form className="form">
+        {showError ? <p className="error">{error}</p> : <></>}
         <h1>Signup</h1>
 
         <label htmlFor="username">Username</label>
@@ -45,9 +53,11 @@ const SignUp: NextPage = () => {
         <label htmlFor="password">Password</label>
         <input onChange={(event) => changeState({ ...state, password: event.target.value })} type="password" id="password" name="password" required />
 
-        <Link href="/signup" className="submit-button">
-          <button>Sign up</button>
-        </Link>
+        <label htmlFor="password">Confirm Password</label>
+        <input onChange={(event) => changeState({ ...state, confPassword: event.target.value })} type="password" id="conf-password" name="conf-password" required />
+
+        <button className="submit-button" onClick={(event) => onSubmit(event, state)}>Sign up</button>
+        {showSuccess ? <p className="success">Account Created</p> : <></>}
       </form>
     </div>
   )

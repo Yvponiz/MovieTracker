@@ -45,7 +45,7 @@ const Login: NextPage = () => {
           <button type="submit">Connexion</button>
         </Link>
 
-        <h2>Create account</h2>
+        <p>No account? Sign Up</p>
 
         <Link href="/signup" className="submit-button">
           <button>Sign up</button>
