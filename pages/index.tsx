@@ -2,9 +2,14 @@ import type { NextPage } from 'next'
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import commonProps, { UserProps } from '../utils/commonProps';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 
-const Home: NextPage = () => {
+export function getServerSideProps({ req, res }) {
+  return commonProps({ req, res })
+}
+
+const Home: NextPage<UserProps> = ({isLoggedIn, username}) => {
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
@@ -13,6 +18,7 @@ const Home: NextPage = () => {
   return (
     <div className='container'>
       <main>
+        {isLoggedIn ? <p>Welcome {username}</p> : <></> }
         <div className='title'>
           <h1>Movie Tracker</h1>
           <Image
@@ -37,7 +43,7 @@ const Home: NextPage = () => {
 
           <div className='card'>
             <div className='card-content'>
-              <Link href="/login">Login</Link>
+              {isLoggedIn ? <Link href='/api/logout'>Logout</Link> : <Link href="/login">Login</Link>}
             </div>
           </div>
 
