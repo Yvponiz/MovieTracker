@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react"
 
 const SignUp: NextPage = () => {
   const router = useRouter();
-  const [showError, setShowDiv] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState('');
   const [state, changeState] = useState({
@@ -28,11 +28,12 @@ const SignUp: NextPage = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
+          if(showError){setShowError(!showError)}
           setShowSuccess(!showSuccess);
-          setTimeout(()=> router.push('/'), 3000);
+          setTimeout(()=> router.push('/'), 1000);
         }
         else if (data.status === "erreur") {
-          setShowDiv(!showError);
+          setShowError(!showError);
           setError(data.errors.join("\n"));
         }
       })
@@ -41,7 +42,6 @@ const SignUp: NextPage = () => {
   return (
     <div className="login-page">
       <form className="form">
-        {showError ? <p className="error">{error}</p> : <></>}
         <h1>Signup</h1>
 
         <label htmlFor="username">Username</label>
@@ -57,6 +57,8 @@ const SignUp: NextPage = () => {
         <input onChange={(event) => changeState({ ...state, confPassword: event.target.value })} type="password" id="conf-password" name="conf-password" required />
 
         <button className="submit-button" onClick={(event) => onSubmit(event, state)}>Sign up</button>
+        
+        {showError ? <p className="error">{error}</p> : <></>}
         {showSuccess ? <p className="success">Account Created</p> : <></>}
       </form>
     </div>
