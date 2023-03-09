@@ -284,14 +284,22 @@ main {
   border-radius: 15px;
   border: 1px solid white;
   background-color: var(--bg-color);
-  width: 30px;
-  height: 30px;
+  width: 300px;
+  height: 150px;
   z-index: 10;
   margin: 25px;
-  padding: 50px 100px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
 }
 
-.no-list button {
+.create-list form {
+  position: relative;
+  display: flex;
+  gap: 5px;
+}
+
+.list-button {
   border: none;
   background-color: rgba(0, 0, 0, 0);
   font-size: 1rem;

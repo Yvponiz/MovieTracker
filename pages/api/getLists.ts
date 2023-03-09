@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { User, UserList } from "../../models/user";
 import client from "../../utils/DButils";
@@ -8,13 +9,14 @@ export default async function getUserLists(
 ) {
     try {
         await client.connect();
+        
         const database = client.db("movietracker");
         const usersCollection = database.collection<User>('users');
-        const userId = req.query.userId;
-        const user = await usersCollection.findOne({ id: userId });
+        const userId = new ObjectId((req.query.userId)?.toString());
+        const user = await usersCollection.findOne({ _id: userId });
         const userLists = user?.lists;
 
-        if (!userLists) {
+        if (!userLists || userLists.length === 0) {
             res.status(200).json({
                 status: "empty",
                 messages: ["You have no lists!"]

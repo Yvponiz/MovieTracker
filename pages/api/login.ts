@@ -17,12 +17,12 @@ export default async function login(
         const passwordMatches = await bcrypt.compare(password, user!.password);
 
         if (!user) {
-            res.status(404).json({ status: "error", errors: ["Invalid email or password"] });
+            res.status(404).json({ status: "error", errors: ["Invalid username or password"] });
             return;
         }
 
         if (!passwordMatches) {
-            res.status(404).json({ status: "error", errors: ["Invalid email or password"] });
+            res.status(404).json({ status: "error", errors: ["Invalid username or password"] });
             return;
         }
 

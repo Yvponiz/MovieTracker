@@ -15,7 +15,7 @@ const SignUp: NextPage = () => {
     confPassword: ''
   })
 
-  function onSubmit(event: FormEvent, state: { username: string; email: string; password: string, confPassword: string }) {
+  function handleSubmit(event: FormEvent, state: { username: string; email: string; password: string, confPassword: string }) {
     event.preventDefault()
     fetch("/api/signup",
       {
@@ -30,7 +30,7 @@ const SignUp: NextPage = () => {
         if (data.status === "success") {
           if(showError){setShowError(!showError)}
           setShowSuccess(!showSuccess);
-          setTimeout(()=> router.push('/'), 1000);
+          setTimeout(()=> router.push('/login'), 1000);
         }
         else if (data.status === "erreur") {
           setShowError(!showError);
@@ -56,7 +56,7 @@ const SignUp: NextPage = () => {
         <label htmlFor="password">Confirm Password</label>
         <input onChange={(event) => changeState({ ...state, confPassword: event.target.value })} type="password" id="conf-password" name="conf-password" required />
 
-        <button className="submit-button" onClick={(event) => onSubmit(event, state)}>Sign up</button>
+        <button className="submit-button" onClick={(event) => handleSubmit(event, state)}>Sign up</button>
         
         {showError ? <p className="error">{error}</p> : <></>}
         {showSuccess ? <p className="success">Account Created</p> : <></>}

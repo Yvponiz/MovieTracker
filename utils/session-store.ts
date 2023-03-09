@@ -11,10 +11,10 @@ export default class MemoryStore implements SessionStore {
         await client.connect();
         const database = client.db("movietracker");
         const sessionCollection = database.collection('session');
-        const sess = (await sessionCollection.findOne({ uuid: sid }))?.data;
+        const sessionDocument = (await sessionCollection.findOne({ uuid: sid }))?.data;
 
-        if (sess) {
-            const session = JSON.parse(sess, (key, value) => {
+        if (sessionDocument) {
+            const session = JSON.parse(sessionDocument, (key, value) => {
                 if (key === "expires") return new Date(value);
                 return value;
             }) as SessionData;

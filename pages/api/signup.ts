@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { User } from '../../models/user';
+import { User, UserList } from '../../models/user';
 import bcrypt from 'bcrypt';
 import client from "../../utils/DButils";
+import { Collection, Db } from 'mongodb';
 
 export default async function signup(
   req: NextApiRequest,
@@ -40,7 +41,8 @@ export default async function signup(
     const newUser: User = {
       username: username,
       email: email,
-      password: hashedPassword
+      password: hashedPassword,
+      lists: []
     }
     const result = await users.insertOne(newUser);
 
@@ -50,7 +52,7 @@ export default async function signup(
       console.log('Failed to save user');
     }
 
-    return res.json({ status: "success", errors: [] })
+    return res.status(201).json({ status: "success", errors: [] })
 
   } catch (error: any) {
     return res.status(500).send(error.toString())
