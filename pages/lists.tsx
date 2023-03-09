@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { NextApiRequest, NextApiResponse, NextPage } from 'next'
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -6,8 +6,13 @@ import AliceCarousel from 'react-alice-carousel';
 import Layout from '../components/layout';
 import { Media } from '../models/media';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
+import commonProps, { UserProps } from '../utils/commonProps';
 
-const List: NextPage = () => {
+export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
+  return commonProps({ req, res })
+}
+
+const List: NextPage<UserProps> = ({isLoggedIn}) => {
   const [searchResult, setSearchResult] = useState<Media[]>([]);
   const carousel = useRef(null);
 
@@ -42,7 +47,7 @@ const List: NextPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout isLoggedIn={isLoggedIn}>
       <div className='container'>
         <main>
           <div id="carousel">

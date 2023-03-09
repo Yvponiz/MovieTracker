@@ -1,6 +1,6 @@
 import { Media } from "./media"
 export interface User {
-    id: string,
+    id?: string,
     username: string,
     email: string,
     password: string,

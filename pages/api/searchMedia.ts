@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as dotenv from "dotenv";
 import { MovieSearchResults } from '../../models/media';
-import * as DButils from '../../utils/DButils';
+
 dotenv.config();
 
 export default async function handler(

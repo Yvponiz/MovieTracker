@@ -45,6 +45,11 @@ main {
   font-weight: 900;
 }
 
+.greet {
+  font-size: 25px;
+  margin-bottom: 50px;
+}
+
 .title {
   display: flex;
   justify-content: center;
@@ -52,10 +57,6 @@ main {
   gap: 15px;
 }
 
-.greet {
-  font-size: 25px;
-  margin-bottom: 50px;
-}
 
 /*==================== CARDS ====================*/
 #cards {
@@ -274,6 +275,12 @@ main {
   background-color: rgba(97, 97, 107, 0.5);
 }
 
+/*==================== CONTACT ====================*/
+
+.contact {
+  min-height: 100vh;
+
+}
 
 /*==================== LAYOUT ====================*/
 
@@ -283,23 +290,29 @@ main {
 
 .header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
   background-color: rgb(40, 40, 40);
-  padding-bottom: 30px;
+  padding: 20px 10px;
+  gap: 5rem;
+  text-decoration: underline;
+}
+
+.layout a:hover {
+  color: blue;
 }
 
 .footer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   background-color: rgb(40, 40, 40);
   padding: 30px;
   margin-top: auto;
+  text-decoration: underline;
 }
 
 @media (prefers-color-scheme: dark) {

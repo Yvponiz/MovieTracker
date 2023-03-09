@@ -1,21 +1,26 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import Head from "next/head";
+import { ReactElement } from "react";
+import commonProps, { GreetingProps } from "../utils/commonProps";
 import Footer from "./footer";
 import Header from "./header";
 
-export default function Layout({ children }: any) {
+type LayoutProps = {
+  children: ReactElement[],
+  isLoggedIn: boolean,
+};
+
+export default function Layout({ children, isLoggedIn, username }: LayoutProps & any) {
   return (
     <>
       <Head>
         <title>Movie Tracker</title>
-        <meta name="description" content="Track movies you want to see" />
+        <meta name="description" content="Track movies & series you want to see" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&family=Signika+Negative:wght@700&display=swap" rel="stylesheet"></link>
       </Head>
 
       <div className="layout">
-        <Header />
+        <Header isLoggedIn={isLoggedIn} />
         {children}
         <Footer />
       </div>

@@ -1,11 +1,16 @@
-import { NextPage } from "next";
+import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import Image from "next/image";
 import { useState, useEffect, FormEvent } from "react";
 import { Media } from "../models/media";
 import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import Layout from "../components/layout";
+import commonProps, { UserProps } from "../utils/commonProps";
 
-const Search: NextPage = () => {
+export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
+  return commonProps({ req, res })
+}
+
+const Search: NextPage<UserProps> = ({isLoggedIn}) => {
   const [inputValue, setInputValue] = useState("");
   const [searchResult, setSearchResult] = useState<Media[]>([]);
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
@@ -44,7 +49,7 @@ const Search: NextPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout isLoggedIn={isLoggedIn}>
       <div className="searchPageContainer">
         <form onSubmit={handleSubmit}>
           <h2>Enter movie or series</h2>

@@ -1,15 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from './getSession'
 
-export type GreetingProps = {
-    isLoggedIn: boolean;
-    username?: string;
-};
-
 export type UserProps = {
     isLoggedIn: boolean;
-    username: string;
-    email: string;
+    username?: string;
+    email?: string;
 };
 
 export default async function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {

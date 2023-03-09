@@ -3,10 +3,8 @@ import Link from "next/link";
 import router from "next/router";
 import { FormEvent, useState } from "react"
 
-
 const Login: NextPage = () => {
   const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState('');
   const [state, changeState] = useState({
     username: '',

@@ -1,13 +1,37 @@
 import Link from "next/link";
 import Image from "next/image"
+import { FunctionComponent } from "react";
+import commonProps, { GreetingProps } from "../utils/commonProps";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default function Header() {
+type HeaderProps = {
+    isLoggedIn: boolean;
+};
+
+const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
     return (
-        <>
-            <div className='header'>
-                <Link href={'/'}>Home</Link>
-            </div>
-        </>
+        isLoggedIn ?
+            <>
+                <Link href='/'>Home</Link>
+                <Link href='/lists'>Lists</Link>
+                <Link href='/profile'>Profile</Link>
+                <Link href='/api/logout'>Logout</Link>
+            </> :
+
+            <>
+                <Link href='/'>Home</Link>
+                <Link href='/login'>Login</Link>
+            </>
+
+    )
+}
+
+export default function Header({ isLoggedIn }: HeaderProps) {
+
+    return (
+        <div className='header'>
+            <ShowHeader isLoggedIn={isLoggedIn} />
+        </div>
     )
 }
 
