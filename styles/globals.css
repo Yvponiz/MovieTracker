@@ -275,6 +275,28 @@ main {
   background-color: rgba(97, 97, 107, 0.5);
 }
 
+/*==================== LISTES ====================*/
+
+.create-list {
+  position: absolute;
+  left: 50;
+  top: 50;
+  border-radius: 15px;
+  border: 1px solid white;
+  background-color: var(--bg-color);
+  width: 30px;
+  height: 30px;
+  z-index: 10;
+  margin: 25px;
+  padding: 50px 100px;
+}
+
+.no-list button {
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1rem;
+}
+
 /*==================== CONTACT ====================*/
 
 .contact {

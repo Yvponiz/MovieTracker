@@ -17,6 +17,7 @@ const List: NextPage<UserProps> = ({isLoggedIn, id}) => {
   const [lists, setLists] = useState<Media[]>([]);
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
+  const [showCreateListDiv, setCreateListDiv] = useState(false);
   const carousel = useRef(null);
   
   useEffect(() => {
@@ -35,7 +36,7 @@ const List: NextPage<UserProps> = ({isLoggedIn, id}) => {
       }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
   
   const ImageItems = searchResult?.map((movie: Media) => (
     <div key={movie.id} className="card">
@@ -63,12 +64,31 @@ const List: NextPage<UserProps> = ({isLoggedIn, id}) => {
     ImageRows.push(ImageItems.slice(i, i + 2));
   }*/
 
+  const handleCreateList = () =>{
+    setCreateListDiv(!showCreateListDiv);
+  }
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className='container'>
         <main>
-          {showMessage ? <p>{message}</p> : <></>}
+          {showMessage ?
+            <div className='no-list'>
+              <p>{message}</p>
+              <div className='submit-button' onClick={handleCreateList}>
+                <button >Create List</button>
+              </div>
+            </div>: <></>
+          }
+
+          {showCreateListDiv ?
+            <div className='create-list'>
+              <form></form>  
+            </div>
+            :
+            <></>
+          }
+
           <div id="carousel">
             <AliceCarousel
               ref={carousel}
