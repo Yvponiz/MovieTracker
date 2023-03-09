@@ -31,7 +31,7 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
         <div id={'cards'}>
           <div className='card'>
             <div className='card-content'>
-              <Link href={'/searchPage'} className='index-link'>
+              <Link href={'/search'} className='index-link'>
                 <p>Rechercher</p>
                 <Image
                   src='/icons/magnifying-glass.svg'

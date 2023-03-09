@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import Layout from '../components/layout';
 import { Media } from '../models/media';
+import { UserList } from '../models/user';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 import commonProps, { UserProps } from '../utils/commonProps';
 
@@ -14,13 +15,14 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 
 const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [searchResult, setSearchResult] = useState<Media[]>([]);
-  const [lists, setLists] = useState<Media[]>([]);
+  const [lists, setLists] = useState<UserList[]>([]);
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState(false);
-  const [state, changeState] = useState({listName: '' })
+  const [state, changeState] = useState({ listName: '' })
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
+  
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
       .then(response => response.json())
@@ -36,15 +38,11 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       });
   };
 
-  const handleCreateList = () => {
+  const handleShowCreateList = () => {
     setShowCreateListDiv(showCreateListDiv => !showCreateListDiv);
   }
 
-  const handleBlur = () => {
-    setShowCreateListDiv(false);
-  };
-
-  const handleSubmit = (event: FormEvent, state: { listName: string }) => {
+  const handleCreateList = (event: FormEvent, state: { listName: string }) => {
     event.preventDefault()
     fetch(`/api/createList?userId=${id}`,
       {
@@ -123,10 +121,28 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           {showMessage ?
             <div className='no-list'>
               <p>{message}</p>
-              <div className='submit-button' onClick={handleCreateList}>
+              <div className='submit-button' onClick={handleShowCreateList}>
                 <button className='list-button'>Create List</button>
               </div>
-            </div> : <></>
+            </div>
+            :
+            <div className='list-page'>
+              <div className='submit-button' onClick={handleShowCreateList}>
+                <button className='list-button'>Create List</button>
+              </div>
+              {lists?.map((list: UserList)=> (
+                <div className='list-div' key={list.name}>
+                <h3>{list.name}</h3>
+                <ul>
+                  {list.items?.map((item)=> (
+                    <li key={item.id}>
+                      {item.media_type === "movie" ? <h3>{item.title}</h3> : <h3>{item.name}</h3>}
+                    </li>
+                  ))}
+                </ul>
+                </div>
+              ))}
+            </div>
           }
 
           {showCreateListDiv ?
@@ -134,7 +150,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               <form>
                 <label htmlFor="list-name">List name: </label>
                 <input onChange={(event) => changeState({ ...state, listName: event.target.value })} type="text" name="list-name" id="list-name" required />
-                <button onClick={(event)=> handleSubmit(event, state)}>Create</button>
+                <button onClick={(event) => handleCreateList(event, state)}>Create</button>
               </form>
             </div>
             :

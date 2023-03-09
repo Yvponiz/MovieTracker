@@ -1,20 +1,37 @@
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import Image from "next/image";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, SyntheticEvent } from "react";
 import { Media } from "../models/media";
 import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import Layout from "../components/layout";
 import commonProps, { UserProps } from "../utils/commonProps";
+import { UserList } from "../models/user";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
 }
 
-const Search: NextPage<UserProps> = ({isLoggedIn}) => {
+const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [inputValue, setInputValue] = useState("");
   const [searchResult, setSearchResult] = useState<Media[]>([]);
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState(false);
+  const [lists, setLists] = useState<UserList[]>([]);
+  const [state, changeState] = useState({
+    listName: '',
+    media: {}
+  })
+
+
+  const fetchLists = () => {
+    fetch(`/api/getLists?userId=${id}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          setLists(data.lists);
+        }
+      });
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -29,9 +46,40 @@ const Search: NextPage<UserProps> = ({isLoggedIn}) => {
     );
   };
 
-  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, media: Media) => {
+  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state:{ listName: string, media: Media}) => {
     e.stopPropagation();
+    fetchLists();
+
+    fetch(`/api/addToList?userId=${id}`,
+          {
+        body: JSON.stringify({
+          listName: state.listName,
+          media: state.media
+        }),
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).catch((response) => response.json())
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setAddedToList(addedToList => !addedToList);
+        }
+        else if (data.status === "erreur") {
+
+        }
+      })
   };
+
+  const handleSelect = (e: SyntheticEvent<HTMLSelectElement, Event>) => {
+    e.stopPropagation();
+    const { value } = e.currentTarget;
+    changeState((prevState) => ({
+      ...prevState,
+      listName: value,
+    }));
+  }
 
   const openSelectedStyle = (mediaId: number): React.CSSProperties => ({
     height: selectedMovieId === mediaId ? "360px" : "260px",
@@ -46,6 +94,7 @@ const Search: NextPage<UserProps> = ({isLoggedIn}) => {
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
+    fetchLists();
   }, []);
 
   return (
@@ -84,12 +133,21 @@ const Search: NextPage<UserProps> = ({isLoggedIn}) => {
                   : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
                 }
 
-                {selectedMovieId === media.id && (
-                  <button
-                    onClick={(e) => { handleAddToListClick(e, media) }}
-                    style={{ backgroundColor: addedToList ? "green" : "" }}>
-                    {addedToList ? "Added!" : "Add to list"}
-                  </button>
+                {selectedMovieId === media.id && isLoggedIn && (
+                  <div>
+                    <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                      id="lists" name="lists" required
+                      onClick={(e) => handleSelect(e)}
+                    >
+                      {lists?.map((list) => <option defaultValue={list.name} key={list.name} value={list.name}>{list.name}</option>)}
+                    </select>
+
+                    <button
+                      onClick={(e) => { handleAddToListClick(e, {...state, media}) }}
+                      style={{ backgroundColor: addedToList ? "green" : "" }}>
+                      {addedToList ? "Added!" : "Add to list"}
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

@@ -28,7 +28,5 @@ export default async function getUserLists(
 
     } catch (error: any) {
         return res.status(500).send(error.toString())
-    } finally {
-        await client.close();
-    }
+    } 
 }

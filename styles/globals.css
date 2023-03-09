@@ -194,6 +194,11 @@ main {
   transform: scale(1.1);
 }
 
+#lists{
+  width: 100px;
+  height: 40px;
+  padding: 10px;
+}
 /*==================== LOGIN ====================*/
 
 .login-page {
@@ -303,6 +308,16 @@ main {
   border: none;
   background-color: rgba(0, 0, 0, 0);
   font-size: 1rem;
+}
+
+.list-div {
+  background-color:  rgba(97, 97, 107, 0.5);
+}
+
+.list-page {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
 /*==================== CONTACT ====================*/

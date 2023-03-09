@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image"
 import { FunctionComponent } from "react";
-import commonProps, { GreetingProps } from "../utils/commonProps";
-import { NextApiRequest, NextApiResponse } from "next";
 
 type HeaderProps = {
     isLoggedIn: boolean;
@@ -14,6 +12,7 @@ const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
             <>
                 <Link href='/'>Home</Link>
                 <Link href='/lists'>Lists</Link>
+                <Link href='/search'>Search</Link>
                 <Link href='/profile'>Profile</Link>
                 <Link href='/api/logout'>Logout</Link>
             </> :
