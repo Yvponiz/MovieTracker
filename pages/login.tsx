@@ -12,7 +12,7 @@ const Login: NextPage = () => {
   })
 
   function onSubmit(event: FormEvent, state: { username: string; password: string }) {
-    event.preventDefault()
+    event.preventDefault();
     fetch("/api/login",
       {
         body: JSON.stringify(state),
@@ -26,7 +26,7 @@ const Login: NextPage = () => {
         if (data.status === "success") {
           router.push('/');
         }
-        else if (data.status === "erreur") {
+        else if (data.status === "error") {
           setShowError(!showError);
           setError(data.errors.join("\n"));
         }

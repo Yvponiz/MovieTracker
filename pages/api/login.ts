@@ -12,17 +12,17 @@ export default async function login(
         await client.connect();
         const { username, password } = req.body
         const database = client.db("movietracker");
-        const users = database.collection<User>('users');
-        const user = await users.findOne({ username });
+        const usersCollection = database.collection<User>('users');
+        const user = await usersCollection.findOne({ username });
         const passwordMatches = await bcrypt.compare(password, user!.password);
 
         if (!user) {
-            res.status(404).json({ status: "erreur", errors: ["Invalid email or password"] });
+            res.status(404).json({ status: "error", errors: ["Invalid email or password"] });
             return;
         }
 
         if (!passwordMatches) {
-            res.status(404).json({ status: "erreur", errors: ["Invalid email or password"] });
+            res.status(404).json({ status: "error", errors: ["Invalid email or password"] });
             return;
         }
 

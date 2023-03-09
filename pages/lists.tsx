@@ -12,10 +12,31 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
   return commonProps({ req, res })
 }
 
-const List: NextPage<UserProps> = ({isLoggedIn}) => {
+const List: NextPage<UserProps> = ({isLoggedIn, id}) => {
   const [searchResult, setSearchResult] = useState<Media[]>([]);
+  const [lists, setLists] = useState<Media[]>([]);
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
   const carousel = useRef(null);
+  
+  useEffect(() => {
+    addMouseMoveEffectToCards("cards");
 
+    fetch(`/api/getLists?userId=${id}`)
+    .then(response => response.json())
+    .then(data => {
+      if(data.status === 'empty'){
+        console.log(data.messages)
+        setShowMessage(!showMessage);
+        setMessage(data.messages.join("\n"));
+      }
+      else if (data.status === 'success'){
+        setLists(data.lists);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   const ImageItems = searchResult?.map((movie: Media) => (
     <div key={movie.id} className="card">
       <div className="card-content">
@@ -42,14 +63,12 @@ const List: NextPage<UserProps> = ({isLoggedIn}) => {
     ImageRows.push(ImageItems.slice(i, i + 2));
   }*/
 
-  useEffect(() => {
-    addMouseMoveEffectToCards("cards");
-  }, []);
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className='container'>
         <main>
+          {showMessage ? <p>{message}</p> : <></>}
           <div id="carousel">
             <AliceCarousel
               ref={carousel}

@@ -27,6 +27,7 @@ export default async function signup(
     const users = database.collection<User>('users');
     const existingUsername = await users.findOne({ username });
     const existingEmail = await users.findOne({ email });
+
     if (existingUsername) {
       res.status(400).json({ status: "erreur", errors: ["Username is already taken"] });
       return;
@@ -42,6 +43,7 @@ export default async function signup(
       password: hashedPassword
     }
     const result = await users.insertOne(newUser);
+
     if (result.acknowledged) {
       console.log(`User has been saved with id: ${result.insertedId}`);
     } else {
