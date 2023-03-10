@@ -3,9 +3,9 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const user: string = process.env.USER ?? '';
-const password: string = process.env.PASSWORD ?? '';
-const uri: string = `mongodb+srv://${user}:${password}@movietracker.mnxjf0t.mongodb.net/?retryWrites=true&w=majority`;
+const devUri: string = process.env.MONGODB_DEV_URI ?? '';
+const prodUri: string = process.env.MONGODB_PROD_URI ?? '';
+const uri: string = process.env.NODE_ENV === 'production' ? prodUri : devUri;
 const client = new MongoClient(uri);
 
 export default client;

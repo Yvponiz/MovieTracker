@@ -14,15 +14,15 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 }
 
 const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
-  const [searchResult, setSearchResult] = useState<Media[]>([]);
-  const [lists, setLists] = useState<UserList[]>([]);
+  const [mediaList, setMediaList] = useState<Media[]>([]);
+  const [userLists, setUserLists] = useState<UserList[]>([]);
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState(false);
   const [state, changeState] = useState({ listName: '' })
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
-  
+
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
       .then(response => response.json())
@@ -33,7 +33,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           setMessage(data.messages.join("\n"));
         }
         else if (data.status === 'success') {
-          setLists(data.lists);
+          setUserLists(data.lists);
         }
       });
   };
@@ -65,6 +65,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
     fetchLists();
+    setMediaList(userLists.flatMap((list)=> list.items))
   }, []);
 
   useEffect(() => {
@@ -80,17 +81,17 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
   }, [createListRef]);
 
-  const ImageItems = searchResult?.map((movie: Media) => (
-    <div key={movie.id} className="card">
+  const ImageItems = mediaList?.map((media: Media) => (
+    <div key={media.id} className="card">
       <div className="card-content">
-        <p>{movie.title}</p>
+        <p>{media.title}</p>
         <Image
-          src={`https://www.themoviedb.org/t/p/original${movie.poster_path}`}
+          src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
           height={200}
           width={100}
           alt={"media image"}
         ></Image>
-        <p>{new Date(`${movie.release_date}`).getFullYear()}</p>
+        <p>{new Date(`${media.release_date}`).getFullYear()}</p>
       </div>
     </div>
   ));
@@ -116,6 +117,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
+      {console.log(mediaList)}
       <div className='container'>
         <main>
           {showMessage ?
@@ -130,16 +132,22 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               <div className='submit-button' onClick={handleShowCreateList}>
                 <button className='list-button'>Create List</button>
               </div>
-              {lists?.map((list: UserList)=> (
+              {userLists?.map((list: UserList) => (
                 <div className='list-div' key={list.name}>
-                <h3>{list.name}</h3>
-                <ul>
-                  {list.items?.map((item)=> (
-                    <li key={item.id}>
-                      {item.media_type === "movie" ? <h3>{item.title}</h3> : <h3>{item.name}</h3>}
-                    </li>
-                  ))}
-                </ul>
+                  <h3>{list.name}</h3>
+                  <div id="carousel">
+                    <AliceCarousel
+                      ref={carousel}
+                      items={ImageItems}
+                      responsive={responsive}
+                      infinite
+                      mouseTracking
+                      animationDuration={800}
+                      paddingLeft={50}
+                      paddingRight={50}
+                      disableDotsControls
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -156,20 +164,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             :
             <></>
           }
-
-          <div id="carousel">
-            <AliceCarousel
-              ref={carousel}
-              items={ImageItems}
-              responsive={responsive}
-              infinite
-              mouseTracking
-              animationDuration={800}
-              paddingLeft={50}
-              paddingRight={50}
-              disableDotsControls
-            />
-          </div>
         </main>
       </div>
     </Layout>
