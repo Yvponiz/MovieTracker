@@ -29,7 +29,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       .then(data => {
         if (data.status === 'empty') {
           console.log(data.messages)
-          setShowMessage(showMessage => !showMessage);
+          setShowMessage(!showMessage);
           setMessage(data.messages.join("\n"));
         }
         else if (data.status === 'success') {
@@ -55,7 +55,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          if (showMessage) { setShowMessage(showMessage => !showMessage) }
+          if (showMessage) { setShowMessage(!showMessage) }
           setMessage(data.message);
           setShowCreateListDiv(false);
         }
@@ -65,7 +65,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
     fetchLists();
-    setMediaList(userLists.flatMap((list)=> list.items))
+    setMediaList(userLists.flatMap((list) => list.items));
+    console.log("MEDIA", mediaList)
   }, []);
 
   useEffect(() => {
@@ -102,6 +103,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     1024: { items: 4 },
   };
 
+
   /*const ImageRows = [];
   for (let i = 0; i < ImageItems.length; i += 2) {
     ImageRows.push(ImageItems.slice(i, i + 2));
@@ -117,7 +119,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
-      {console.log(mediaList)}
       <div className='container'>
         <main>
           {showMessage ?
@@ -135,24 +136,49 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               {userLists?.map((list: UserList) => (
                 <div className='list-div' key={list.name}>
                   <h3>{list.name}</h3>
-                  <div id="carousel">
-                    <AliceCarousel
-                      ref={carousel}
-                      items={ImageItems}
-                      responsive={responsive}
-                      infinite
-                      mouseTracking
-                      animationDuration={800}
-                      paddingLeft={50}
-                      paddingRight={50}
-                      disableDotsControls
-                    />
+                  <div className='list-carousel'>
+                    {mediaList?.map((media: Media) => (
+                      <div
+                        key={media.id}
+                        className="card"
+                      >
+                        <div className="card-content">
+                          {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+
+                          <Image
+                            src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
+                            height={200}
+                            width={100}
+                            alt={"media image"}
+                          />
+                          {media.media_type === "movie" ?
+                            <p>{new Date(`${media.release_date}`).getFullYear()}</p>
+                            : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
+                          }
+                        </div>
+                      </div>
+                    ))}
+                    <div id="carousel">
+                      <div className='carousel-item'>
+                        {/* <AliceCarousel
+                          ref={carousel}
+                          items={ImageItems}
+                          responsive={responsive}
+                          infinite
+                          mouseTracking
+                          animationDuration={800}
+                          paddingLeft={50}
+                          paddingRight={50}
+                          disableDotsControls
+                        /> */}
+                      </div>
+
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           }
-
           {showCreateListDiv ?
             <div className='create-list' ref={createListRef} >
               <form>
