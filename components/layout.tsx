@@ -1,7 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import Head from "next/head";
 import { ReactElement } from "react";
-import commonProps, { GreetingProps } from "../utils/commonProps";
 import Footer from "./footer";
 import Header from "./header";
 
