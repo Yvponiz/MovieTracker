@@ -16,9 +16,9 @@ export default async function handler(
 
   const json = await response.json();
 
-  const filteredResults = json.results.filter((result: { poster_path: null; media_type: string; }) => {
+  const filteredResults = json.results ? json.results.filter((result: { poster_path: null; media_type: string; }) => {
     return result.poster_path !== null && (result.media_type === "movie" || result.media_type === "tv");
-  });
+  }) : [];
 
   const searchData: MovieSearchResults = {
     results: filteredResults
