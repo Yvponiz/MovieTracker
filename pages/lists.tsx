@@ -83,8 +83,26 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
   }, [createListRef, userLists]);
 
-  const ImageItems = mediaList?.map((media: Media) => (
-    <MediaCard key={media.id} media={media}/>
+  const MediaItems = mediaList?.map((media => (
+    <MediaCard key={media.id} media={media} />
+  )))
+
+  const ListItems = userLists?.map(userList => (
+    <div className='list-div' key={userList.name}>
+      <h3>{userList.name}</h3>
+      <div className='list-carousel'>
+        <AliceCarousel
+          ref={carousel}
+          items={MediaItems}
+          mouseTracking
+          animationDuration={800}
+          paddingLeft={50}
+          paddingRight={50}
+          infinite
+          disableDotsControls
+        />
+      </div>
+    </div>
   ));
 
   const responsive = {
@@ -121,24 +139,21 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               <button className='list-button'>Create List</button>
             </div>
 
-            {userLists?.map((list: UserList) => (
-              <div className='list-div' key={list.name}>
-                <h3>{list.name}</h3>
-                <div className='list-carousel'>
-                  <AliceCarousel
-                    ref={carousel}
-                    items={ImageItems}
-                    responsive={responsive}
-                    mouseTracking
-                    animationDuration={800}
-                    paddingLeft={50}
-                    paddingRight={50}
-                    infinite
-                    disableDotsControls
-                  />
-                </div>
-              </div>
-            ))}
+            {userLists?.map((userList) => (
+              <AliceCarousel
+                key={userList.name}
+                ref={carousel}
+                items={ListItems}
+                responsive={responsive}
+                mouseTracking
+                animationDuration={800}
+                paddingLeft={50}
+                paddingRight={50}
+                infinite
+                disableDotsControls
+              />
+
+              ))}
           </div>
         }
         {showCreateListDiv ?

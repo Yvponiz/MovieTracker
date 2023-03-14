@@ -45,7 +45,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       prevSelectedMovieId === mediaId ? null : mediaId
     );
 
-    const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
+    const mediaInList = lists.some(list => list.media.some(m => m.id === mediaId));
     if (mediaInList) {
       setAddedToList(addedToList => !addedToList);
       console.log("Media already in list");
