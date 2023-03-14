@@ -22,7 +22,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     media: {}
   })
 
-
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
       .then(response => response.json())
@@ -44,7 +43,16 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setSelectedMovieId((prevSelectedMovieId) =>
       prevSelectedMovieId === mediaId ? null : mediaId
     );
+    
+    const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
+    if (mediaInList) {
+      setAddedToList(addedToList => !addedToList);
+      console.log("Media already in list");
+      return;
+    }
+
   };
+  
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
     e.stopPropagation();
@@ -141,7 +149,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                     >
                       {lists?.map((list) =>
                         <option
-                          defaultValue={list.name}
+                          selected
                           key={list.name}
                           value={list.name}
                         >
