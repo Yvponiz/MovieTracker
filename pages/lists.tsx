@@ -8,6 +8,7 @@ import { Media } from '../models/media';
 import { UserList } from '../models/user';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 import commonProps, { UserProps } from '../utils/commonProps';
+import MediaCard from '../components/card';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -83,18 +84,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   }, [createListRef, userLists]);
 
   const ImageItems = mediaList?.map((media: Media) => (
-    <div key={media.id} className="card">
-      <div className="card-content">
-        <p>{media.title}</p>
-        <Image
-          src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
-          height={200}
-          width={100}
-          alt={"media image"}
-        ></Image>
-        <p>{new Date(`${media.release_date}`).getFullYear()}</p>
-      </div>
-    </div>
+    <MediaCard key={media.id} media={media}/>
   ));
 
   const responsive = {
@@ -121,35 +111,35 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       <div className='list-page-wrapper'>
         {showMessage
           ? <div className='no-list'>
-              <p>{message}</p>
-              <div className='submit-button' onClick={handleShowCreateList}>
-                <button className='list-button'>Create List</button>
-              </div>
+            <p>{message}</p>
+            <div className='submit-button' onClick={handleShowCreateList}>
+              <button className='list-button'>Create List</button>
             </div>
+          </div>
           : <div className='list-page'>
-              <div className='submit-button' onClick={handleShowCreateList}>
-                <button className='list-button'>Create List</button>
-              </div>
-
-              {userLists?.map((list: UserList) => (
-                <div className='list-div' key={list.name}>
-                  <h3>{list.name}</h3>
-                  <div className='list-carousel'>
-                    <AliceCarousel
-                      ref={carousel}
-                      items={ImageItems}
-                      responsive={responsive}
-                      mouseTracking
-                      animationDuration={800}
-                      paddingLeft={50}
-                      paddingRight={50}
-                      infinite
-                      disableDotsControls
-                    />
-                  </div>
-                </div>
-              ))}
+            <div className='submit-button' onClick={handleShowCreateList}>
+              <button className='list-button'>Create List</button>
             </div>
+
+            {userLists?.map((list: UserList) => (
+              <div className='list-div' key={list.name}>
+                <h3>{list.name}</h3>
+                <div className='list-carousel'>
+                  <AliceCarousel
+                    ref={carousel}
+                    items={ImageItems}
+                    responsive={responsive}
+                    mouseTracking
+                    animationDuration={800}
+                    paddingLeft={50}
+                    paddingRight={50}
+                    infinite
+                    disableDotsControls
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         }
         {showCreateListDiv ?
           <div className='create-list' ref={createListRef} >

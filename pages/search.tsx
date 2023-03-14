@@ -6,6 +6,7 @@ import { Media } from "../models/media";
 import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
+import MediaCard from "../components/card";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -43,7 +44,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setSelectedMovieId((prevSelectedMovieId) =>
       prevSelectedMovieId === mediaId ? null : mediaId
     );
-    
+
     const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
     if (mediaInList) {
       setAddedToList(addedToList => !addedToList);
@@ -52,7 +53,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     }
 
   };
-  
+
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
     e.stopPropagation();
@@ -120,52 +121,35 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         <div id="cards">
           {searchResult?.map((media: Media) => (
-            <div
+            <MediaCard 
               key={media.id}
-              className="card"
+              media={media}
               onClick={() => handleCardClick(media.id)}
-              style={openSelectedStyle(media.id)}
-            >
-              <div className="card-content">
-                {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+              style={openSelectedStyle(media.id)}>
+              {selectedMovieId === media.id && isLoggedIn && (
+                <div>
+                  <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                    id="lists" name="lists" required
+                    onClick={(e) => handleSelect(e)}
+                  >
+                    {lists?.map((list) =>
+                      <option
+                        selected
+                        key={list.name}
+                        value={list.name}
+                      >
+                        {list.name}
+                      </option>)}
+                  </select>
 
-                <Image
-                  src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
-                  height={200}
-                  width={100}
-                  alt={"media image"}
-                />
-
-                {media.media_type === "movie" ?
-                  <p>{new Date(`${media.release_date}`).getFullYear()}</p>
-                  : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
-                }
-
-                {selectedMovieId === media.id && isLoggedIn && (
-                  <div>
-                    <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                      id="lists" name="lists" required
-                      onClick={(e) => handleSelect(e)}
-                    >
-                      {lists?.map((list) =>
-                        <option
-                          selected
-                          key={list.name}
-                          value={list.name}
-                        >
-                          {list.name}
-                        </option>)}
-                    </select>
-
-                    <button
-                      onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                      style={{ backgroundColor: addedToList ? "green" : "" }}>
-                      {addedToList ? "Added!" : "Add to list"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+                  <button
+                    onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                    style={{ backgroundColor: addedToList ? "green" : "" }}>
+                    {addedToList ? "Added!" : "Add to list"}
+                  </button>
+                </div>
+              )}
+            </MediaCard>
           ))}
         </div>
       </div>
