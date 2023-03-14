@@ -139,6 +139,10 @@ main {
   padding-top: 50px;
 }
 
+#carousel ul {
+  list-style: none;
+}
+
 .carousel-item>.card-content {
   display: flex;
   flex-direction: column;
@@ -194,11 +198,12 @@ main {
   transform: scale(1.1);
 }
 
-#lists{
+#lists {
   width: 100px;
   height: 40px;
   padding: 10px;
 }
+
 /*==================== LOGIN ====================*/
 
 .login-page {
@@ -267,11 +272,9 @@ main {
   border-radius: 15px;
   margin-top: 1rem;
   text-align: center;
-  color: white;
-  background-color: var(--bg-color);
-  border: 1px solid var(--card-color);
   transition: background-color 0.3s, color 0.3s ease-in-out;
   box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+  width: 394px;
 }
 
 .submit-button:hover {
@@ -280,7 +283,7 @@ main {
   background-color: rgba(97, 97, 107, 0.5);
 }
 
-/*==================== LISTES ====================*/
+/*==================== LISTS ====================*/
 
 .create-list {
   position: absolute;
@@ -312,20 +315,44 @@ main {
 
 .list-carousel {
   display: flex;
+  flex-direction: row;
   gap: 10px;
 }
 
 .list-div {
-  background-color:  rgba(97, 97, 107, 0.5);
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(97, 97, 107, 0.5);
   width: 100%;
+  min-height: 370px;
+}
+
+.list-div h3 {
+  text-decoration: underline;
+  align-self: center;
+  font-size: 2rem;
 }
 
 .list-page {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 50px;
-  min-height: 100vh;
   width: 100%;
+}
+
+.list-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.no-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /*==================== CONTACT ====================*/

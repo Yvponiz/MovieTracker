@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse, NextPage } from 'next'
-import Link from 'next/link';
 import Image from 'next/image';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import AliceCarousel from 'react-alice-carousel';
+import "react-alice-carousel/lib/alice-carousel.css";
 import Layout from '../components/layout';
 import { Media } from '../models/media';
 import { UserList } from '../models/user';
@@ -23,7 +23,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
 
-  const fetchLists = () => {
+  const fetchLists = useCallback(() => {
     fetch(`/api/getLists?userId=${id}`)
       .then(response => response.json())
       .then(data => {
@@ -33,43 +33,43 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           setMessage(data.messages.join("\n"));
         }
         else if (data.status === 'success') {
-          setUserLists(data.lists);
+          setUserLists(data.lists as UserList[]);
         }
       });
-  };
+  }, [id, showMessage]);
 
-  const handleShowCreateList = () => {
+  const handleShowCreateList = useCallback(() => {
     setShowCreateListDiv(showCreateListDiv => !showCreateListDiv);
-  }
+  }, []);
 
-  const handleCreateList = (event: FormEvent, state: { listName: string }) => {
+
+  const handleCreateList = useCallback((event: FormEvent, state: { listName: string }) => {
     event.preventDefault()
-    fetch(`/api/createList?userId=${id}`,
-      {
-        body: JSON.stringify(state),
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).catch((response) => response.json())
+    fetch(`/api/createList?userId=${id}`, {
+      body: JSON.stringify(state),
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).catch((response) => response.json())
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
           if (showMessage) { setShowMessage(!showMessage) }
           setMessage(data.message);
           setShowCreateListDiv(false);
+          fetchLists();
         }
       })
-  }
+  }, [fetchLists, id, showMessage]);
 
   useEffect(() => {
-    addMouseMoveEffectToCards("cards");
     fetchLists();
-    setMediaList(userLists.flatMap((list) => list.items));
-    console.log("MEDIA", mediaList)
   }, []);
 
   useEffect(() => {
+    addMouseMoveEffectToCards("cards");
+    setMediaList(userLists.flatMap((list) => list.items) as Media[]);
     const handleClickOutside = (event: MouseEvent) => {
       if (createListRef.current && !createListRef.current.contains(event.target as Node)) {
         setShowCreateListDiv(false);
@@ -80,7 +80,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [createListRef]);
+  }, [createListRef, userLists]);
 
   const ImageItems = mediaList?.map((media: Media) => (
     <div key={media.id} className="card">
@@ -103,7 +103,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     1024: { items: 4 },
   };
 
-
   /*const ImageRows = [];
   for (let i = 0; i < ImageItems.length; i += 2) {
     ImageRows.push(ImageItems.slice(i, i + 2));
@@ -119,78 +118,50 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
-      <div className='container'>
-        <main>
-          {showMessage ?
-            <div className='no-list'>
+      <div className='list-page-wrapper'>
+        {showMessage
+          ? <div className='no-list'>
               <p>{message}</p>
               <div className='submit-button' onClick={handleShowCreateList}>
                 <button className='list-button'>Create List</button>
               </div>
             </div>
-            :
-            <div className='list-page'>
+          : <div className='list-page'>
               <div className='submit-button' onClick={handleShowCreateList}>
                 <button className='list-button'>Create List</button>
               </div>
+
               {userLists?.map((list: UserList) => (
                 <div className='list-div' key={list.name}>
                   <h3>{list.name}</h3>
                   <div className='list-carousel'>
-                    {mediaList?.map((media: Media) => (
-                      <div
-                        key={media.id}
-                        className="card"
-                      >
-                        <div className="card-content">
-                          {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
-
-                          <Image
-                            src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
-                            height={200}
-                            width={100}
-                            alt={"media image"}
-                          />
-                          {media.media_type === "movie" ?
-                            <p>{new Date(`${media.release_date}`).getFullYear()}</p>
-                            : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
-                          }
-                        </div>
-                      </div>
-                    ))}
-                    <div id="carousel">
-                      <div className='carousel-item'>
-                        {/* <AliceCarousel
-                          ref={carousel}
-                          items={ImageItems}
-                          responsive={responsive}
-                          infinite
-                          mouseTracking
-                          animationDuration={800}
-                          paddingLeft={50}
-                          paddingRight={50}
-                          disableDotsControls
-                        /> */}
-                      </div>
-
-                    </div>
+                    <AliceCarousel
+                      ref={carousel}
+                      items={ImageItems}
+                      responsive={responsive}
+                      mouseTracking
+                      animationDuration={800}
+                      paddingLeft={50}
+                      paddingRight={50}
+                      infinite
+                      disableDotsControls
+                    />
                   </div>
                 </div>
               ))}
             </div>
-          }
-          {showCreateListDiv ?
-            <div className='create-list' ref={createListRef} >
-              <form>
-                <label htmlFor="list-name">List name: </label>
-                <input onChange={(event) => changeState({ ...state, listName: event.target.value })} type="text" name="list-name" id="list-name" required />
-                <button onClick={(event) => handleCreateList(event, state)}>Create</button>
-              </form>
-            </div>
-            :
-            <></>
-          }
-        </main>
+        }
+        {showCreateListDiv ?
+          <div className='create-list' ref={createListRef} >
+            <form>
+              <label htmlFor="list-name">List name: </label>
+              <input onChange={(event) => changeState({ ...state, listName: event.target.value })} type="text" name="list-name" id="list-name" required />
+              <button onClick={(event) => handleCreateList(event, state)}>Create</button>
+            </form>
+          </div>
+          :
+          <></>
+        }
       </div>
     </Layout>
   )

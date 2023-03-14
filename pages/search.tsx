@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import Image from "next/image";
+import Layout from "../components/layout";
+import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import { useState, useEffect, FormEvent, SyntheticEvent } from "react";
 import { Media } from "../models/media";
 import { addMouseMoveEffectToCards } from "../utils/mouseOver";
-import Layout from "../components/layout";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
 
@@ -46,12 +46,12 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     );
   };
 
-  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state:{ listName: string, media: Media}) => {
+  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
     e.stopPropagation();
     fetchLists();
 
     fetch(`/api/addToList?userId=${id}`,
-          {
+      {
         body: JSON.stringify({
           listName: state.listName,
           media: state.media
@@ -139,11 +139,18 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                       id="lists" name="lists" required
                       onClick={(e) => handleSelect(e)}
                     >
-                      {lists?.map((list) => <option defaultValue={list.name} key={list.name} value={list.name}>{list.name}</option>)}
+                      {lists?.map((list) =>
+                        <option
+                          defaultValue={list.name}
+                          key={list.name}
+                          value={list.name}
+                        >
+                          {list.name}
+                        </option>)}
                     </select>
 
                     <button
-                      onClick={(e) => { handleAddToListClick(e, {...state, media}) }}
+                      onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
                       style={{ backgroundColor: addedToList ? "green" : "" }}>
                       {addedToList ? "Added!" : "Add to list"}
                     </button>
