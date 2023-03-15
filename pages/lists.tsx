@@ -66,6 +66,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   useEffect(() => {
     fetchLists();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -83,27 +84,30 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
   }, [createListRef, userLists]);
 
-  const MediaItems = mediaList?.map((media => (
-    <MediaCard key={media.id} media={media} />
-  )))
-
-  const ListItems = userLists?.map(userList => (
-    <div className='list-div' key={userList.name}>
-      <h3>{userList.name}</h3>
-      <div className='list-carousel'>
-        <AliceCarousel
-          ref={carousel}
-          items={MediaItems}
-          mouseTracking
-          animationDuration={800}
-          paddingLeft={50}
-          paddingRight={50}
-          infinite
-          disableDotsControls
-        />
+  const ListItems = userLists?.map(userList => {
+    const MediaItems = userList?.items.map(media => (
+      <MediaCard key={media.id} media={media} />
+    ));
+    
+    return (
+      <div className='list-div' key={userList.name}>
+        <h3>{userList.name}</h3>
+        <div className='list-carousel'>
+          <AliceCarousel
+            ref={carousel}
+            items={MediaItems}
+            mouseTracking
+            animationDuration={800}
+            paddingLeft={50}
+            paddingRight={50}
+            infinite
+            disableDotsControls
+          />
+        </div>
       </div>
-    </div>
-  ));
+    );
+  });
+  
 
   const responsive = {
     0: { items: 2 },
@@ -138,22 +142,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             <div className='submit-button' onClick={handleShowCreateList}>
               <button className='list-button'>Create List</button>
             </div>
+            {ListItems}
 
-            {userLists?.map((userList) => (
-              <AliceCarousel
-                key={userList.name}
-                ref={carousel}
-                items={ListItems}
-                responsive={responsive}
-                mouseTracking
-                animationDuration={800}
-                paddingLeft={50}
-                paddingRight={50}
-                infinite
-                disableDotsControls
-              />
-
-              ))}
           </div>
         }
         {showCreateListDiv ?

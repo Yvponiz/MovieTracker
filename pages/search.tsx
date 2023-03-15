@@ -18,10 +18,9 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState(false);
   const [lists, setLists] = useState<UserList[]>([]);
-  const [state, changeState] = useState({
-    listName: '',
-    media: {}
-  })
+  const [state, changeState] = useState({listName: '',media: {}})
+  const [message, setMessage] = useState<string>('');
+  const [messageDiv, showMessageDiv] = useState(false);
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -45,15 +44,12 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       prevSelectedMovieId === mediaId ? null : mediaId
     );
 
-    const mediaInList = lists.some(list => list.media.some(m => m.id === mediaId));
+    const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
     if (mediaInList) {
       setAddedToList(addedToList => !addedToList);
-      console.log("Media already in list");
       return;
     }
-
   };
-
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
     e.stopPropagation();
@@ -75,8 +71,9 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         if (data.status === "success") {
           setAddedToList(addedToList => !addedToList);
         }
-        else if (data.status === "erreur") {
-
+        else if (data.status === "error") {
+          showMessageDiv(!messageDiv);
+          setMessage(data.error.join("\n"));
         }
       })
   };
@@ -104,6 +101,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
     fetchLists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -121,7 +119,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         <div id="cards">
           {searchResult?.map((media: Media) => (
-            <MediaCard 
+            <MediaCard
               key={media.id}
               media={media}
               onClick={() => handleCardClick(media.id)}
@@ -135,6 +133,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                     {lists?.map((list) =>
                       <option
                         selected
+                        defaultValue={list.name}
                         key={list.name}
                         value={list.name}
                       >
