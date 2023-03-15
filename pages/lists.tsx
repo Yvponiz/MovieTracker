@@ -66,6 +66,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   useEffect(() => {
     fetchLists();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -83,9 +84,30 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
   }, [createListRef, userLists]);
 
-  const ImageItems = mediaList?.map((media: Media) => (
-    <MediaCard key={media.id} media={media}/>
-  ));
+  const ListItems = userLists?.map(userList => {
+    const MediaItems = userList?.items.map(media => (
+      <MediaCard key={media.id} media={media} />
+    ));
+    
+    return (
+      <div className='list-div' key={userList.name}>
+        <h3>{userList.name}</h3>
+        <div className='list-carousel'>
+          <AliceCarousel
+            ref={carousel}
+            items={MediaItems}
+            mouseTracking
+            animationDuration={800}
+            paddingLeft={50}
+            paddingRight={50}
+            infinite
+            disableDotsControls
+          />
+        </div>
+      </div>
+    );
+  });
+  
 
   const responsive = {
     0: { items: 2 },
@@ -120,25 +142,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             <div className='submit-button' onClick={handleShowCreateList}>
               <button className='list-button'>Create List</button>
             </div>
+            {ListItems}
 
-            {userLists?.map((list: UserList) => (
-              <div className='list-div' key={list.name}>
-                <h3>{list.name}</h3>
-                <div className='list-carousel'>
-                  <AliceCarousel
-                    ref={carousel}
-                    items={ImageItems}
-                    responsive={responsive}
-                    mouseTracking
-                    animationDuration={800}
-                    paddingLeft={50}
-                    paddingRight={50}
-                    infinite
-                    disableDotsControls
-                  />
-                </div>
-              </div>
-            ))}
           </div>
         }
         {showCreateListDiv ?
