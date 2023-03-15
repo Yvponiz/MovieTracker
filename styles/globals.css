@@ -354,6 +354,11 @@ main {
   align-items: center;
 }
 
+.list-message {
+  color: red;
+  padding: 5px;
+}
+
 /*==================== CONTACT ====================*/
 
 .contact {

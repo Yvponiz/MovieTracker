@@ -18,9 +18,9 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState(false);
   const [lists, setLists] = useState<UserList[]>([]);
-  const [state, changeState] = useState({listName: '',media: {}})
+  const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
-  const [messageDiv, showMessageDiv] = useState(false);
+  const [showMessageDiv, setShowMessageDiv] = useState(false);
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -43,12 +43,14 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setSelectedMovieId((prevSelectedMovieId) =>
       prevSelectedMovieId === mediaId ? null : mediaId
     );
-
-    const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
-    if (mediaInList) {
-      setAddedToList(addedToList => !addedToList);
-      return;
-    }
+    const firstListName = lists[0]?.name || '';
+    changeState({ listName: firstListName, media: {} });
+    // const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
+    // if (mediaInList) {
+    //   setShowMessageDiv(showMessageDiv => !showMessageDiv)
+    //   setMessage("Already in list")
+    //   return;
+    // }
   };
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
@@ -72,8 +74,12 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           setAddedToList(addedToList => !addedToList);
         }
         else if (data.status === "error") {
-          showMessageDiv(!messageDiv);
-          setMessage(data.error.join("\n"));
+          setShowMessageDiv(!showMessageDiv);
+          setMessage(data.errors.join("\n"));
+          setTimeout(() => {
+            setShowMessageDiv(!showMessageDiv);
+            setMessage('');
+          }, 1000);
         }
       })
   };
@@ -126,26 +132,30 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               style={openSelectedStyle(media.id)}>
               {selectedMovieId === media.id && isLoggedIn && (
                 <div>
-                  <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                    id="lists" name="lists" required
-                    onClick={(e) => handleSelect(e)}
-                  >
-                    {lists?.map((list) =>
-                      <option
-                        selected
-                        defaultValue={list.name}
-                        key={list.name}
-                        value={list.name}
-                      >
-                        {list.name}
-                      </option>)}
-                  </select>
+                  <div>
+                    <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                      id="lists" name="lists" required
+                      onClick={(e) => handleSelect(e)}
+                    >
+                      {lists?.map((list) =>
+                        <option
+                          key={list.name}
+                          value={list.name}
+                        >
+                          {list.name}
+                        </option>)}
+                    </select>
 
-                  <button
-                    onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                    style={{ backgroundColor: addedToList ? "green" : "" }}>
-                    {addedToList ? "Added!" : "Add to list"}
-                  </button>
+                    <button
+                      onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                      style={{ backgroundColor: addedToList ? "green" : "" }}>
+                      {addedToList ? "Added!" : "Add to list"}
+                    </button>
+                  </div>
+
+                  <div className="list-message">
+                    {showMessageDiv ? <span>{message}</span> : <></>}
+                  </div>
                 </div>
               )}
             </MediaCard>

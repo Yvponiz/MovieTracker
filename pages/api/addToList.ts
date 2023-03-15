@@ -18,10 +18,12 @@ export default async function addToList(
         const user = await usersCollection.findOne({ _id: userId });
         const userLists = await user?.lists;
         const listIndex = user?.lists?.findIndex((list) => list.name === listName);
-        if (user?.lists![listIndex!].items.includes(media)) {
-            return res.status(400).json({ status: "error", errors: ["Media already exists in the list"] });
-        }
 
+        const mediaIndex = user?.lists![listIndex!].items.findIndex((item) => item.id === media.id);
+
+        if (mediaIndex !== -1) {
+            return res.status(400).json({ status: "error", errors: ["Media is already in the list"] });
+        }
         user?.lists![listIndex!].items.push(media);
 
         const result = await usersCollection.updateOne(
