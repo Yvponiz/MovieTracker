@@ -20,7 +20,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState(false);
-  const [state, changeState] = useState({ listName: '' })
+  const [state, changeState] = useState({ listName: '', media: {} })
+  const [removedFromList, setRemovedFromList] = useState(false)
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
 
@@ -64,6 +65,35 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       })
   }, [fetchLists, id, showMessage]);
 
+  const handleRemoveFromList = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
+    e.stopPropagation();
+    fetchLists();
+
+    fetch(`/api/removeFromList?userId=${id}`,
+      {
+        body: JSON.stringify({
+          listName: state.listName,
+          media: JSON.stringify(state.media)
+        }),
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).catch((response) => response.json())
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setRemovedFromList(removedFromList => !removedFromList);
+          setMessage(data.message.join("\n"));
+          fetchLists();
+        }
+        else if (data.status === "error") {
+          setShowMessage(!showMessage);
+          setMessage(data.errors.join("\n"));
+        }
+      })
+  };
+
   useEffect(() => {
     fetchLists();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,9 +114,18 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
   }, [createListRef, userLists]);
 
+  const responsive = {
+    0: { items: 2 },
+    568: { items: 3 },
+    1024: { items: 4 },
+  };
+
   const ListItems = userLists?.map(userList => {
     const MediaItems = userList?.items.map(media => (
-      <MediaCard key={media.id} media={media} />
+      <MediaCard key={media.id} media={media}>
+        <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Delete</button>
+        {removedFromList ? <span>{message}</span> : <></>}
+      </MediaCard>
     ));
     
     return (
@@ -96,6 +135,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           <AliceCarousel
             ref={carousel}
             items={MediaItems}
+            responsive={responsive}
             mouseTracking
             animationDuration={800}
             paddingLeft={50}
@@ -108,13 +148,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     );
   });
   
-
-  const responsive = {
-    0: { items: 2 },
-    568: { items: 3 },
-    1024: { items: 4 },
-  };
-
   /*const ImageRows = [];
   for (let i = 0; i < ImageItems.length; i += 2) {
     ImageRows.push(ImageItems.slice(i, i + 2));
