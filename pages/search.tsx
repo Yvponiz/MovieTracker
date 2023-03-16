@@ -45,6 +45,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     );
     const firstListName = lists[0]?.name || '';
     changeState({ listName: firstListName, media: {} });
+    setAddedToList(false);
   };
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
@@ -76,6 +77,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           }, 1000);
         }
       })
+
+
   };
 
   const handleSelect = (e: SyntheticEvent<HTMLSelectElement, Event>) => {

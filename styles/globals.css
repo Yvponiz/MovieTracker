@@ -370,6 +370,12 @@ main {
   align-items: center;
 }
 
+.no-list a {
+  font-size: large;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+
 .list-message {
   color: red;
   padding: 5px;
@@ -396,7 +402,11 @@ main {
   background-color: rgb(40, 40, 40);
   padding: 20px 10px;
   gap: 5rem;
+}
+
+.header a {
   text-decoration: underline;
+
 }
 
 .layout a:hover {

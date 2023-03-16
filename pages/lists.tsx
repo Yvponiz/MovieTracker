@@ -9,6 +9,7 @@ import { UserList } from '../models/user';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 import commonProps, { UserProps } from '../utils/commonProps';
 import MediaCard from '../components/card';
+import Link from 'next/link';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -42,7 +43,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const handleShowCreateList = useCallback(() => {
     setShowCreateListDiv(showCreateListDiv => !showCreateListDiv);
   }, []);
-
 
   const handleCreateList = useCallback((event: FormEvent, state: { listName: string }) => {
     event.preventDefault()
@@ -116,7 +116,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   }, []);
 
   useEffect(() => {
-    addMouseMoveEffectToCards("cards");
     const handleClickOutside = (event: MouseEvent) => {
       if (createListRef.current && !createListRef.current.contains(event.target as Node)) {
         setShowCreateListDiv(false);
@@ -138,33 +137,41 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const ListItems = userLists?.map(userList => {
     const MediaItems = userList?.items.map(media => (
       <MediaCard key={media.id} media={media}
-        style={media.watched ? {border:'solid 1.5px green'} : {} }
+        style={media.watched ? { border: 'solid 1.5px green' } : {}}
       >
         <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Delete</button>
+        
         <input type='checkbox' checked={media.watched ? true : false}
           onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }} />
       </MediaCard>
     ));
 
     return (
-      <div className='list-div' key={userList.name}>
-        <h3>{userList.name}</h3>
-        <div className='list-carousel'>
-          {userList.items.length > 0 ?
-            <AliceCarousel
-              ref={carousel}
-              items={MediaItems}
-              responsive={responsive}
-              mouseTracking
-              animationDuration={800}
-              paddingLeft={50}
-              paddingRight={50}
-              infinite
-              disableDotsControls
-            /> : <span>List empty</span>
-          }
-        </div>
-      </div>
+      userLists ?
+        <div className='list-div' key={userList.name}>
+          <h3>{userList.name}</h3>
+          <div className='list-carousel'>
+            {userList.items.length > 0 
+            ?
+              <AliceCarousel
+                ref={carousel}
+                items={MediaItems}
+                responsive={responsive}
+                mouseTracking
+                animationDuration={800}
+                paddingLeft={50}
+                paddingRight={50}
+                infinite
+                disableDotsControls
+              />
+              : 
+              <div className='no-list'>
+                <span>List empty</span>
+                <Link href='/search'>Search</Link>
+              </div>
+            }
+          </div>
+        </div> : <span>You have no</span>
     );
   });
 
@@ -183,7 +190,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
-      {console.log(watched)}
       <div className='list-page-wrapper'>
         {showMessage
           ? <div className='no-list'>
@@ -196,9 +202,11 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             <div className='submit-button' onClick={handleShowCreateList}>
               <button className='list-button'>Create List</button>
             </div>
+
             {ListItems}
           </div>
         }
+
         {showCreateListDiv ?
           <div className='create-list' ref={createListRef} >
             <form>
