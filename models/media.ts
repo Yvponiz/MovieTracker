@@ -16,6 +16,7 @@ export interface Media {
     video?: boolean;
     vote_average?: number;
     vote_count?: number;
+    watched?: boolean;
 }
 
 export interface MovieSearchResults {

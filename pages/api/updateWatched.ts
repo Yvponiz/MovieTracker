@@ -4,26 +4,24 @@ import { Media } from "../../models/media";
 import { User, UserList } from "../../models/user";
 import client from "../../utils/DButils";
 
-export default async function addToList(
+export default async function updateWatched(
     req: NextApiRequest,
     res: NextApiResponse<{ status: string, message?: string[], errors?: string[] }>
 ) {
     try {
         await client.connect();
 
-        const { listName, media } = req.body;
+        const { listName, watched, media } = req.body;
         const userId = new ObjectId((req.query.userId)?.toString());
         const database = client.db("movietracker");
         const usersCollection = database.collection<User>('users');
         const user = await usersCollection.findOne({ _id: userId });
         const listIndex = user?.lists?.findIndex((list) => list.name === listName);
-
         const mediaIndex = user?.lists![listIndex!].items.findIndex((item) => item.id === media.id);
+        const mediaTitle = media.media_type === "movie" ? media.title : media.name;
+        const watchedMessage = `${mediaTitle} set to ${watched ? "watched" : "unwatched"}`;
 
-        if (mediaIndex !== -1) {
-            return res.status(400).json({ status: "error", errors: ["Media is already in the list"] });
-        }
-        user?.lists![listIndex!].items.push(media);
+        user!.lists![listIndex!].items[mediaIndex!].watched = watched;
 
         const result = await usersCollection.updateOne(
             { _id: userId },
@@ -31,9 +29,9 @@ export default async function addToList(
         );
 
         if (result.acknowledged) {
-            return res.status(201).json({ status: "success", message: [`Media added to list ${listName}`] });
+            return res.status(201).json({ status: "success", message: [watchedMessage] });
         } else {
-            return res.status(500).json({ status: "error", errors: ["Failed to add media"] });
+            return res.status(500).json({ status: "error", errors: ["Failed to change media to watched"] });
         }
     } catch (error: any) {
         return res.status(500).send(error.toString())

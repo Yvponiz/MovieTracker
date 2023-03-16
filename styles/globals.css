@@ -315,7 +315,23 @@ main {
 
 .list-carousel {
   display: flex;
+  justify-content: center;
   gap: 10px;
+}
+
+.list-carousel span {
+  margin-top: 50px;
+}
+
+.list-carousel .card {
+  height: 350px;
+}
+
+.list-carousel input[type="checkbox"] {
+  width: 30px;
+  height: 30px;
+  margin-top: 20px;
+  flex-shrink: 0;
 }
 
 .list-div {
@@ -358,10 +374,6 @@ main {
   color: red;
   padding: 5px;
 }
-
-/* .alice-carousel__stage-item {
-  width: 400px !important;
-} */
 
 /*==================== CONTACT ====================*/
 

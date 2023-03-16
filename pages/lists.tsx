@@ -15,13 +15,12 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 }
 
 const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
-  const [mediaList, setMediaList] = useState<Media[]>([]);
   const [userLists, setUserLists] = useState<UserList[]>([]);
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState(false);
   const [state, changeState] = useState({ listName: '', media: {} })
-  const [removedFromList, setRemovedFromList] = useState(false)
+  const [watched, setWatched] = useState(false);
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
 
@@ -83,7 +82,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          setRemovedFromList(removedFromList => !removedFromList);
           setMessage(data.message.join("\n"));
           fetchLists();
         }
@@ -94,14 +92,31 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       })
   };
 
+  const handleCheckboxChange = (
+    event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; },
+    state: { watched: boolean, media: Media, listName: string }
+  ) => {
+    setWatched(event.target.checked);
+    fetch(`/api/updateWatched?userId=${id}`, {
+      body: JSON.stringify(state),
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        fetchLists();
+      })
+  };
+
   useEffect(() => {
     fetchLists();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
-    setMediaList(userLists.flatMap((list) => list.items) as Media[]);
     const handleClickOutside = (event: MouseEvent) => {
       if (createListRef.current && !createListRef.current.contains(event.target as Node)) {
         setShowCreateListDiv(false);
@@ -122,32 +137,37 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const ListItems = userLists?.map(userList => {
     const MediaItems = userList?.items.map(media => (
-      <MediaCard key={media.id} media={media}>
+      <MediaCard key={media.id} media={media}
+        style={media.watched ? {border:'solid 1.5px green'} : {} }
+      >
         <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Delete</button>
-        {removedFromList ? <span>{message}</span> : <></>}
+        <input type='checkbox' checked={media.watched ? true : false}
+          onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }} />
       </MediaCard>
     ));
-    
+
     return (
       <div className='list-div' key={userList.name}>
         <h3>{userList.name}</h3>
         <div className='list-carousel'>
-          <AliceCarousel
-            ref={carousel}
-            items={MediaItems}
-            responsive={responsive}
-            mouseTracking
-            animationDuration={800}
-            paddingLeft={50}
-            paddingRight={50}
-            infinite
-            disableDotsControls
-          />
+          {userList.items.length > 0 ?
+            <AliceCarousel
+              ref={carousel}
+              items={MediaItems}
+              responsive={responsive}
+              mouseTracking
+              animationDuration={800}
+              paddingLeft={50}
+              paddingRight={50}
+              infinite
+              disableDotsControls
+            /> : <span>List empty</span>
+          }
         </div>
       </div>
     );
   });
-  
+
   /*const ImageRows = [];
   for (let i = 0; i < ImageItems.length; i += 2) {
     ImageRows.push(ImageItems.slice(i, i + 2));
@@ -163,6 +183,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
+      {console.log(watched)}
       <div className='list-page-wrapper'>
         {showMessage
           ? <div className='no-list'>
@@ -176,7 +197,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               <button className='list-button'>Create List</button>
             </div>
             {ListItems}
-
           </div>
         }
         {showCreateListDiv ?

@@ -45,12 +45,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     );
     const firstListName = lists[0]?.name || '';
     changeState({ listName: firstListName, media: {} });
-    // const mediaInList = lists.some(list => list.items.some(m => m.id === mediaId));
-    // if (mediaInList) {
-    //   setShowMessageDiv(showMessageDiv => !showMessageDiv)
-    //   setMessage("Already in list")
-    //   return;
-    // }
   };
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
