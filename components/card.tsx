@@ -10,6 +10,8 @@ type MediaCardProps = {
     style?: CSSProperties;
 };
 
+const isMobile = window.screen.width < 500;
+
 const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => {
     const { media, children, onClick, style } = props;
     return (
@@ -18,8 +20,8 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                 {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
                 <Image
                     src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
-                    height={200}
-                    width={100}
+                    height={isMobile? 100: 200}
+                    width={isMobile? 50: 100}
                     alt={"media image"}
                 />
                 {media.media_type === "movie" ?

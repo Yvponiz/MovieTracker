@@ -32,7 +32,7 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
           <div className='card'>
             <div className='card-content'>
               <Link href={'/search'} className='index-link'>
-                <p>Rechercher</p>
+                <p>Search</p>
                 <Image
                   src='/icons/magnifying-glass.svg'
                   width={50}

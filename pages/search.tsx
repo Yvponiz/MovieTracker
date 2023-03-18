@@ -7,6 +7,7 @@ import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
 import MediaCard from "../components/card";
+import { openSelectedStyle } from "../utils/selectedCardStyle";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -21,6 +22,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
   const [showMessageDiv, setShowMessageDiv] = useState(false);
+  const isMobile = window.screen.width < 500;
+  const styleParams = { isMobile: isMobile, selectedMovieId };
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -77,8 +80,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           }, 1000);
         }
       })
-
-
   };
 
   const handleSelect = (e: SyntheticEvent<HTMLSelectElement, Event>) => {
@@ -89,17 +90,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       listName: value,
     }));
   }
-
-  const openSelectedStyle = (mediaId: number): React.CSSProperties => ({
-    height: selectedMovieId === mediaId ? "360px" : "260px",
-    width: selectedMovieId === mediaId ? "400px" : "300px",
-    zIndex: selectedMovieId === mediaId ? 1 : 0,
-    position: selectedMovieId === mediaId ? "fixed" : 'initial',
-    top: selectedMovieId === mediaId ? "50%" : "auto",
-    left: selectedMovieId === mediaId ? "50%" : "auto",
-    transform:
-      selectedMovieId === mediaId ? "translate(-50%, -50%)" : "translate(0)",
-  });
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
@@ -126,7 +116,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               key={media.id}
               media={media}
               onClick={() => handleCardClick(media.id)}
-              style={openSelectedStyle(media.id)}>
+              style={openSelectedStyle(styleParams, media.id)}>
               {selectedMovieId === media.id && isLoggedIn && (
                 <div>
                   <div>

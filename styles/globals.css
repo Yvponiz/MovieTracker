@@ -385,7 +385,6 @@ main {
 
 .contact {
   min-height: 100vh;
-
 }
 
 /*==================== LAYOUT ====================*/
@@ -423,6 +422,176 @@ main {
   padding: 30px;
   margin-top: auto;
   text-decoration: underline;
+}
+
+@media screen and (max-width: 500px) {
+  main {
+    max-width: 100%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .container {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .container main {
+    font-size: medium;
+    font-weight: normal;
+    text-align: center;
+  }
+
+  .greet {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  .title {
+    font-size: 20px;
+    gap: 10px;
+  }
+
+  #cards .card {
+    height: 200px;
+    width: 250px;
+  }
+
+  #carousel {
+    padding-top: 30px;
+  }
+
+  /*SEARCH*/
+  .searchPageContainer form {
+    padding: 10px;
+    margin: 10px;
+  }
+
+  .searchPageContainer form input {
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  .searchPageContainer form button {
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  /*LOGIN*/
+  .login-page input {
+    margin: 5px;
+    font-size: 16px;
+  }
+
+  .login-page label {
+    font-size: 16px;
+  }
+
+  .error,
+  .success {
+    font-size: 16px;
+    padding: 3px;
+    margin: 5px 0;
+  }
+
+  .form {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .submit-button {
+    width: 90%;
+  }
+
+  /*LISTS*/
+  .create-list {
+    position: static;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: var(--bg-color);
+    width: 90%;
+    height: auto;
+    margin: 25px auto;
+    padding: 10px;
+    display: block;
+  }
+
+  .create-list form {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .list-carousel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .list-carousel .card {
+    width: 120px;
+    height: 180px;
+  }
+
+  .list-carousel input[type="checkbox"] {
+    margin-top: 10px;
+    height: 15px;
+    width: 15px;
+  }
+
+  .list-div {
+    min-height: 250px;
+  }
+
+  .list-div h3 {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .list-div p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .no-list a {
+    font-size: medium;
+    margin-top: 5px;
+  }
+
+  /*LAYOUT*/
+  .layout {
+    height: auto;
+  }
+
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: rgb(40, 40, 40);
+    padding: 10px;
+    gap: 1rem;
+  }
+
+  .header a {
+    text-decoration: none;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: rgb(40, 40, 40);
+    padding: 20px;
+    margin-top: auto;
+    text-decoration: none;
+    text-align: center;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
