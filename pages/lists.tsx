@@ -64,6 +64,25 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       })
   }, [fetchLists, id, showMessage]);
 
+  const handleDeleteList = useCallback((state: { listName: string }) => {
+    fetch(`/api/deleteList?userId=${id}`, {
+      body: JSON.stringify(state),
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).catch((response) => response.json())
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          if (showMessage) { setShowMessage(!showMessage) }
+          setMessage(data.message);
+          setShowCreateListDiv(false);
+          fetchLists();
+        }
+      })
+  }, [fetchLists, id, showMessage])
+
   const handleRemoveFromList = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
     e.stopPropagation();
     fetchLists();
@@ -137,15 +156,15 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     const MediaItems = userList?.items.map(media => (
       <MediaCardContext.Provider key={media.id}
         value={{
-          height: isMobile? 80 : 160,
-          width: isMobile? 60 : 140,
+          height: isMobile ? 80 : 160,
+          width: isMobile ? 60 : 140,
           page: 'lists'
         }}
       >
         <MediaCard key={media.id} media={media}
           style={media.watched ? { border: 'solid 1.5px green' } : {}}
         >
-          <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Delete</button>
+          <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Remove</button>
 
           <input type='checkbox' checked={media.watched ? true : false}
             onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }} />
@@ -154,31 +173,38 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     ));
 
     return (
-      userLists ?
-        <div className='list-div' key={userList.name}>
+
+      <div className='list-div' key={userList.name}>
+        <div className='list-title'>
           <h2>{userList.name}</h2>
-          <div className='list-carousel'>
-            {userList.items.length > 0
-              ?
-              <AliceCarousel
-                ref={carousel}
-                items={MediaItems}
-                responsive={responsive}
-                mouseTracking
-                animationDuration={800}
-                paddingLeft={50}
-                paddingRight={50}
-                infinite
-                disableDotsControls
-              />
-              :
-              <div className='no-list'>
-                <span>List empty</span>
-                <Link href='/search'>Search</Link>
-              </div>
-            }
-          </div>
-        </div> : <span>You have no</span>
+          <button
+            onClick={() => handleDeleteList({ listName: userList.name })}
+            title='Delete list'
+          >X
+          </button>
+        </div>
+        <div className='list-carousel'>
+          {userList.items.length > 0
+            ?
+            <AliceCarousel
+              ref={carousel}
+              items={MediaItems}
+              responsive={responsive}
+              mouseTracking
+              animationDuration={800}
+              paddingLeft={50}
+              paddingRight={50}
+              infinite
+              disableDotsControls
+            />
+            :
+            <div className='no-list'>
+              <span>List empty</span>
+              <Link href='/search'>Search</Link>
+            </div>
+          }
+        </div>
+      </div>
     );
   });
 

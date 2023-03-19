@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { User, UserList } from "../../models/user";
+import { User } from "../../models/user";
 import client from "../../utils/DButils";
 
-export default async function createList(
+export default async function deleteList(
     req: NextApiRequest,
     res: NextApiResponse<{ status: string, message?: string[], errors?: string[] }>
 ) {
@@ -14,21 +14,16 @@ export default async function createList(
         const userId = new ObjectId((req.query.userId)?.toString());
         const database = client.db("movietracker");
         const usersCollection = database.collection<User>('users');
-        
-        const newList: UserList = {
-            name: listName,
-            items: []
-        };
 
         const result = await usersCollection.updateOne(
             { _id: userId },
-            { $push: { lists: newList } }
+            { $pull: { lists: { name: listName } } }
         );
 
         if (result.acknowledged) {
-            return res.status(201).json({ status: "success", message: ["List created!"] });
+            return res.status(201).json({ status: "success", message: ["List deleted!"] });
         } else {
-            return res.status(500).json({ status: "error", errors: ["Failed to create list"] });
+            return res.status(500).json({ status: "error", errors: ["Failed to delete list"] });
         }
     } catch (error: any) {
         return res.status(500).send(error.toString())

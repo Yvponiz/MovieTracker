@@ -18,7 +18,6 @@ export default async function removeFromList(
         const user = await usersCollection.findOne({ _id: userId });
         const listIndex = user?.lists?.findIndex((list) => list.name === listName);
         const mediaIndex = user?.lists![listIndex!].items.findIndex((item) => item.id === media.id);
-        console.log(`LISTNAME: ${listName} \n MEDIA: ${media}`)
 
         // if (mediaIndex === undefined) {
         //     return res.status(404).json({ status: "error", errors: ["Media not found in list"] });
