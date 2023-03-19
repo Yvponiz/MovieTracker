@@ -8,7 +8,7 @@ import { Media } from '../models/media';
 import { UserList } from '../models/user';
 import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 import commonProps, { UserProps } from '../utils/commonProps';
-import MediaCard from '../components/card';
+import MediaCard, { MediaCardContext } from '../components/card';
 import Link from 'next/link';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
@@ -21,9 +21,9 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [showMessage, setShowMessage] = useState(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState(false);
   const [state, changeState] = useState({ listName: '', media: {} })
-  const [watched, setWatched] = useState(false);
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
   const fetchLists = useCallback(() => {
     fetch(`/api/getLists?userId=${id}`)
@@ -96,7 +96,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; },
     state: { watched: boolean, media: Media, listName: string }
   ) => {
-    setWatched(event.target.checked);
     fetch(`/api/updateWatched?userId=${id}`, {
       body: JSON.stringify(state),
       method: "POST",
@@ -136,23 +135,31 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const ListItems = userLists?.map(userList => {
     const MediaItems = userList?.items.map(media => (
-      <MediaCard key={media.id} media={media}
-        style={media.watched ? { border: 'solid 1.5px green' } : {}}
+      <MediaCardContext.Provider key={media.id}
+        value={{
+          height: isMobile? 80 : 160,
+          width: isMobile? 60 : 140,
+          page: 'lists'
+        }}
       >
-        <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Delete</button>
-        
-        <input type='checkbox' checked={media.watched ? true : false}
-          onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }} />
-      </MediaCard>
+        <MediaCard key={media.id} media={media}
+          style={media.watched ? { border: 'solid 1.5px green' } : {}}
+        >
+          <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Delete</button>
+
+          <input type='checkbox' checked={media.watched ? true : false}
+            onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }} />
+        </MediaCard>
+      </MediaCardContext.Provider>
     ));
 
     return (
       userLists ?
         <div className='list-div' key={userList.name}>
-          <h3>{userList.name}</h3>
+          <h2>{userList.name}</h2>
           <div className='list-carousel'>
-            {userList.items.length > 0 
-            ?
+            {userList.items.length > 0
+              ?
               <AliceCarousel
                 ref={carousel}
                 items={MediaItems}
@@ -164,7 +171,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                 infinite
                 disableDotsControls
               />
-              : 
+              :
               <div className='no-list'>
                 <span>List empty</span>
                 <Link href='/search'>Search</Link>

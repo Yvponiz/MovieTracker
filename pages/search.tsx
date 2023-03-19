@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Layout from "../components/layout";
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
-import { useState, useEffect, FormEvent, SyntheticEvent } from "react";
+import { useState, useEffect, FormEvent, SyntheticEvent, useContext } from "react";
 import { Media } from "../models/media";
 import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
-import MediaCard from "../components/card";
+import MediaCard, { MediaCardContext } from "../components/card";
 import { openSelectedStyle } from "../utils/selectedCardStyle";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
@@ -112,40 +112,50 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         <div id="cards">
           {searchResult?.map((media: Media) => (
-            <MediaCard
-              key={media.id}
-              media={media}
-              onClick={() => handleCardClick(media.id)}
-              style={openSelectedStyle(styleParams, media.id)}>
-              {selectedMovieId === media.id && isLoggedIn && (
-                <div>
+            <>
+            <MediaCardContext.Provider
+              value={{
+                height: isMobile? 170: 200, 
+                width: isMobile? 130: 140, 
+                page:'search'
+              }}
+            >
+              <MediaCard
+                key={media.id}
+                media={media}
+                onClick={() => handleCardClick(media.id)}
+                style={openSelectedStyle(styleParams, media.id)}>
+                {selectedMovieId === media.id && isLoggedIn && (
                   <div>
-                    <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                      id="lists" name="lists" required
-                      onClick={(e) => handleSelect(e)}
-                    >
-                      {lists?.map((list) =>
-                        <option
-                          key={list.name}
-                          value={list.name}
-                        >
-                          {list.name}
-                        </option>)}
-                    </select>
+                    <div>
+                      <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                        id="lists" name="lists" required
+                        onClick={(e) => handleSelect(e)}
+                      >
+                        {lists?.map((list) =>
+                          <option
+                            key={list.name}
+                            value={list.name}
+                          >
+                            {list.name}
+                          </option>)}
+                      </select>
 
-                    <button
-                      onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                      style={{ backgroundColor: addedToList ? "green" : "" }}>
-                      {addedToList ? "Added!" : "Add to list"}
-                    </button>
-                  </div>
+                      <button
+                        onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                        style={{ backgroundColor: addedToList ? "green" : "" }}>
+                        {addedToList ? "Added!" : "Add to list"}
+                      </button>
+                    </div>
 
-                  <div className="list-message">
-                    {showMessageDiv ? <span>{message}</span> : <></>}
+                    <div className="list-message">
+                      {showMessageDiv ? <span>{message}</span> : <></>}
+                    </div>
                   </div>
-                </div>
-              )}
-            </MediaCard>
+                )}
+              </MediaCard>
+            </MediaCardContext.Provider>
+            </>
           ))}
         </div>
       </div>

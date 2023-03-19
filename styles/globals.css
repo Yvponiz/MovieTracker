@@ -342,10 +342,10 @@ main {
   min-height: 370px;
 }
 
-.list-div h3 {
+.list-div h2 {
   text-decoration: underline;
   align-self: center;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 .list-page {
@@ -509,15 +509,12 @@ main {
 
   /*LISTS*/
   .create-list {
-    position: static;
     border-radius: 10px;
     border: 1px solid white;
     background-color: var(--bg-color);
     width: 90%;
     height: auto;
-    margin: 25px auto;
-    padding: 10px;
-    display: block;
+    padding: 15px;
   }
 
   .create-list form {

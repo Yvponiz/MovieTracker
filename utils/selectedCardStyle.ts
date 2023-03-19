@@ -8,7 +8,7 @@ export const openSelectedStyle = ({ isMobile, selectedMovieId }: OpenSelectedSty
         ? selectedMovieId === mediaId ? "360px" : "300px"
         : selectedMovieId === mediaId ? "360px" : "260px",
     width: isMobile
-        ? "260px"
+        ? selectedMovieId === mediaId ? "360px" : "260px"
         : selectedMovieId === mediaId ? "360px" : "260px",
     zIndex: isMobile
         ? 0
