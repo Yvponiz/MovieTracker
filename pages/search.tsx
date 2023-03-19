@@ -8,6 +8,7 @@ import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
 import MediaCard, { MediaCardContext } from "../components/card";
 import { openSelectedStyle } from "../utils/selectedCardStyle";
+import { SearchForm } from "../components/searchForm";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -22,6 +23,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
   const [showMessageDiv, setShowMessageDiv] = useState(false);
+  const [isHovered, setIsHovered] = useState<number | null>(null);
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
   const styleParams = { isMobile: isMobile, selectedMovieId };
 
@@ -93,10 +95,10 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
-    if(isLoggedIn){
+    if (isLoggedIn) {
       fetchLists();
     }
-    else{
+    else {
       setShowMessageDiv(!showMessageDiv)
       setMessage("You must be logged in to add a movie or series to a list")
     }
@@ -106,64 +108,67 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className="searchPageContainer">
-        <form onSubmit={handleSubmit}>
-          <h2>Enter movie or series</h2>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <button type="submit">Search</button>
-        </form>
+       <SearchForm 
+        onSubmit={handleSubmit}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+       />
 
-        {isLoggedIn ? <></>: <p>{message}</p>}
+        {isLoggedIn ? <></> : <p>{message}</p>}
 
         <div id="cards">
           {searchResult?.map((media: Media) => (
             <>
-            <MediaCardContext.Provider
-              value={{
-                height: isMobile? 170: 200, 
-                width: isMobile? 130: 140, 
-                page:'search'
-              }}
-            >
-              <MediaCard
-                key={media.id}
-                media={media}
-                onClick={() => handleCardClick(media.id)}
-                style={openSelectedStyle(styleParams, media.id)}>
-                {selectedMovieId === media.id && isLoggedIn && (
-                  <div>
+              <MediaCardContext.Provider
+                value={{
+                  height: isMobile ? 170 : 160,
+                  width: isMobile ? 130 : 140,
+                  page: 'search'
+                }}
+              >
+                <MediaCard
+                  key={media.id}
+                  media={media}
+                  onClick={() => handleCardClick(media.id)}
+                  onMouseEnter={() => setIsHovered(media.id)}
+                  onMouseLeave={() => setIsHovered(null)}
+                  style={openSelectedStyle(styleParams, media.id)}
+                >
+                  {selectedMovieId === media.id && isLoggedIn && (
                     <div>
-                      <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                        id="lists" name="lists" required
-                        onClick={(e) => handleSelect(e)}
-                      >
-                        {lists?.map((list) =>
-                          <option
-                            key={list.name}
-                            value={list.name}
-                          >
-                            {list.name}
-                          </option>)}
-                      </select>
+                      <div>
+                        <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                          id="lists" name="lists" required
+                          onClick={(e) => handleSelect(e)}
+                        >
+                          {lists?.map((list) =>
+                            <option
+                              key={list.name}
+                              value={list.name}
+                            >
+                              {list.name}
+                            </option>)}
+                        </select>
 
-                      <button
-                        onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                        style={{ backgroundColor: addedToList ? "green" : "" }}>
-                        {addedToList ? "Added!" : "Add to list"}
-                      </button>
+                        <button
+                          onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                          style={{ backgroundColor: addedToList ? "green" : "" }}>
+                          {addedToList ? "Added!" : "Add to list"}
+                        </button>
+                      </div>
+
+
+                      {/*If there is an error adding to the list*/}
+                      <div className="list-message">
+                        {showMessageDiv ? <span>{message}</span> : <></>}
+                      </div>
                     </div>
-                    
-                    {/*If there is an error creating the list*/}
-                    <div className="list-message">
-                      {showMessageDiv ? <span>{message}</span> : <></>}
-                    </div>
-                  </div>
-                )}
-              </MediaCard>
-            </MediaCardContext.Provider>
+                  )}
+                  {isHovered === media.id && (
+                    <div className="hover-text">{media.overview}</div>
+                  )}
+                </MediaCard>
+              </MediaCardContext.Provider>
             </>
           ))}
         </div>
