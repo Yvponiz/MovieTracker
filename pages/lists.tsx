@@ -6,7 +6,6 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import Layout from '../components/layout';
 import { Media } from '../models/media';
 import { UserList } from '../models/user';
-import { addMouseMoveEffectToCards } from '../utils/mouseOver';
 import commonProps, { UserProps } from '../utils/commonProps';
 import MediaCard, { MediaCardContext } from '../components/card';
 import Link from 'next/link';
@@ -129,7 +128,13 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   };
 
   useEffect(() => {
-    fetchLists();
+    if (isLoggedIn) {
+      fetchLists();
+    }
+    else {
+      setShowMessage(!showMessage);
+      setMessage("You must be logged in to create and view lists")
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -224,21 +229,19 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className='list-page-wrapper'>
-        {showMessage
-          ? <div className='no-list'>
-            <p>{message}</p>
-            <div className='submit-button' onClick={handleShowCreateList}>
-              <button className='list-button'>Create List</button>
-            </div>
-          </div>
-          : <div className='list-page'>
+        {!isLoggedIn ? <p>{message}</p>
+          :
+          <div className='list-page'>
+            {userLists.length === 0 ?
+              <div className='no-list'>
+                <p>{message}</p>
+              </div> : <></>}
             <div className='submit-button' onClick={handleShowCreateList}>
               <button className='list-button'>Create List</button>
             </div>
 
             {ListItems}
-          </div>
-        }
+          </div>}
 
         {showCreateListDiv ?
           <div className='create-list' ref={createListRef} >

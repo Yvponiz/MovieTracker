@@ -110,6 +110,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           <button type="submit">Search</button>
         </form>
 
+        {isLoggedIn ? <></>: <p>You must be logged in to add a movie or series to a list</p>}
+
         <div id="cards">
           {searchResult?.map((media: Media) => (
             <>
@@ -147,7 +149,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                         {addedToList ? "Added!" : "Add to list"}
                       </button>
                     </div>
-
+                    
+                    {/*If there is an error creating the list*/}
                     <div className="list-message">
                       {showMessageDiv ? <span>{message}</span> : <></>}
                     </div>
