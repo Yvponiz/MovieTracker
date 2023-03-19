@@ -93,7 +93,13 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
-    fetchLists();
+    if(isLoggedIn){
+      fetchLists();
+    }
+    else{
+      setShowMessageDiv(!showMessageDiv)
+      setMessage("You must be logged in to add a movie or series to a list")
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -110,7 +116,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           <button type="submit">Search</button>
         </form>
 
-        {isLoggedIn ? <></>: <p>You must be logged in to add a movie or series to a list</p>}
+        {isLoggedIn ? <></>: <p>{message}</p>}
 
         <div id="cards">
           {searchResult?.map((media: Media) => (
