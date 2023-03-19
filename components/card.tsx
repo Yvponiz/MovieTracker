@@ -10,7 +10,7 @@ type MediaCardProps = {
     style?: CSSProperties;
 };
 
-const isMobile = window.screen.width < 500;
+const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
 const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => {
     const { media, children, onClick, style } = props;

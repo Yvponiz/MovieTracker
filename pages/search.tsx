@@ -22,7 +22,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
   const [showMessageDiv, setShowMessageDiv] = useState(false);
-  const isMobile = window.screen.width < 500;
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
   const styleParams = { isMobile: isMobile, selectedMovieId };
 
   const fetchLists = () => {
