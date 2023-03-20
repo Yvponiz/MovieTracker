@@ -141,7 +141,6 @@ main {
 }
 
 .media-year {
-
   font-size: 1.2rem;
 }
 
@@ -554,6 +553,8 @@ main {
 
   .info-text {
     height: 200px;
+    width: 350px;
+    font-size: 1.2rem;
   }
 
   /*LOGIN*/
