@@ -7,7 +7,7 @@ import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
 import MediaCard, { MediaCardContext } from "../components/card";
-import { openSelectedStyle } from "../utils/selectedCardStyle";
+import { openSelectedStyle } from "../styles/selectedCardStyle";
 import { SearchForm } from "../components/searchForm";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
@@ -15,15 +15,18 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 }
 
 const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
-  const [inputValue, setInputValue] = useState("");
   const [searchResult, setSearchResult] = useState<Media[]>([]);
-  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-  const [addedToList, setAddedToList] = useState(false);
   const [lists, setLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
+  const [inputValue, setInputValue] = useState<string>("");
   const [message, setMessage] = useState<string>('');
-  const [showMessageDiv, setShowMessageDiv] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState<number | null>(null);
+  const [addedToList, setAddedToList] = useState<boolean>(false);
+  const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
+  const [blur, setBlur] = useState<boolean>(false);
+  const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
   const styleParams = { isMobile: isMobile, selectedMovieId };
 
@@ -48,9 +51,18 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setSelectedMovieId((prevSelectedMovieId) =>
       prevSelectedMovieId === mediaId ? null : mediaId
     );
+    setBlur((prevBlur) => !prevBlur);
+
     const firstListName = lists[0]?.name || '';
     changeState({ listName: firstListName, media: {} });
     setAddedToList(false);
+  };
+
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if (selectedMovieId !== null) {
+      setSelectedMovieId(null);
+      setBlur(false);
+    }
   };
 
   const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
@@ -91,7 +103,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       ...prevState,
       listName: value,
     }));
-  }
+  };
 
   useEffect(() => {
     addMouseMoveEffectToCards("cards");
@@ -108,21 +120,24 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className="searchPageContainer">
-       <SearchForm 
-        onSubmit={handleSubmit}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-       />
 
-        {isLoggedIn ? <></> : <p>{message}</p>}
+        {blur && <div className="blur" onClick={handleOutsideClick}></div>}
+
+        <SearchForm
+          onSubmit={handleSubmit}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+        />
+
+        {!isLoggedIn && <p>{message}</p>}
 
         <div id="cards">
           {searchResult?.map((media: Media) => (
             <>
               <MediaCardContext.Provider
                 value={{
-                  height: isMobile ? 170 : 160,
-                  width: isMobile ? 130 : 140,
+                  height: isMobile ? 170 : selectedMovieId === media.id ? 400 : 160,
+                  width: isMobile ? 130 : selectedMovieId === media.id ? 380 : 140,
                   page: 'search'
                 }}
               >
@@ -133,21 +148,28 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                   onMouseEnter={() => setIsHovered(media.id)}
                   onMouseLeave={() => setIsHovered(null)}
                   style={openSelectedStyle(styleParams, media.id)}
+                  setMediaInfo={setMediaInfo}
+                  selectedMovieId={selectedMovieId}
                 >
                   {selectedMovieId === media.id && isLoggedIn && (
-                    <div>
+                    <div id="add-to-list">
                       <div>
                         <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
                           id="lists" name="lists" required
                           onClick={(e) => handleSelect(e)}
                         >
-                          {lists?.map((list) =>
-                            <option
-                              key={list.name}
-                              value={list.name}
-                            >
-                              {list.name}
-                            </option>)}
+                          {lists.length === 0 ?
+                            <option>No Lists</option>
+                            :
+                            lists?.map((list) =>
+                              <option
+                                key={list.name}
+                                value={list.name}
+                              >
+                                {list.name}
+                              </option>
+                            )
+                          }
                         </select>
 
                         <button
@@ -155,8 +177,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                           style={{ backgroundColor: addedToList ? "green" : "" }}>
                           {addedToList ? "Added!" : "Add to list"}
                         </button>
-                      </div>
 
+                      </div>
 
                       {/*If there is an error adding to the list*/}
                       <div className="list-message">
@@ -164,9 +186,13 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                       </div>
                     </div>
                   )}
-                  {isHovered === media.id && (
-                    <div className="hover-text">{media.overview}</div>
+
+                  {mediaInfo && selectedMovieId === media.id && (
+                    <div className="info-text">
+                      {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+                    </div>
                   )}
+
                 </MediaCard>
               </MediaCardContext.Provider>
             </>

@@ -86,10 +86,6 @@ main {
   z-index: 5;
 }
 
-#cards > div:hover .hover-text {
-  display: block;
-}
-
 .card:hover::before {
   opacity: 2;
 }
@@ -128,6 +124,7 @@ main {
   flex-direction: column;
   flex-grow: 1;
   inset: 1.5px;
+  justify-content: space-between;
   padding: 10px;
   position: absolute;
   display: flex;
@@ -138,20 +135,47 @@ main {
 
 .card-content h3{
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-.hover-text {
+.media-year {
+
+  font-size: 1.2rem;
+}
+
+.card-title-div {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-text {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
-  font-weight: bold;
+  font-size: 1.8rem;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 5px;
-  display: none;
+  width: 460px;
+  height: 440px;
+  overflow:scroll;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Limit the number of lines displayed */
+  -webkit-box-orient: vertical;
+  max-height: calc(1.2 * 5); /* 1.2 is the line-height, 5 is the number of lines */
+}
+
+.info-icon {
+  margin: 10px;
 }
 
 #carousel {
@@ -185,6 +209,16 @@ main {
 }
 
 /*==================== SEARCH ====================*/
+
+.blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
 
 .searchPageContainer form {
   padding: 20px;
@@ -442,7 +476,6 @@ main {
 
 .header a {
   text-decoration: underline;
-
 }
 
 .layout a:hover {
@@ -495,6 +528,10 @@ main {
     width: 250px;
   }
 
+  .card-content p {
+    margin: 5px;
+  }
+
   #carousel {
     padding-top: 30px;
   }
@@ -513,6 +550,10 @@ main {
   .searchPageContainer form button {
     font-size: 16px;
     padding: 5px;
+  }
+
+  .info-text {
+    height: 200px;
   }
 
   /*LOGIN*/

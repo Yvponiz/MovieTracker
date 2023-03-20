@@ -6,10 +6,10 @@ interface OpenSelectedStyleParams {
 export const openSelectedStyle = ({ isMobile, selectedMovieId }: OpenSelectedStyleParams, mediaId: number): React.CSSProperties => ({
     height: isMobile
         ? selectedMovieId === mediaId ? "360px" : "300px"
-        : selectedMovieId === mediaId ? "360px" : "260px",
+        : selectedMovieId === mediaId ? "580px" : "260px",
     width: isMobile
         ? selectedMovieId === mediaId ? "360px" : "260px"
-        : selectedMovieId === mediaId ? "360px" : "260px",
+        : selectedMovieId === mediaId ? "560px" : "260px",
     zIndex: isMobile
         ? 0
         : selectedMovieId === mediaId ? 1 : 0,
