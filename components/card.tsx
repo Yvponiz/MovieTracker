@@ -10,8 +10,8 @@ type MediaCardProps = {
     onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
     style?: CSSProperties;
     mediaInfo?: boolean;
-    setMediaInfo: any;
-    selectedMovieId: number | null;
+    setMediaInfo?: any;
+    selectedMovieId?: number | null;
 };
 
 export const MediaCardContext = createContext({ height: 200, width: 100, page: '' });

@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse, NextPage } from 'next'
-import Image from 'next/image';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
