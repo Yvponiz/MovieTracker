@@ -8,6 +8,7 @@ import { UserList } from '../models/user';
 import commonProps, { UserProps } from '../utils/commonProps';
 import MediaCard, { MediaCardContext } from '../components/card';
 import Link from 'next/link';
+import { listCardSelectedStyle } from '../styles/selectedCardStyle';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -15,10 +16,14 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 
 const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [userLists, setUserLists] = useState<UserList[]>([]);
-  const [message, setMessage] = useState('');
-  const [showMessage, setShowMessage] = useState(false);
-  const [showCreateListDiv, setShowCreateListDiv] = useState(false);
   const [state, changeState] = useState({ listName: '', media: {} })
+  const [message, setMessage] = useState<string>('');
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [showCreateListDiv, setShowCreateListDiv] = useState<boolean>(false);
+  const [listTitleClick, setListTitleClick] = useState<boolean>(false);
+  const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+  const [blur, setBlur] = useState<boolean>(false);
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
@@ -126,6 +131,21 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       })
   };
 
+  const handleTitleClick = (e: React.MouseEvent) => (
+    setListTitleClick(listTitleClick => !listTitleClick)
+  )
+
+  const handleCardClick = (mediaId: number) => {
+    setSelectedMovieId((prevSelectedMovieId) =>
+      prevSelectedMovieId === mediaId ? null : mediaId
+    );
+    setBlur((prevBlur) => !prevBlur);
+  };
+
+  const handleCheckClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  }
+
   useEffect(() => {
     if (isLoggedIn) {
       fetchLists();
@@ -151,8 +171,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   }, [createListRef, userLists]);
 
   const responsive = {
-    0: { items: 2 },
-    568: { items: 3 },
+    0: { items: 1 },
+    568: { items: 4 },
     1024: { items: 4 },
   };
 
@@ -160,18 +180,36 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     const MediaItems = userList?.items.map(media => (
       <MediaCardContext.Provider key={media.id}
         value={{
-          height: isMobile ? 80 : 160,
-          width: isMobile ? 60 : 140,
+          height: isMobile ? (selectedMovieId === media.id ? 120 : 80)
+            : (selectedMovieId === media.id ? 380 : 160),
+          width: isMobile ? (selectedMovieId === media.id ? 100 : 60)
+            : selectedMovieId === media.id ? 360 : 140,
           page: 'lists'
         }}
       >
         <MediaCard key={media.id} media={media}
-          style={media.watched ? { border: 'solid 1.5px green' } : {}}
+          style={listCardSelectedStyle({ isMobile: isMobile, selectedMovieId, watched: media.watched }, media.id)}
+          onClick={() => handleCardClick(media.id)}
+          setMediaInfo={setMediaInfo}
+          selectedMovieId={selectedMovieId}
         >
-          <button onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}> Remove</button>
+          {selectedMovieId === media.id && <button
+            onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}
+          >
+            Remove
+          </button>}
 
           <input type='checkbox' checked={media.watched ? true : false}
-            onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }} />
+            onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }}
+            onClick={(e) => { handleCheckClick(e) }}
+          />
+
+          {mediaInfo && selectedMovieId === media.id && (
+            <div className="info-text">
+              {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+            </div>
+          )}
+
         </MediaCard>
       </MediaCardContext.Provider>
     ));
@@ -179,13 +217,13 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     return (
 
       <div className='list-div' key={userList.name}>
-        <div className='list-title'>
+        <div className='list-name' title='Click to delete list!' onClick={(e) => handleTitleClick(e)}>
           <h2>{userList.name}</h2>
-          <button
+          {listTitleClick && <button
             onClick={() => handleDeleteList({ listName: userList.name })}
             title='Delete list'
           >X
-          </button>
+          </button>}
         </div>
         <div className='list-carousel'>
           {userList.items.length > 0
@@ -198,7 +236,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               animationDuration={800}
               paddingLeft={50}
               paddingRight={50}
-              infinite
               disableDotsControls
             />
             :

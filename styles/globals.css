@@ -82,6 +82,10 @@ main {
   transition: all 0.1s ease-in-out;
 }
 
+.media-image{
+  transition: all 0.1s ease-in-out;
+}
+
 #cards .card:hover {
   z-index: 5;
 }
@@ -380,7 +384,16 @@ main {
 }
 
 .list-carousel .card {
-  height: 350px;
+  height: 360px;
+}
+
+.list-carousel .card p {
+  margin: 10px
+}
+
+.list-carousel .card h3 {
+  font-size: 1.5rem;
+  margin: 10px;
 }
 
 .list-carousel input[type="checkbox"] {
@@ -404,15 +417,17 @@ main {
   font-size: 1.5rem;
 }
 
-.list-title {
+.list-name {
   display: flex;
   align-self: center;
   justify-content: center;
   align-items: center;
   gap: 5px;
+  min-width: 102px;
+  cursor: pointer;
 }
 
-.list-title button {
+.list-name button {
   height: 30px;
   width: 30px;
   color: red;
@@ -553,7 +568,7 @@ main {
 
   .info-text {
     height: 200px;
-    width: 350px;
+    width: 200px;
     font-size: 1.2rem;
   }
 

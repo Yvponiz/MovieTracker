@@ -1,12 +1,13 @@
-interface OpenSelectedStyleParams {
+interface styleParams {
     isMobile: boolean;
     selectedMovieId: number | null;
+    watched?: boolean;
 }
 
-export const openSelectedStyle = ({ isMobile, selectedMovieId }: OpenSelectedStyleParams, mediaId: number): React.CSSProperties => ({
+export const openSelectedStyle = ({ isMobile, selectedMovieId }: styleParams, mediaId: number): React.CSSProperties => ({
     height: isMobile
         ? selectedMovieId === mediaId ? "360px" : "300px"
-        : selectedMovieId === mediaId ? "580px" : "260px",
+        : selectedMovieId === mediaId ? "560px" : "260px",
     width: isMobile
         ? selectedMovieId === mediaId ? "360px" : "260px"
         : selectedMovieId === mediaId ? "560px" : "260px",
@@ -25,4 +26,16 @@ export const openSelectedStyle = ({ isMobile, selectedMovieId }: OpenSelectedSty
     transform: isMobile
         ? "translate(0)"
         : selectedMovieId === mediaId ? "translate(-50%, -50%)" : "translate(0)",
+    transition: "all 0.1s ease-in-out"
 });
+
+export const listCardSelectedStyle = ({ selectedMovieId, isMobile, watched }: styleParams, mediaId: number): React.CSSProperties => ({
+    height: isMobile
+        ? selectedMovieId === mediaId ? "260px" : "200px"
+        : selectedMovieId === mediaId ? "560px" : "360px",
+    width: isMobile
+        ? selectedMovieId === mediaId ? "260px" : "160px"
+        : selectedMovieId === mediaId ? "560px" : "360px",
+    zIndex: selectedMovieId === mediaId ? 1 : 0,
+    border: watched? 'solid 1.5px green': ''
+})

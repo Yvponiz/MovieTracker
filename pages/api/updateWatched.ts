@@ -21,7 +21,23 @@ export default async function updateWatched(
         const mediaTitle = media.media_type === "movie" ? media.title : media.name;
         const watchedMessage = `${mediaTitle} set to ${watched ? "watched" : "unwatched"}`;
 
-        user!.lists![listIndex!].items[mediaIndex!].watched = watched;
+        // Check if the media is watched in all lists
+        let isMediaWatchedInAllLists = true;
+        for (const list of user?.lists || []) {
+            const mediaIndex = list.items.findIndex((item) => item.id === media.id);
+            if (mediaIndex >= 0 && !list.items[mediaIndex].watched) {
+                isMediaWatchedInAllLists = false;
+                break;
+            }
+        }
+
+        // Set the watched status of the media in all lists
+        for (const list of user?.lists || []) {
+            const mediaIndex = list.items.findIndex((item) => item.id === media.id);
+            if (mediaIndex >= 0) {
+                list.items[mediaIndex].watched = isMediaWatchedInAllLists ? true : watched;
+            }
+        }
 
         const result = await usersCollection.updateOne(
             { _id: userId },

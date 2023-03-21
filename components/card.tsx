@@ -44,7 +44,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
         >
             <div className="card-content">
                 <div className="card-title-div">
-
+                    
                     {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
 
                     {selectedMovieId === media.id &&
@@ -64,6 +64,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                     height={height}
                     width={width}
                     alt={"media image"}
+                    className='media-image'
                 />
 
                 <div className="media-year">
