@@ -287,7 +287,7 @@ main {
 }
 
 .login-page p {
-  margin: 20px 0 0 0;
+  margin: 20px 0 20 0;
 }
 
 .error {
@@ -295,7 +295,7 @@ main {
   border: 1px solid red;
   color: red;
   padding: 5px;
-  margin: 0;
+  margin-bottom: 10px;
 }
 
 .success {
@@ -311,7 +311,7 @@ main {
   flex-direction: column;
   color: white;
   width: 500px;
-  height: 500px;
+  height: 520px;
   padding: 50px;
   background: rgba(97, 97, 107, 0.5);
   border-radius: 15px;

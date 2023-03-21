@@ -23,6 +23,14 @@ export default async function signup(
       res.status(400).json({ status: "erreur", errors: ["Email is not valid"] })
       return
     }
+    else if(username.length < 4){
+      res.status(400).json({ status: "erreur", errors: ["Username must be at least 4 characters"] })
+      return
+    }
+    else if(password.length < 7){
+      res.status(400).json({ status: "erreur", errors: ["Password must be at least 7 characters"] })
+      return
+    }
 
     const database = client.db("movietracker");
     const users = database.collection<User>('users');
