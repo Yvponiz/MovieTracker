@@ -29,75 +29,65 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
         </div>
 
         <div id={'cards'}>
-          <Link href={'/search'} className='index-link'>
-            <div className='card'>
-              <div className='card-content'>
-                <p>Search</p>
-                <Image
-                  src='/icons/magnifying-glass.svg'
-                  width={50}
-                  height={50}
-                  alt="magnifying-glass"
-                />
-              </div>
+          <Link href={'/search'} className='card'>
+            <div className='card-content'>
+              <p>Search</p>
+              <Image
+                src='/icons/magnifying-glass.svg'
+                width={50}
+                height={50}
+                alt="magnifying-glass"
+              />
             </div>
           </Link>
 
-          <Link href={'/lists'} className='index-link'>
-            <div className='card'>
-              <div className='card-content'>
-                <p>Movie & Series Lists</p>
-                <Image
-                  src='/icons/tv.svg'
-                  width={50}
-                  height={50}
-                  alt="tv-icon"
-                />
-              </div>
+          <Link href={'/lists'} className='card'>
+            <div className='card-content'>
+              <p>Movie & Series Lists</p>
+              <Image
+                src='/icons/tv.svg'
+                width={50}
+                height={50}
+                alt="tv-icon"
+              />
             </div>
           </Link>
 
           {isLoggedIn ?
-            <Link href='/api/logout' className='index-link'>
-              <div className='card'>
-                <div className='card-content'>
-                  <p>Logout</p>
-                  <Image
-                    src='/icons/logout.svg'
-                    width={50}
-                    height={50}
-                    alt="logout-icon"
-                  />
-                </div>
+            <Link href='/api/logout' className='card'>
+              <div className='card-content'>
+                <p>Logout</p>
+                <Image
+                  src='/icons/logout.svg'
+                  width={50}
+                  height={50}
+                  alt="logout-icon"
+                />
               </div>
             </Link>
             :
-            <Link href="/login" className='index-link'>
-              <div className='card'>
-                <div className='card-content'>
-                  <p>Login</p>
-                  <Image
-                    src='/icons/login.svg'
-                    width={50}
-                    height={50}
-                    alt="login-icon"
-                  />
-                </div>
+            <Link href="/login" className='card'>
+              <div className='card-content'>
+                <p>Login</p>
+                <Image
+                  src='/icons/login.svg'
+                  width={50}
+                  height={50}
+                  alt="login-icon"
+                />
               </div>
             </Link>
           }
 
-          <Link href="" className='index-link'>
-            <div className='card'>
-              <div className='card-content'>
-                <p>Coming Soon</p>
-                <Image
-                  src='/icons/profile.svg'
-                  width={50}
-                  height={50}
-                  alt="profile-icon"
-                />
-              </div>
+          <Link href="" className='card'>
+            <div className='card-content'>
+              <p>Coming Soon</p>
+              <Image
+                src='/icons/profile.svg'
+                width={50}
+                height={50}
+                alt="profile-icon"
+              />
             </div>
           </Link>
 
