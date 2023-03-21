@@ -11,8 +11,12 @@ export default async function handler(
         const database = client.db("movietracker");
         const session = database.collection<Session>('session');
 
-        const result = await session.deleteMany({});
-        console.log(`${result.deletedCount} documents deleted`);
+        // Calculate the timestamp for sessions that have not been accessed in the last 24 hours
+        const inactiveTime = new Date().getTime() - 24 * 60 * 60 * 1000;
+
+        // Delete all sessions that have not been accessed in the last 24 hours
+        const result = await session.deleteMany({ lastAccessed: { $lt: inactiveTime } });
+        console.log(`${result.deletedCount} inactive sessions deleted`);
         res.status(200).end('Hello Cron!');
     }
     catch (error: any) {
