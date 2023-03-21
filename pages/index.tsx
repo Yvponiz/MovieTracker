@@ -29,9 +29,9 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
         </div>
 
         <div id={'cards'}>
-          <div className='card'>
-            <div className='card-content'>
-              <Link href={'/search'} className='index-link'>
+          <Link href={'/search'} className='index-link'>
+            <div className='card'>
+              <div className='card-content'>
                 <p>Search</p>
                 <Image
                   src='/icons/magnifying-glass.svg'
@@ -39,13 +39,13 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
                   height={50}
                   alt="magnifying-glass"
                 />
-              </Link>
+              </div>
             </div>
-          </div>
+          </Link>
 
-          <div className='card'>
-            <div className='card-content'>
-              <Link href={'/lists'} className='index-link'>
+          <Link href={'/lists'} className='index-link'>
+            <div className='card'>
+              <div className='card-content'>
                 <p>Movie & Series Lists</p>
                 <Image
                   src='/icons/tv.svg'
@@ -53,14 +53,14 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
                   height={50}
                   alt="tv-icon"
                 />
-              </Link>
+              </div>
             </div>
-          </div>
+          </Link>
 
-          <div className='card'>
-            <div className='card-content'>
-              {isLoggedIn ?
-                <Link href='/api/logout' className='index-link'>
+          {isLoggedIn ?
+            <Link href='/api/logout' className='index-link'>
+              <div className='card'>
+                <div className='card-content'>
                   <p>Logout</p>
                   <Image
                     src='/icons/logout.svg'
@@ -68,8 +68,13 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
                     height={50}
                     alt="logout-icon"
                   />
-                </Link> :
-                <Link href="/login" className='index-link'>
+                </div>
+              </div>
+            </Link>
+            :
+            <Link href="/login" className='index-link'>
+              <div className='card'>
+                <div className='card-content'>
                   <p>Login</p>
                   <Image
                     src='/icons/login.svg'
@@ -77,13 +82,14 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
                     height={50}
                     alt="login-icon"
                   />
-                </Link>}
-            </div>
-          </div>
+                </div>
+              </div>
+            </Link>
+          }
 
-          <div className='card'>
-            <div className='card-content'>
-              <Link href="" className='index-link'>
+          <Link href="" className='index-link'>
+            <div className='card'>
+              <div className='card-content'>
                 <p>Coming Soon</p>
                 <Image
                   src='/icons/profile.svg'
@@ -91,9 +97,9 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
                   height={50}
                   alt="profile-icon"
                 />
-              </Link>
+              </div>
             </div>
-          </div>
+          </Link>
 
         </div>
       </main>
