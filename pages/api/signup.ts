@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { User, UserList } from '../../models/user';
+import { User } from '../../models/user';
 import bcrypt from 'bcrypt';
 import client from "../../utils/DButils";
-import { Collection, Db } from 'mongodb';
 
 export default async function signup(
   req: NextApiRequest,
