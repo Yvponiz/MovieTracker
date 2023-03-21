@@ -32,7 +32,7 @@ const SignUp: NextPage = () => {
           setShowSuccess(!showSuccess);
           setTimeout(()=> router.push('/login'), 1000);
         }
-        else if (data.status === "erreur") {
+        else if (data.status === "error") {
           setShowError(!showError);
           setError(data.errors.join("\n"));
         }

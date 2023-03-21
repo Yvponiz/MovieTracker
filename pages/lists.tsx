@@ -45,6 +45,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const handleShowCreateList = useCallback(() => {
     setShowCreateListDiv(showCreateListDiv => !showCreateListDiv);
+    setShowMessage(false);
   }, []);
 
   const handleCreateList = useCallback((event: FormEvent, state: { listName: string }) => {
@@ -59,10 +60,14 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          if (showMessage) { setShowMessage(!showMessage) }
+          setShowMessage(!showMessage)
           setMessage(data.message);
           setShowCreateListDiv(false);
           fetchLists();
+        }
+        else if (data.status === "error") {
+          setShowMessage(!showMessage)
+          setMessage(data.errors.join("\n"));
         }
       })
   }, [fetchLists, id, showMessage]);
@@ -279,16 +284,16 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             {ListItems}
           </div>}
 
-        {showCreateListDiv ?
+        {showCreateListDiv &&
           <div className='create-list' ref={createListRef} >
             <form>
               <label htmlFor="list-name">List name: </label>
               <input onChange={(event) => changeState({ ...state, listName: event.target.value })} type="text" name="list-name" id="list-name" required />
               <button onClick={(event) => handleCreateList(event, state)}>Create</button>
             </form>
+
+            {showMessage && <p className='error'>{message}</p>}
           </div>
-          :
-          <></>
         }
       </div>
     </Layout>

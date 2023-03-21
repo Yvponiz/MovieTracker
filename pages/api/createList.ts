@@ -14,7 +14,12 @@ export default async function createList(
         const userId = new ObjectId((req.query.userId)?.toString());
         const database = client.db("movietracker");
         const usersCollection = database.collection<User>('users');
-        
+
+        if (listName.length === 0) {
+            res.status(400).json({ status: "error", errors: ["List name must be at least 1 character"] })
+            return
+        }
+
         const newList: UserList = {
             name: listName,
             items: []

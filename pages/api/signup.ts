@@ -15,19 +15,19 @@ export default async function signup(
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     if (password !== confPassword) {
-      res.status(400).json({ status: "erreur", errors: ["Passwords must be identical"] })
+      res.status(400).json({ status: "error", errors: ["Passwords must be identical"] })
       return
     }
     else if (emailReg.test(email) == false) {
-      res.status(400).json({ status: "erreur", errors: ["Email is not valid"] })
+      res.status(400).json({ status: "error", errors: ["Email is not valid"] })
       return
     }
     else if(username.length < 4){
-      res.status(400).json({ status: "erreur", errors: ["Username must be at least 4 characters"] })
+      res.status(400).json({ status: "error", errors: ["Username must be at least 4 characters"] })
       return
     }
     else if(password.length < 7){
-      res.status(400).json({ status: "erreur", errors: ["Password must be at least 7 characters"] })
+      res.status(400).json({ status: "error", errors: ["Password must be at least 7 characters"] })
       return
     }
 
@@ -37,11 +37,11 @@ export default async function signup(
     const existingEmail = await users.findOne({ email });
 
     if (existingUsername) {
-      res.status(400).json({ status: "erreur", errors: ["Username is already taken"] });
+      res.status(400).json({ status: "error", errors: ["Username is already taken"] });
       return;
     }
     if (existingEmail) {
-      res.status(400).json({ status: "erreur", errors: ["Email is already taken"] });
+      res.status(400).json({ status: "error", errors: ["Email is already taken"] });
       return;
     }
 

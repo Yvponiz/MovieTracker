@@ -296,6 +296,7 @@ main {
   color: red;
   padding: 5px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .success {
@@ -347,8 +348,8 @@ main {
 
 .create-list {
   position: absolute;
-  left: 50;
-  top: 50;
+  left: 40%;
+  top: 50%;
   border-radius: 15px;
   border: 1px solid white;
   background-color: var(--bg-color);
@@ -358,7 +359,9 @@ main {
   margin: 25px;
   padding: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .create-list form {
