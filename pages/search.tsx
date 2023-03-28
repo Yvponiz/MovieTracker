@@ -9,6 +9,7 @@ import { UserList } from "../models/user";
 import MediaCard, { MediaCardContext } from "../components/card";
 import { openSelectedStyle } from "../styles/selectedCardStyle";
 import { SearchForm } from "../components/searchForm";
+import TrendingMovies from "../components/trendingMovies";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -106,7 +107,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   };
 
   useEffect(() => {
-    addMouseMoveEffectToCards("cards");
     if (isLoggedIn) {
       fetchLists();
     }
@@ -131,6 +131,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         {!isLoggedIn && <p>{message}</p>}
 
+        <TrendingMovies/>
+
         <div id="cards">
           {searchResult?.map((media: Media) => (
             <>
@@ -144,6 +146,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                 <MediaCard
                   key={media.id}
                   media={media}
+                  className='card'
                   onClick={() => handleCardClick(media.id)}
                   onMouseEnter={() => setIsHovered(media.id)}
                   onMouseLeave={() => setIsHovered(null)}

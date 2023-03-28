@@ -277,6 +277,13 @@ main {
   transform: scale(1.1);
 }
 
+.trending-card {
+  width: 400px;
+  height: 280px;
+  border-radius: 15px;
+  background-size: cover;
+}
+
 #lists {
   width: 100px;
   height: 40px;
