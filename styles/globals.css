@@ -224,26 +224,45 @@ main {
 }
 
 .searchPageContainer form {
-  padding: 20px;
+  display: flex;
+  padding: 5px;
   margin: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
+  border-radius: 30px;
+  background-color: rgb(40, 40, 40);
   text-align: center;
 }
 
 .searchPageContainer form input {
   font-size: 20px;
   padding: 10px;
+  margin: 0;
+  background-color: rgb(40, 40, 40);
+  border: none;
+  border-radius: 30px;
+  /* width: 50px; */
+  transition: width 0.3s ease-in-out;
+}
+
+.searchPageContainer form input:focus{
+  outline: none;
+  /* width: fit-content; */
+}
+
+.search-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: rgb(40, 40, 40);
+  border: none;
 }
 
 .searchPageContainer form button {
   font-size: 20px;
   padding: 10px;
-}
-
-.searchPageContainer button {
-  padding: 10px;
-  border-radius: 8px;
 }
 
 .searchPageContainer {
@@ -481,22 +500,42 @@ main {
   height: 100%;
 }
 
-.header {
+.header{
   display: flex;
   justify-content: center;
-  align-items: center;
   width: 100%;
-  background-color: rgb(40, 40, 40);
-  padding: 20px 10px;
+  padding: 10px;
+}
+
+.header nav{
+  background-color: rgb(30, 30, 30);
+  border-radius: 50px;
+}
+
+.header nav ul {
+  display: flex;
   gap: 5rem;
+  padding: 0 15px;
+  margin: 5px;
+  list-style: none;
+  border-radius: 30px;
 }
 
-.header a {
-  text-decoration: underline;
+.header nav li {
+  border-radius: 30px;
+  padding: 10px 15px;
+  transition: background-color 0.4s, color 0.3s ease-in-out;
+  cursor: pointer;
 }
 
-.layout a:hover {
-  color: blue;
+.header nav li.active {
+  background-color: white;
+  color: black;
+}
+
+.header nav li:hover {
+  background-color: white;
+  color: black;
 }
 
 .footer {
@@ -666,13 +705,12 @@ main {
     justify-content: center;
     align-items: center;
     width: 100%;
-    background-color: rgb(40, 40, 40);
     padding: 10px;
     gap: 1rem;
   }
 
-  .header a {
-    text-decoration: none;
+  .header nav ul {
+    gap: 0;
   }
 
   .footer {

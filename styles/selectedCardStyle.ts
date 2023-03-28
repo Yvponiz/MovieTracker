@@ -37,5 +37,5 @@ export const listCardSelectedStyle = ({ selectedMovieId, isMobile, watched }: st
         ? selectedMovieId === mediaId ? "260px" : "160px"
         : selectedMovieId === mediaId ? "560px" : "360px",
     zIndex: selectedMovieId === mediaId ? 1 : 0,
-    border: watched? 'solid 1.5px green': ''
+    border: watched? 'solid 2px green': ''
 })

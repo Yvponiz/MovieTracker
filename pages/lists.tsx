@@ -242,6 +242,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               paddingLeft={50}
               paddingRight={50}
               disableDotsControls
+              infinite
+              controlsStrategy="alternate"
             />
             :
             <div className='no-list'>

@@ -1,27 +1,38 @@
 import Link from "next/link";
 import Image from "next/image"
 import { FunctionComponent } from "react";
+import { useRouter } from 'next/router';
 
 type HeaderProps = {
     isLoggedIn: boolean;
 };
 
 const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
+    const router = useRouter();
+
     return (
-        isLoggedIn ?
-            <>
-                <Link href='/'>Home</Link>
-                <Link href='/lists'>Lists</Link>
-                <Link href='/search'>Search</Link>
-                <Link href='/profile'>Profile</Link>
-                <Link href='/api/logout'>Logout</Link>
-            </> :
-
-            <>
-                <Link href='/'>Home</Link>
-                <Link href='/login'>Login</Link>
-            </>
-
+        <nav>
+            <ul>
+                <li className={router.pathname === '/home' ? 'active' : ''}>
+                    <Link href='/'>Home</Link>
+                </li>
+                <li className={router.pathname === '/lists' ? 'active' : ''} >
+                    <Link href='/lists'>Lists</Link>
+                </li>
+                <li className={router.pathname === '/search' ? 'active' : ''}>
+                    <Link href='/search'>Search</Link>
+                </li>
+                <li className={router.pathname === '/profile' ? 'active' : ''}>
+                    <Link href='/profile'>Profile</Link>
+                </li>
+                <li className={router.pathname === '/login' ? 'active' : ''}>
+                    {isLoggedIn ?
+                        <Link href='/api/logout'>Logout</Link> :
+                        <Link href='/login'>Login</Link>
+                    }
+                </li>
+            </ul>
+        </nav>
     )
 }
 
