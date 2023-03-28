@@ -702,6 +702,17 @@ main {
     padding: 5px;
   }
 
+  .searchPageContainer form input {
+    width: 100px;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .searchPageContainer form input:focus {
+    outline: none;
+    width: 220px;
+    transition: all 0.3s ease-in-out;
+  }
+
   .searchPageContainer form button {
     font-size: 16px;
     padding: 5px;
