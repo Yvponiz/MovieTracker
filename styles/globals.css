@@ -7,7 +7,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Signika Negative', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   color: white;
   background-color: var(--bg-color);
 }
@@ -82,8 +82,15 @@ main {
   transition: all 0.1s ease-in-out;
 }
 
-.media-image{
+.media-image {
   transition: all 0.1s ease-in-out;
+}
+
+.media-score {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
 }
 
 #cards .card:hover {
@@ -137,7 +144,7 @@ main {
   z-index: 4;
 }
 
-.card-content h3{
+.card-content h3 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -165,20 +172,41 @@ main {
   font-size: 1.8rem;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  border-radius: 5px;
-  width: 460px;
-  height: 440px;
-  overflow:scroll;
+  border-radius: 30px;
+  width: 500px;
+  height: 320px;
+  overflow: scroll;
   text-overflow: ellipsis;
   white-space: pre-wrap;
   display: -webkit-box;
-  -webkit-line-clamp: 5; /* Limit the number of lines displayed */
+  -webkit-line-clamp: 5;
+  /* Limit the number of lines displayed */
   -webkit-box-orient: vertical;
-  max-height: calc(1.2 * 5); /* 1.2 is the line-height, 5 is the number of lines */
+  max-height: calc(1.2 * 5);
+  /* 1.2 is the line-height, 5 is the number of lines */
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+
+
 .info-icon {
-  margin: 10px;
+  align-self: end;
+  cursor: pointer;
 }
 
 #carousel {
@@ -239,13 +267,14 @@ main {
   background-color: rgb(40, 40, 40);
   border: none;
   border-radius: 30px;
-  /* width: 50px; */
+  width: 200px;
   transition: width 0.3s ease-in-out;
 }
 
-.searchPageContainer form input:focus{
+.searchPageContainer form input:focus {
   outline: none;
-  /* width: fit-content; */
+  width: 320px;
+  transition: all 0.3s ease-in-out;
 }
 
 .search-icon {
@@ -275,6 +304,76 @@ main {
 
 .searchPageContainer .card:hover {
   transform: scale(1.1);
+}
+
+.trending-card {
+  width: 600px;
+  height: 380px;
+  border-radius: 15px;
+  background-size: cover;
+  background-position-y: 10%;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-right: 10px;
+}
+
+.trending-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px;
+  height: 100%;
+}
+
+.trending-card-content-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 25px;
+}
+
+.trending-card-content-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.trending-card-content-left * {
+  margin: 0;
+}
+
+.trending-card-content-left h3 {
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.trending-card-content-left p {
+  font-size: 1.3rem;
+}
+
+.trending-card-content-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.trending-carousel {
+  width: 100%;
+}
+
+.trending-carousel li {
+  margin-right: 15px;
 }
 
 #lists {
@@ -500,14 +599,14 @@ main {
   height: 100%;
 }
 
-.header{
+.header {
   display: flex;
   justify-content: center;
   width: 100%;
   padding: 10px;
 }
 
-.header nav{
+.header nav {
   background-color: rgb(30, 30, 30);
   border-radius: 50px;
 }
@@ -606,6 +705,33 @@ main {
   .searchPageContainer form button {
     font-size: 16px;
     padding: 5px;
+  }
+
+  .searchPageContainer p {
+    font-size: 15px;
+    padding: 5px;
+    text-align: center;
+  }
+
+  .trending-card {
+    width: 300px;
+    height: 190px;
+  }
+
+  .trending-card-content {
+    margin: 13px;
+  }
+
+  .trending-card-content-left {
+    gap: 0;
+  }
+
+  .trending-card-content-left h3 {
+    font-size: 1rem;
+  }
+
+  .trending-card-content-left p {
+    font-size: 0.9rem;
   }
 
   .info-text {
@@ -709,8 +835,17 @@ main {
     gap: 1rem;
   }
 
+  .header nav {
+    transform: scale(0.9);
+  }
+
   .header nav ul {
     gap: 0;
+  }
+
+  .header nav ul li a {
+    gap: 0;
+    font-size: 0.9rem;
   }
 
   .footer {
