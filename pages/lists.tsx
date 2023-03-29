@@ -6,7 +6,7 @@ import Layout from '../components/layout';
 import { Media } from '../models/media';
 import { UserList } from '../models/user';
 import commonProps, { UserProps } from '../utils/commonProps';
-import MediaCard, { MediaCardContext } from '../components/card';
+import MediaCard from '../components/card';
 import Link from 'next/link';
 import { listCardSelectedStyle } from '../styles/selectedCardStyle';
 
@@ -183,42 +183,32 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const ListItems = userLists?.map(userList => {
     const MediaItems = userList?.items.map(media => (
-      <MediaCardContext.Provider key={media.id}
-        value={{
-          height: isMobile ? (selectedMovieId === media.id ? 120 : 80)
-            : (selectedMovieId === media.id ? 380 : 160),
-          width: isMobile ? (selectedMovieId === media.id ? 100 : 60)
-            : selectedMovieId === media.id ? 360 : 140,
-          page: 'lists'
-        }}
+      <MediaCard key={media.id} media={media}
+        style={listCardSelectedStyle({ isMobile: isMobile, selectedMovieId, watched: media.watched }, media.id)}
+        onClick={() => handleCardClick(media.id)}
+        setMediaInfo={setMediaInfo}
+        selectedMovieId={selectedMovieId}
+        className=''
+        isLoggedIn={isLoggedIn}
       >
-        <MediaCard key={media.id} media={media}
-          style={listCardSelectedStyle({ isMobile: isMobile, selectedMovieId, watched: media.watched }, media.id)}
-          onClick={() => handleCardClick(media.id)}
-          setMediaInfo={setMediaInfo}
-          selectedMovieId={selectedMovieId}
-          className=''
-          isLoggedIn={isLoggedIn}
+        {selectedMovieId === media.id && <button
+          onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}
         >
-          {selectedMovieId === media.id && <button
-            onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}
-          >
-            Remove
-          </button>}
+          Remove
+        </button>}
 
-          <input type='checkbox' checked={media.watched ? true : false}
-            onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }}
-            onClick={(e) => { handleCheckClick(e) }}
-          />
+        <input type='checkbox' checked={media.watched ? true : false}
+          onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }}
+          onClick={(e) => { handleCheckClick(e) }}
+        />
 
-          {mediaInfo && selectedMovieId === media.id && (
-            <div className="info-text">
-              {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-            </div>
-          )}
+        {mediaInfo && selectedMovieId === media.id && (
+          <div className="info-text">
+            {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+          </div>
+        )}
 
-        </MediaCard>
-      </MediaCardContext.Provider>
+      </MediaCard>
     ));
 
     return (
