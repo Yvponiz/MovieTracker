@@ -4,7 +4,6 @@ import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { Media } from "../models/media";
 import { UserList } from "../models/user";
-import { UserProps } from "../utils/commonProps";
 import { MediaCardContext } from "./card";
 
 type Props ={
@@ -17,8 +16,6 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
     const carousel = useRef(null);
-    const { height, width, page } = useContext(MediaCardContext);
-    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
     useEffect(() => {
         fetch(`/api/getTrending`)
