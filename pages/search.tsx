@@ -22,11 +22,13 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-  const [isHovered, setIsHovered] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
-  const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+  const [cardPosition, setCardPosition] = useState<{ left: number; top: number }>({
+    left: 0,
+    top: 0,
+  });
 
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
   const styleParams = { isMobile: isMobile, selectedMovieId };
@@ -66,7 +68,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     }
   };
 
-  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
+  const handleAddToListClick = (e: React.MouseEvent, state: { listName: string, media: Media }) => {
     e.stopPropagation();
     fetchLists();
 
@@ -131,9 +133,11 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         {!isLoggedIn && <p>{message}</p>}
 
-        <TrendingMovies/>
+        <h2>Trending movies & series</h2>
+        <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
 
-        <div id="cards">
+        <h2>Search results</h2>
+        <div className="search-result-div">
           {searchResult?.map((media: Media) => (
             <>
               <MediaCardContext.Provider
@@ -146,13 +150,10 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                 <MediaCard
                   key={media.id}
                   media={media}
-                  className='card'
+                  className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
                   onClick={() => handleCardClick(media.id)}
-                  onMouseEnter={() => setIsHovered(media.id)}
-                  onMouseLeave={() => setIsHovered(null)}
-                  style={openSelectedStyle(styleParams, media.id)}
-                  setMediaInfo={setMediaInfo}
                   selectedMovieId={selectedMovieId}
+                  isLoggedIn={isLoggedIn}
                 >
                   {selectedMovieId === media.id && isLoggedIn && (
                     <div id="add-to-list">
@@ -175,11 +176,14 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                           }
                         </select>
 
-                        <button
-                          onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                          style={{ backgroundColor: addedToList ? "green" : "" }}>
-                          {addedToList ? "Added!" : "Add to list"}
-                        </button>
+                        {isLoggedIn &&
+                          <button
+                            onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                            style={{ backgroundColor: addedToList ? "green" : "" }}
+                          >
+                            {addedToList ? "Added!" : "Add to list"}
+                          </button>
+                        }
 
                       </div>
 
@@ -190,11 +194,10 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                     </div>
                   )}
 
-                  {mediaInfo && selectedMovieId === media.id && (
+                  {selectedMovieId === media.id &&
                     <div className="info-text">
                       {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-                    </div>
-                  )}
+                    </div>}
 
                 </MediaCard>
               </MediaCardContext.Provider>

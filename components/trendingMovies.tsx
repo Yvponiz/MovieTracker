@@ -3,16 +3,19 @@ import { FunctionComponent, useContext, useEffect, useRef, useState } from "reac
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { Media } from "../models/media";
-import MediaCard, { MediaCardContext, MediaCardProps } from "./card";
+import { UserList } from "../models/user";
+import { MediaCardContext } from "./card";
 
+type Props ={
+    isLoggedIn: boolean;
+    lists: UserList[];
+}
 
-const TrendingMovies: FunctionComponent = () => {
+const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
     const carousel = useRef(null);
-    const { height, width, page } = useContext(MediaCardContext);
-    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
     useEffect(() => {
         fetch(`/api/getTrending`)
@@ -20,20 +23,21 @@ const TrendingMovies: FunctionComponent = () => {
             .then(data => {
                 setTrendingResult(data.results);
             });
-    }, [trendingResult])
+    }, [])
 
     const handleInfoClick = (mediaId: number) => {
         if (selectedMovieId === mediaId) {
-          setMediaInfo(!mediaInfo);
+            setMediaInfo(!mediaInfo);
         } else {
-          setSelectedMovieId(mediaId);
-          setMediaInfo(true);
+            setSelectedMovieId(mediaId);
+            setMediaInfo(true);
         }
     };
 
     const TrendingItems = trendingResult?.slice(0, 5).map((media: Media) => (
         <div
-            className="trending-card" key={media.id}
+            key={media.id}
+            className='trending-card'
             style={{ backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
         >
             <div className="trending-card-content">
@@ -42,11 +46,10 @@ const TrendingMovies: FunctionComponent = () => {
                     width={30}
                     height={30}
                     alt='summary icon'
-                    onClick={(e) => { handleInfoClick(media.id)}}
+                    onClick={(e) => { handleInfoClick(media.id) }}
                 />
 
                 <div className="trending-card-content-bottom">
-
                     <div className="trending-card-content-left">
                         {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
 
@@ -67,14 +70,14 @@ const TrendingMovies: FunctionComponent = () => {
                             <p>{media.vote_average?.toPrecision(2)} rating</p>
                         </div>
                     </div>
-                    <div className="trending-card-content-right">
+                    {isLoggedIn && <div className="add-button">
                         <Image
                             src='/icons/add-icon.svg'
                             width={30}
                             height={30}
                             alt='add icon'
                         />
-                    </div>
+                    </div>}
                 </div>
             </div>
             {mediaInfo && selectedMovieId === media.id && (

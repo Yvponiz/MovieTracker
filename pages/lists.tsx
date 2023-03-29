@@ -198,6 +198,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
           setMediaInfo={setMediaInfo}
           selectedMovieId={selectedMovieId}
           className=''
+          isLoggedIn={isLoggedIn}
         >
           {selectedMovieId === media.id && <button
             onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}
