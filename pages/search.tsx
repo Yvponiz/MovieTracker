@@ -66,7 +66,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     }
   };
 
-  const handleAddToListClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, state: { listName: string, media: Media }) => {
+  const handleAddToListClick = (e: React.MouseEvent, state: { listName: string, media: Media }) => {
     e.stopPropagation();
     fetchLists();
 
@@ -131,9 +131,11 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         {!isLoggedIn && <p>{message}</p>}
 
-        <TrendingMovies/>
+        <h2>Trending movies & series</h2>
+        <TrendingMovies isLoggedIn={isLoggedIn} />
 
-        <div id="cards">
+        <h2>Search results</h2>
+        <div className="search-result-div">
           {searchResult?.map((media: Media) => (
             <>
               <MediaCardContext.Provider
@@ -146,13 +148,14 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                 <MediaCard
                   key={media.id}
                   media={media}
-                  className='card'
+                  className='search-card'
                   onClick={() => handleCardClick(media.id)}
                   onMouseEnter={() => setIsHovered(media.id)}
                   onMouseLeave={() => setIsHovered(null)}
-                  style={openSelectedStyle(styleParams, media.id)}
+                  style={openSelectedStyle(styleParams, media)}
                   setMediaInfo={setMediaInfo}
                   selectedMovieId={selectedMovieId}
+                  isLoggedIn={isLoggedIn}
                 >
                   {selectedMovieId === media.id && isLoggedIn && (
                     <div id="add-to-list">
@@ -175,11 +178,12 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                           }
                         </select>
 
-                        <button
+                        {isLoggedIn && <div className="search-card-content-right"
                           onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
                           style={{ backgroundColor: addedToList ? "green" : "" }}>
+
                           {addedToList ? "Added!" : "Add to list"}
-                        </button>
+                        </div>}
 
                       </div>
 

@@ -3,10 +3,11 @@ import { FunctionComponent, useContext, useEffect, useRef, useState } from "reac
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { Media } from "../models/media";
+import { UserProps } from "../utils/commonProps";
 import MediaCard, { MediaCardContext, MediaCardProps } from "./card";
 
 
-const TrendingMovies: FunctionComponent = () => {
+const TrendingMovies: FunctionComponent<UserProps> = ({isLoggedIn}) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
@@ -20,14 +21,14 @@ const TrendingMovies: FunctionComponent = () => {
             .then(data => {
                 setTrendingResult(data.results);
             });
-    }, [trendingResult])
+    }, [])
 
     const handleInfoClick = (mediaId: number) => {
         if (selectedMovieId === mediaId) {
-          setMediaInfo(!mediaInfo);
+            setMediaInfo(!mediaInfo);
         } else {
-          setSelectedMovieId(mediaId);
-          setMediaInfo(true);
+            setSelectedMovieId(mediaId);
+            setMediaInfo(true);
         }
     };
 
@@ -42,11 +43,10 @@ const TrendingMovies: FunctionComponent = () => {
                     width={30}
                     height={30}
                     alt='summary icon'
-                    onClick={(e) => { handleInfoClick(media.id)}}
+                    onClick={(e) => { handleInfoClick(media.id) }}
                 />
 
                 <div className="trending-card-content-bottom">
-
                     <div className="trending-card-content-left">
                         {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
 
@@ -67,14 +67,14 @@ const TrendingMovies: FunctionComponent = () => {
                             <p>{media.vote_average?.toPrecision(2)} rating</p>
                         </div>
                     </div>
-                    <div className="trending-card-content-right">
+                    {isLoggedIn && <div className="add-button">
                         <Image
                             src='/icons/add-icon.svg'
                             width={30}
                             height={30}
                             alt='add icon'
                         />
-                    </div>
+                    </div>}
                 </div>
             </div>
             {mediaInfo && selectedMovieId === media.id && (

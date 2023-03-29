@@ -144,13 +144,6 @@ main {
   z-index: 4;
 }
 
-.card-content h3 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
 .media-year {
   font-size: 1.2rem;
 }
@@ -287,11 +280,18 @@ main {
   border-radius: 50px;
   background-color: rgb(40, 40, 40);
   border: none;
+  cursor: pointer;
 }
 
 .searchPageContainer form button {
   font-size: 20px;
   padding: 10px;
+}
+
+.searchPageContainer h2 {
+  font-size: 2rem;
+  margin: 20px 15px;
+  align-self: flex-start;
 }
 
 .searchPageContainer {
@@ -304,6 +304,83 @@ main {
 
 .searchPageContainer .card:hover {
   transform: scale(1.1);
+}
+
+.search-card {
+  border-radius: 30px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.search-card:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  border-radius: 15px;
+}
+
+.search-card-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px;
+  height: 80%;
+  z-index: 2;
+}
+
+.search-card-top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.search-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.search-card-content-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.search-card-content-left * {
+  margin: 0;
+}
+
+.search-card-content-left h3 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.search-result-div {
+  padding: 0 15px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+}
+
+.rating-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: black;
+  border-radius: 30px;
+  height: 20px;
+  width: 50px;
 }
 
 .trending-card {
@@ -356,7 +433,7 @@ main {
   font-size: 1.3rem;
 }
 
-.trending-card-content-right {
+.add-button {
   position: relative;
   display: flex;
   align-items: center;
@@ -706,7 +783,7 @@ main {
     width: 100px;
     transition: width 0.3s ease-in-out;
   }
-  
+
   .searchPageContainer form input:focus {
     outline: none;
     width: 220px;
@@ -722,6 +799,10 @@ main {
     font-size: 15px;
     padding: 5px;
     text-align: center;
+  }
+
+  .search-result-div {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .trending-card {

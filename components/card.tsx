@@ -13,6 +13,7 @@ export type MediaCardProps = {
     mediaInfo?: boolean;
     setMediaInfo?: any;
     selectedMovieId?: number | null;
+    isLoggedIn: boolean;
 };
 
 export const MediaCardContext = createContext({ height: 200, width: 100, page: '' });
@@ -26,7 +27,8 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
         onMouseLeave,
         style,
         setMediaInfo,
-        selectedMovieId
+        selectedMovieId,
+        isLoggedIn
     } = props;
     const { height, width, page } = useContext(MediaCardContext);
 
@@ -46,39 +48,45 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                     onMouseLeave={onMouseLeave}
                     style={style}
                 >
-                    <div className="trending-card-content">
-                        <div className="card-title-div">
-
-                            {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
-
-                            {selectedMovieId === media.id &&
-                                <Image className="info-icon"
-                                    src='icons/info.svg'
-                                    width={20}
-                                    height={20}
-                                    alt='summary icon'
-                                    onClick={(e) => { handleInfoClick(media.id, e) }}
+                    <div className="search-card-content">
+                        <div className="search-card-top">
+                            <div className="rating-div">
+                                <Image
+                                    src='/icons/star.svg'
+                                    height={12}
+                                    width={12}
+                                    alt='star icon'
                                 />
-                            }
-
+                                <p>{media.vote_average?.toPrecision(2)}</p>
+                            </div>
+                            <Image className="info-icon"
+                                src='icons/info.svg'
+                                width={20}
+                                height={20}
+                                alt='summary icon'
+                                onClick={(e) => { handleInfoClick(media.id, e) }}
+                            />
                         </div>
 
-                        <Image
-                            src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
-                            height={height}
-                            width={width}
-                            alt={"media image"}
-                            className='media-image'
-                        />
-
-                        <div className="media-year">
-                            {media.media_type === "movie" ?
-                                <p>{new Date(`${media.release_date}`).getFullYear()}</p>
-                                : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
-                            }
+                        <div className="search-card-bottom">
+                            <div className="search-card-content-left">
+                                {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                                <div className="media-year">
+                                    {media.media_type === "movie" ?
+                                        <p>{new Date(`${media.release_date}`).getFullYear()}</p>
+                                        : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
+                                    }
+                                </div>
+                            </div>
+                            {isLoggedIn && <div className="add-button">
+                                <Image
+                                    src='/icons/add-icon.svg'
+                                    width={30}
+                                    height={30}
+                                    alt='add icon'
+                                />
+                            </div>}
                         </div>
-
-                        {children}
 
                     </div>
                 </div>}
