@@ -157,28 +157,6 @@ main {
   justify-content: center;
 }
 
-.info-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1.8rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 30px;
-  width: 500px;
-  height: 320px;
-  overflow: scroll;
-  text-overflow: ellipsis;
-  white-space: pre-wrap;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  /* Limit the number of lines displayed */
-  -webkit-box-orient: vertical;
-  max-height: calc(1.2 * 5);
-  /* 1.2 is the line-height, 5 is the number of lines */
-}
-
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -194,8 +172,6 @@ main {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
-
-
 
 .info-icon {
   align-self: end;
@@ -307,9 +283,20 @@ main {
 }
 
 .search-card {
+  position: relative;
   border-radius: 30px;
   background-size: cover;
   background-repeat: no-repeat;
+  transition: all 0.3s;
+  z-index: 1;
+  height: 300px;
+  width: 300px;
+}
+
+.expanded-search-card {
+  position: relative;
+  transform: scale(1.5);
+  z-index: 100;
 }
 
 .search-card:hover::after {
@@ -360,7 +347,7 @@ main {
 }
 
 .search-card-content-left h3 {
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   margin: 0;
 }
 
@@ -431,6 +418,26 @@ main {
 
 .trending-card-content-left p {
   font-size: 1.3rem;
+}
+
+.trending-card .info-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.8rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 30px;
+  width: 500px;
+  height: 320px;
+  overflow: scroll;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  max-height: calc(1.2 * 5);
 }
 
 .add-button {

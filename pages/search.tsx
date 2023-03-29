@@ -52,7 +52,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setSelectedMovieId((prevSelectedMovieId) =>
       prevSelectedMovieId === mediaId ? null : mediaId
     );
-    setBlur((prevBlur) => !prevBlur);
+    // setBlur((prevBlur) => !prevBlur);
 
     const firstListName = lists[0]?.name || '';
     changeState({ listName: firstListName, media: {} });
@@ -132,7 +132,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         {!isLoggedIn && <p>{message}</p>}
 
         <h2>Trending movies & series</h2>
-        <TrendingMovies isLoggedIn={isLoggedIn} />
+        <TrendingMovies isLoggedIn={isLoggedIn} lists={lists}/>
 
         <h2>Search results</h2>
         <div className="search-result-div">
@@ -148,11 +148,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                 <MediaCard
                   key={media.id}
                   media={media}
-                  className='search-card'
+                  className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
                   onClick={() => handleCardClick(media.id)}
-                  onMouseEnter={() => setIsHovered(media.id)}
-                  onMouseLeave={() => setIsHovered(null)}
-                  style={openSelectedStyle(styleParams, media)}
                   setMediaInfo={setMediaInfo}
                   selectedMovieId={selectedMovieId}
                   isLoggedIn={isLoggedIn}
@@ -194,11 +191,10 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                     </div>
                   )}
 
-                  {mediaInfo && selectedMovieId === media.id && (
+                  {selectedMovieId === media.id &&
                     <div className="info-text">
                       {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-                    </div>
-                  )}
+                    </div>}
 
                 </MediaCard>
               </MediaCardContext.Provider>

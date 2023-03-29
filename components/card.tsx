@@ -46,7 +46,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                     onClick={onClick}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
-                    style={style}
+                    style={{backgroundImage:`url(https://www.themoviedb.org/t/p/original${media.poster_path})`}}
                 >
                     <div className="search-card-content">
                         <div className="search-card-top">
@@ -87,7 +87,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                                 />
                             </div>}
                         </div>
-
+                        {children}
                     </div>
                 </div>}
         </>

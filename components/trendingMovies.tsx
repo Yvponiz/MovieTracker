@@ -3,11 +3,16 @@ import { FunctionComponent, useContext, useEffect, useRef, useState } from "reac
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { Media } from "../models/media";
+import { UserList } from "../models/user";
 import { UserProps } from "../utils/commonProps";
-import MediaCard, { MediaCardContext, MediaCardProps } from "./card";
+import { MediaCardContext } from "./card";
 
+type Props ={
+    isLoggedIn: boolean;
+    lists: UserList[];
+}
 
-const TrendingMovies: FunctionComponent<UserProps> = ({isLoggedIn}) => {
+const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
@@ -34,7 +39,8 @@ const TrendingMovies: FunctionComponent<UserProps> = ({isLoggedIn}) => {
 
     const TrendingItems = trendingResult?.slice(0, 5).map((media: Media) => (
         <div
-            className="trending-card" key={media.id}
+            key={media.id}
+            className='trending-card'
             style={{ backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
         >
             <div className="trending-card-content">
