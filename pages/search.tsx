@@ -8,6 +8,7 @@ import { UserList } from "../models/user";
 import MediaCard from "../components/card";
 import { SearchForm } from "../components/searchForm";
 import TrendingMovies from "../components/trendingMovies";
+import PopularMovies from "../components/popularMovies";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -135,6 +136,11 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         <h2>Trending movies & series</h2>
         <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
+
+        <h2>What&apos;s Popular </h2>
+        <div className="popular-div">
+          <PopularMovies isLoggedIn={isLoggedIn} lists={lists} />
+        </div>
 
         {searchResult.length > 0 && <h2>Search results</h2>}
         <div className="search-result-div" ref={resultRef}>

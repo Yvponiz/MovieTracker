@@ -15,6 +15,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
     const carousel = useRef(null);
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
     useEffect(() => {
         fetch(`/api/getTrending`)
@@ -33,6 +34,12 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
         setMediaInfo(false);
     };
 
+    const handleInfoClick = (mediaId: number, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setSelectedMovieId(selectedMovieId === mediaId ? null : mediaId);
+        setMediaInfo(true);
+    }
+
     const TrendingItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <div
             key={media.id}
@@ -47,6 +54,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                     alt='summary icon'
                     onMouseEnter={() => handleInfoMouseEnter(media.id)}
                     onMouseLeave={() => handleInfoMouseLeave()}
+                    onClick={isMobile ? (e) => { handleInfoClick(media.id, e) } : undefined}
                 />
 
                 <div className="trending-card-content-bottom">
@@ -109,11 +117,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 paddingLeft={10}
                 paddingRight={70}
                 autoWidth
-                controlsStrategy="alternate"
                 animationType="fadeout"
-                // autoPlay
-                autoPlayStrategy="none"
-                autoPlayInterval={5000}
             />
         </div>
     )
