@@ -9,6 +9,7 @@ body {
   margin: 0;
   font-family: 'Quicksand', sans-serif;
   color: white;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
   background-color: var(--bg-color);
 }
 
@@ -158,19 +159,7 @@ main {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #888;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+  width: none;
 }
 
 .info-icon {
@@ -278,8 +267,13 @@ main {
   min-height: 100vh;
 }
 
-.searchPageContainer .card:hover {
-  transform: scale(1.1);
+.search-result-div {
+  padding: 0 15px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 30px;
+  align-content: center;
 }
 
 .search-card {
@@ -287,7 +281,7 @@ main {
   border-radius: 30px;
   background-size: cover;
   background-repeat: no-repeat;
-  transition: all 0.3s;
+  transition: transform 0.2s ease-in-out, all 0.3s;
   z-index: 1;
   height: 300px;
   width: 300px;
@@ -299,6 +293,14 @@ main {
   z-index: 100;
 }
 
+.expanded-search-card:nth-child(5n + 1) {
+  transform: scale(1.5) translateX(30%);
+}
+
+.expanded-search-card:nth-child(5n) {
+  transform: scale(1.5) translateX(-30%);
+}
+
 .search-card:hover::after {
   content: '';
   position: absolute;
@@ -308,7 +310,7 @@ main {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
-  border-radius: 15px;
+  border-radius: 30px;
 }
 
 .search-card-content {
@@ -352,19 +354,9 @@ main {
 }
 
 .search-card .info-text {
-  font-size: 1.2rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 30px;
+  font-size: 1rem;
   width: 220px;
   height: 220px;
-  overflow: scroll;
-  text-overflow: ellipsis;
-  white-space: pre-wrap;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  max-height: calc(1.2 * 5);
 }
 
 #add-to-list button {
@@ -377,14 +369,6 @@ main {
   height: 40px;
   border: none;
   border-radius: 10px;
-}
-
-.search-result-div {
-  padding: 0 15px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 30px;
 }
 
 .rating-div {
@@ -449,16 +433,22 @@ main {
 }
 
 .trending-card .info-text {
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  width: 500px;
+  height: 320px;
+}
+
+.info-text {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.8rem;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 30px;
-  width: 500px;
-  height: 320px;
+  text-align: center;
+  scrollbar-width: none;
   overflow: scroll;
   text-overflow: ellipsis;
   white-space: pre-wrap;
@@ -812,16 +802,13 @@ main {
   .searchPageContainer form input {
     font-size: 16px;
     padding: 5px;
-  }
-
-  .searchPageContainer form input {
     width: 100px;
     transition: width 0.3s ease-in-out;
   }
 
   .searchPageContainer form input:focus {
     outline: none;
-    width: 220px;
+    width: 180px;
     transition: all 0.3s ease-in-out;
   }
 
@@ -836,8 +823,42 @@ main {
     text-align: center;
   }
 
+  .searchPageContainer h2 {
+    font-size: 1.5rem;
+  }
+
   .search-result-div {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+
+  .search-card {
+    height: 200px;
+    width: 150px;
+  }
+
+  .search-card-content {
+    margin: 20px;
+    height: 80%;
+    z-index: 2;
+  }
+
+  .search-card-content-left h3 {
+    font-size: 1.2rem;
+  }
+
+  .search-card .info-text {
+    height: 100px;
+    width: 150px;
+    font-size: 2px;
+  }
+
+  .expanded-search-card:nth-child(odd) {
+    transform: scale(1.4) translateX(40%);
+  }
+
+  .expanded-search-card:nth-child(even) {
+    transform: scale(1.4) translateX(-40%);
   }
 
   .trending-card {
@@ -847,6 +868,10 @@ main {
 
   .trending-card-content {
     margin: 13px;
+  }
+
+  .trending-card-content-bottom {
+    padding: 8px 15px;
   }
 
   .trending-card-content-left {
@@ -863,7 +888,7 @@ main {
 
   .trending-card .info-text {
     height: 200px;
-    width: 200px;
+    width: 220px;
     font-size: 1.2rem;
   }
 

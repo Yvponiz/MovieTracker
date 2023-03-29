@@ -3,11 +3,9 @@ import Layout from "../components/layout";
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import { useState, useEffect, FormEvent, SyntheticEvent, useContext } from "react";
 import { Media } from "../models/media";
-import { addMouseMoveEffectToCards } from "../utils/mouseOver";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
-import MediaCard, { MediaCardContext } from "../components/card";
-import { openSelectedStyle } from "../styles/selectedCardStyle";
+import MediaCard from "../components/card";
 import { SearchForm } from "../components/searchForm";
 import TrendingMovies from "../components/trendingMovies";
 
@@ -25,13 +23,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
-  const [cardPosition, setCardPosition] = useState<{ left: number; top: number }>({
-    left: 0,
-    top: 0,
-  });
 
-  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
-  const styleParams = { isMobile: isMobile, selectedMovieId };
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -136,72 +128,55 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         <h2>Trending movies & series</h2>
         <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
 
-        <h2>Search results</h2>
+        {searchResult.length > 0 && <h2>Search results</h2>}
         <div className="search-result-div">
           {searchResult?.map((media: Media) => (
-            <>
-              <MediaCardContext.Provider
-                value={{
-                  height: isMobile ? 170 : selectedMovieId === media.id ? 400 : 160,
-                  width: isMobile ? 130 : selectedMovieId === media.id ? 380 : 140,
-                  page: 'search'
-                }}
-              >
-                <MediaCard
-                  key={media.id}
-                  media={media}
-                  className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
-                  onClick={() => handleCardClick(media.id)}
-                  selectedMovieId={selectedMovieId}
-                  isLoggedIn={isLoggedIn}
-                >
-                  {selectedMovieId === media.id && isLoggedIn && (
-                    <div id="add-to-list">
-                      <div>
-                        <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                          id="lists" name="lists" required
-                          onClick={(e) => handleSelect(e)}
-                        >
-                          {lists.length === 0 ?
-                            <option>No Lists</option>
-                            :
-                            lists?.map((list) =>
-                              <option
-                                key={list.name}
-                                value={list.name}
-                              >
-                                {list.name}
-                              </option>
-                            )
-                          }
-                        </select>
-
-                        {isLoggedIn &&
-                          <button
-                            onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                            style={{ backgroundColor: addedToList ? "green" : "" }}
+            <MediaCard
+              key={media.id}
+              media={media}
+              className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
+              onClick={() => handleCardClick(media.id)}
+              selectedMovieId={selectedMovieId}
+              isLoggedIn={isLoggedIn}
+            >
+              {selectedMovieId === media.id && isLoggedIn && (
+                <div id="add-to-list">
+                  <div>
+                    <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                      id="lists" name="lists" required
+                      onClick={(e) => handleSelect(e)}
+                    >
+                      {lists.length === 0 ?
+                        <option>No Lists</option>
+                        :
+                        lists?.map((list) =>
+                          <option
+                            key={list.name}
+                            value={list.name}
                           >
-                            {addedToList ? "Added!" : "Add to list"}
-                          </button>
-                        }
+                            {list.name}
+                          </option>
+                        )
+                      }
+                    </select>
 
-                      </div>
+                    {isLoggedIn &&
+                      <button
+                        onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                        style={{ backgroundColor: addedToList ? "green" : "" }}
+                      >
+                        {addedToList ? "Added!" : "Add to list"}
+                      </button>
+                    }
+                  </div>
 
-                      {/*If there is an error adding to the list*/}
-                      <div className="list-message">
-                        {showMessageDiv ? <span>{message}</span> : <></>}
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedMovieId === media.id &&
-                    <div className="info-text">
-                      {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-                    </div>}
-
-                </MediaCard>
-              </MediaCardContext.Provider>
-            </>
+                  {/*If there is an error adding to the list*/}
+                  <div className="list-message">
+                    {showMessageDiv ? <span>{message}</span> : <></>}
+                  </div>
+                </div>
+              )}
+            </MediaCard>
           ))}
         </div>
       </div>

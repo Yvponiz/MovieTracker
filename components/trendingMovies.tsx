@@ -1,10 +1,9 @@
 import Image from "next/image";
-import { FunctionComponent, useContext, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { Media } from "../models/media";
 import { UserList } from "../models/user";
-import { MediaCardContext } from "./card";
 
 type Props ={
     isLoggedIn: boolean;
@@ -34,7 +33,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
         }
     };
 
-    const TrendingItems = trendingResult?.slice(0, 5).map((media: Media) => (
+    const TrendingItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <div
             key={media.id}
             className='trending-card'
@@ -80,6 +79,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                     </div>}
                 </div>
             </div>
+
             {mediaInfo && selectedMovieId === media.id && (
                 <div className="info-text">
                     {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}

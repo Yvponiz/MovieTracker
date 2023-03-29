@@ -16,20 +16,17 @@ export type MediaCardProps = {
     isLoggedIn: boolean;
 };
 
-export const MediaCardContext = createContext({ height: 200, width: 100, page: '' });
-
 const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => {
+    const [mediaInfo, setMediaInfo] = useState<boolean>(false);
     const { media,
         className,
         children,
         onClick,
         onMouseEnter,
         onMouseLeave,
-        setMediaInfo,
         selectedMovieId,
         isLoggedIn
     } = props;
-    const { height, width, page } = useContext(MediaCardContext);
 
     const handleInfoClick = (mediaId: number, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -78,6 +75,13 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                                 </div>
                             </div>
                         </div>
+
+                        {mediaInfo && selectedMovieId === media.id &&
+                            <div className="info-text">
+                                {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+                            </div>
+                        }
+
                         {children}
                     </div>
                 </div>}
