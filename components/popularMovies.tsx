@@ -14,13 +14,16 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const carousel = useRef(null);
 
     useEffect(() => {
+        setIsLoading(true);
         fetch(`/api/getPopular`)
             .then(response => response.json())
             .then(data => {
                 setTrendingResult(data.results);
+                setIsLoading(false);
             });
     }, [])
 
@@ -39,7 +42,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
             className='popular-card'
         >
             <div className="popular-card-poster"
-                style={{ backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
             >
                 <div className="media-score">
                     <Image
@@ -57,7 +60,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 <h3>{media.original_title}</h3>
 
                 <div className="media-year">
-                    <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long',  })}</p>
+                    <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
 
                 </div>
 

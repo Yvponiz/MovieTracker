@@ -14,14 +14,17 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const carousel = useRef(null);
     const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
     useEffect(() => {
+        setIsLoading(true);
         fetch(`/api/getTrending`)
             .then(response => response.json())
             .then(data => {
                 setTrendingResult(data.results);
+                setIsLoading(false);
             });
     }, [])
 
@@ -44,7 +47,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
         <div
             key={media.id}
             className='trending-card'
-            style={{ backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+            style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
         >
             <div className="trending-card-content">
                 <Image className="info-icon"

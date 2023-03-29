@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { createContext, CSSProperties, FunctionComponent, useContext, useState } from "react";
+import { CSSProperties, FunctionComponent, useState } from "react";
 import { Media } from "../models/media";
 
 export type MediaCardProps = {
@@ -13,7 +13,8 @@ export type MediaCardProps = {
     mediaInfo?: boolean;
     setMediaInfo?: any;
     selectedMovieId?: number | null;
-    isLoggedIn: boolean;
+    isLoggedIn?: boolean;
+    isLoading?: boolean;
 };
 
 const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => {
@@ -25,7 +26,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
         onMouseEnter,
         onMouseLeave,
         selectedMovieId,
-        isLoggedIn
+        isLoading
     } = props;
 
     const handleInfoClick = (mediaId: number, e: React.MouseEvent) => {
@@ -42,7 +43,8 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                     onClick={onClick}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
-                    style={{ backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                    style={{ 
+                        backgroundImage: isLoading? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
                 >
                     <div className="search-card-content">
                         <div className="search-card-top">

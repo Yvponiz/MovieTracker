@@ -24,6 +24,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
 
@@ -39,9 +40,13 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     fetch(`/api/searchMedia?q=${inputValue}`)
       .then((res) => res.json())
-      .then((data) => setSearchResult(data.results as Media[]));
+      .then((data) => {
+        setSearchResult(data.results as Media[])
+        setIsLoading(false);
+      });
   };
 
   const handleCardClick = (mediaId: number) => {
@@ -145,52 +150,64 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         {searchResult.length > 0 && <h2>Search results</h2>}
         <div className="search-result-div" ref={resultRef}>
           {searchResult?.map((media: Media) => (
-            <MediaCard
-              key={media.id}
-              media={media}
-              className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
-              onClick={() => handleCardClick(media.id)}
-              selectedMovieId={selectedMovieId}
-              isLoggedIn={isLoggedIn}
-            >
-              {selectedMovieId === media.id && isLoggedIn && (
-                <div id="add-to-list">
-                  <div>
-                    <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                      id="lists" name="lists" required
-                      onClick={(e) => handleSelect(e)}
-                    >
-                      {lists.length === 0 ?
-                        <option>No Lists</option>
-                        :
-                        lists?.map((list) =>
-                          <option
-                            key={list.name}
-                            value={list.name}
-                          >
-                            {list.name}
-                          </option>
-                        )
-                      }
-                    </select>
-
-                    {isLoggedIn &&
-                      <button
-                        onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                        style={{ backgroundColor: addedToList ? "green" : "" }}
+            isLoading
+              ? <div className="loading" key={media.id}
+              >
+                Loading...
+                <Image
+                  src='/icons/loading.svg'
+                  height={20}
+                  width={20}
+                  alt='loading icon'
+                />
+              </div>
+              :
+              <MediaCard
+                key={media.id}
+                media={media}
+                className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
+                onClick={() => handleCardClick(media.id)}
+                selectedMovieId={selectedMovieId}
+                isLoading={isLoading}
+              >
+                {selectedMovieId === media.id && isLoggedIn && (
+                  <div id="add-to-list">
+                    <div>
+                      <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
+                        id="lists" name="lists" required
+                        onClick={(e) => handleSelect(e)}
                       >
-                        {addedToList ? "Added!" : "Add to list"}
-                      </button>
-                    }
-                  </div>
+                        {lists.length === 0 ?
+                          <option>No Lists</option>
+                          :
+                          lists?.map((list) =>
+                            <option
+                              key={list.name}
+                              value={list.name}
+                            >
+                              {list.name}
+                            </option>
+                          )
+                        }
+                      </select>
 
-                  {/*If there is an error adding to the list*/}
-                  <div className="list-message">
-                    {showMessageDiv ? <span>{message}</span> : <></>}
+                      {isLoggedIn &&
+                        <button
+                          onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                          style={{ backgroundColor: addedToList ? "green" : "" }}
+                        >
+                          {addedToList ? "Added!" : "Add to list"}
+                        </button>
+                      }
+                    </div>
+
+                    {/*If there is an error adding to the list*/}
+                    <div className="list-message">
+                      {showMessageDiv ? <span>{message}</span> : <></>}
+                    </div>
                   </div>
-                </div>
-              )}
-            </MediaCard>
+                )}
+              </MediaCard>
           ))}
         </div>
       </div>
