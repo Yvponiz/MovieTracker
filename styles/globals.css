@@ -273,7 +273,7 @@ main {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 30px;
-  align-content: center;
+  place-items: center;
 }
 
 .search-card {
@@ -354,7 +354,7 @@ main {
 }
 
 .search-card .info-text {
-  font-size: 1rem;
+  font-size: 0.8rem;
   width: 220px;
   height: 220px;
 }
@@ -446,7 +446,7 @@ main {
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  border-radius: 30px;
+  border-radius: 15px;
   text-align: center;
   scrollbar-width: none;
   overflow: scroll;
@@ -837,6 +837,14 @@ main {
     width: 150px;
   }
 
+  .expanded-search-card:nth-child(odd) {
+    transform: scale(1.4) translateX(40%);
+  }
+
+  .expanded-search-card:nth-child(even) {
+    transform: scale(1.4) translateX(-40%);
+  }
+
   .search-card-content {
     margin: 20px;
     height: 80%;
@@ -853,12 +861,14 @@ main {
     font-size: 2px;
   }
 
-  .expanded-search-card:nth-child(odd) {
-    transform: scale(1.4) translateX(40%);
+  #add-to-list button {
+    height: 30px;
+    border-radius: 5px;
+    font-size: 0.8rem;
   }
-
-  .expanded-search-card:nth-child(even) {
-    transform: scale(1.4) translateX(-40%);
+  
+  #add-to-list select {
+    height: 30px;
   }
 
   .trending-card {

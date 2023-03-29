@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Layout from "../components/layout";
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
-import { useState, useEffect, FormEvent, SyntheticEvent, useContext } from "react";
+import { useState, useEffect, FormEvent, SyntheticEvent, useContext, useRef } from "react";
 import { Media } from "../models/media";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
@@ -23,6 +23,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
 
   const fetchLists = () => {
@@ -111,6 +112,13 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (searchResult.length > 0 && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [searchResult]);
+
+
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className="searchPageContainer">
@@ -129,7 +137,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
 
         {searchResult.length > 0 && <h2>Search results</h2>}
-        <div className="search-result-div">
+        <div className="search-result-div" ref={resultRef}>
           {searchResult?.map((media: Media) => (
             <MediaCard
               key={media.id}

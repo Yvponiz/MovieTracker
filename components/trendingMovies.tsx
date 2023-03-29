@@ -5,7 +5,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import { Media } from "../models/media";
 import { UserList } from "../models/user";
 
-type Props ={
+type Props = {
     isLoggedIn: boolean;
     lists: UserList[];
 }
@@ -24,13 +24,13 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
             });
     }, [])
 
-    const handleInfoClick = (mediaId: number) => {
-        if (selectedMovieId === mediaId) {
-            setMediaInfo(!mediaInfo);
-        } else {
-            setSelectedMovieId(mediaId);
-            setMediaInfo(true);
-        }
+    const handleInfoMouseEnter = (mediaId: number) => {
+        setSelectedMovieId(mediaId);
+        setMediaInfo(true);
+    };
+
+    const handleInfoMouseLeave = () => {
+        setMediaInfo(false);
     };
 
     const TrendingItems = trendingResult?.slice(0, 10).map((media: Media) => (
@@ -45,7 +45,8 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                     width={30}
                     height={30}
                     alt='summary icon'
-                    onClick={(e) => { handleInfoClick(media.id) }}
+                    onMouseEnter={() => handleInfoMouseEnter(media.id)}
+                    onMouseLeave={() => handleInfoMouseLeave()}
                 />
 
                 <div className="trending-card-content-bottom">
