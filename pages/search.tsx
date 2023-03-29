@@ -22,11 +22,13 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-  const [isHovered, setIsHovered] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
-  const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+  const [cardPosition, setCardPosition] = useState<{ left: number; top: number }>({
+    left: 0,
+    top: 0,
+  });
 
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
   const styleParams = { isMobile: isMobile, selectedMovieId };
@@ -52,7 +54,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setSelectedMovieId((prevSelectedMovieId) =>
       prevSelectedMovieId === mediaId ? null : mediaId
     );
-    // setBlur((prevBlur) => !prevBlur);
+    setBlur((prevBlur) => !prevBlur);
 
     const firstListName = lists[0]?.name || '';
     changeState({ listName: firstListName, media: {} });
@@ -132,7 +134,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         {!isLoggedIn && <p>{message}</p>}
 
         <h2>Trending movies & series</h2>
-        <TrendingMovies isLoggedIn={isLoggedIn} lists={lists}/>
+        <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
 
         <h2>Search results</h2>
         <div className="search-result-div">
@@ -150,7 +152,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                   media={media}
                   className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
                   onClick={() => handleCardClick(media.id)}
-                  setMediaInfo={setMediaInfo}
                   selectedMovieId={selectedMovieId}
                   isLoggedIn={isLoggedIn}
                 >
@@ -175,12 +176,14 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                           }
                         </select>
 
-                        {isLoggedIn && <div className="search-card-content-right"
-                          onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                          style={{ backgroundColor: addedToList ? "green" : "" }}>
-
-                          {addedToList ? "Added!" : "Add to list"}
-                        </div>}
+                        {isLoggedIn &&
+                          <button
+                            onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                            style={{ backgroundColor: addedToList ? "green" : "" }}
+                          >
+                            {addedToList ? "Added!" : "Add to list"}
+                          </button>
+                        }
 
                       </div>
 

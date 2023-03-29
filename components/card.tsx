@@ -25,7 +25,6 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
         onClick,
         onMouseEnter,
         onMouseLeave,
-        style,
         setMediaInfo,
         selectedMovieId,
         isLoggedIn
@@ -46,7 +45,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                     onClick={onClick}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
-                    style={{backgroundImage:`url(https://www.themoviedb.org/t/p/original${media.poster_path})`}}
+                    style={{ backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
                 >
                     <div className="search-card-content">
                         <div className="search-card-top">
@@ -78,14 +77,6 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                                     }
                                 </div>
                             </div>
-                            {isLoggedIn && <div className="add-button">
-                                <Image
-                                    src='/icons/add-icon.svg'
-                                    width={30}
-                                    height={30}
-                                    alt='add icon'
-                                />
-                            </div>}
                         </div>
                         {children}
                     </div>
