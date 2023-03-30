@@ -9,6 +9,7 @@ import MediaCard from "../components/card";
 import { SearchForm } from "../components/searchForm";
 import TrendingMovies from "../components/trendingMovies";
 import PopularMovies from "../components/popularMovies";
+import router from "next/router";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -25,8 +26,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const resultRef = useRef<HTMLDivElement>(null);
-
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -41,23 +40,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    fetch(`/api/searchMedia?q=${inputValue}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSearchResult(data.results as Media[])
-        setIsLoading(false);
-      });
-  };
-
-  const handleCardClick = (mediaId: number) => {
-    setSelectedMovieId((prevSelectedMovieId) =>
-      prevSelectedMovieId === mediaId ? null : mediaId
-    );
-    setBlur((prevBlur) => !prevBlur);
-
-    const firstListName = lists[0]?.name || '';
-    changeState({ listName: firstListName, media: {} });
-    setAddedToList(false);
+    router.push(`/results?q=${inputValue}`);
   };
 
   const handleOutsideClick = (e: React.MouseEvent) => {
@@ -118,13 +101,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (searchResult.length > 0 && resultRef.current) {
-      resultRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [searchResult]);
-
-
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className="searchPageContainer">
@@ -145,70 +121,6 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         <h2>What&apos;s Popular </h2>
         <div className="popular-div">
           <PopularMovies isLoggedIn={isLoggedIn} lists={lists} />
-        </div>
-
-        {searchResult.length > 0 && <h2>Search results</h2>}
-        <div className="search-result-div" ref={resultRef}>
-          {searchResult?.map((media: Media) => (
-            isLoading
-              ? <div className="loading" key={media.id}
-              >
-                Loading...
-                <Image
-                  src='/icons/loading.svg'
-                  height={20}
-                  width={20}
-                  alt='loading icon'
-                />
-              </div>
-              :
-              <MediaCard
-                key={media.id}
-                media={media}
-                className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
-                onClick={() => handleCardClick(media.id)}
-                selectedMovieId={selectedMovieId}
-                isLoading={isLoading}
-              >
-                {selectedMovieId === media.id && isLoggedIn && (
-                  <div id="add-to-list">
-                    <div>
-                      <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                        id="lists" name="lists" required
-                        onClick={(e) => handleSelect(e)}
-                      >
-                        {lists.length === 0 ?
-                          <option>No Lists</option>
-                          :
-                          lists?.map((list) =>
-                            <option
-                              key={list.name}
-                              value={list.name}
-                            >
-                              {list.name}
-                            </option>
-                          )
-                        }
-                      </select>
-
-                      {isLoggedIn &&
-                        <button
-                          onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
-                          style={{ backgroundColor: addedToList ? "green" : "" }}
-                        >
-                          {addedToList ? "Added!" : "Add to list"}
-                        </button>
-                      }
-                    </div>
-
-                    {/*If there is an error adding to the list*/}
-                    <div className="list-message">
-                      {showMessageDiv ? <span>{message}</span> : <></>}
-                    </div>
-                  </div>
-                )}
-              </MediaCard>
-          ))}
         </div>
       </div>
     </Layout>

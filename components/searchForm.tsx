@@ -3,7 +3,7 @@ import Image from "next/image";
 export const SearchForm = ({ onSubmit, inputValue, setInputValue }: any): JSX.Element => {
   
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className='search-form'>
       <button type='submit' className="search-icon">
         <Image src='/icons/search.svg'
           height={30}
