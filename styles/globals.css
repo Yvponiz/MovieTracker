@@ -519,23 +519,15 @@ main {
   flex-direction: column;
   justify-content: flex-end;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .trending-card-content {
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   margin: 25px;
   height: 100%;
-}
-
-.trending-card-content-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px 25px;
 }
 
 .trending-card-content-left {
@@ -1183,9 +1175,6 @@ main {
 
   .trending-card-content {
     margin: 13px;
-  }
-
-  .trending-card-content-bottom {
     padding: 8px 15px;
   }
 
@@ -1309,25 +1298,46 @@ main {
   .media-page-wrapper h1 {
     font-size: 1.5rem;
     margin: 10px 40px;
+    text-align: center;
   }
 
   .media-page-wrapper p {
-    font-size: 1.5rem;
+    font-size: 1rem;
+    margin: 0;
   }
 
   .media-page-wrapper h3 {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 
   .media-page-wrapper .rating-div {
     gap: 5px;
-    width: 90px;
-    height: 50px;
+    width: 70px;
+    height: 40px;
     border-radius: 50px;
+    margin: 0;
+  }
+
+  .media-page-poster ul {
+    font-size: 1rem;
+    margin: 10px;
   }
 
   .media-page-info {
     gap: 10px;
+  }
+
+  .media-page-info .search-card-cast li {
+    font-size: 1rem;
+  }
+
+  .media-page-info .search-card-cast h3 {
+    font-size: 1.2rem;
+  }
+
+  .media-page-wrapper .info-text {
+    height: 150px;
+    margin: 5px;
   }
 
 

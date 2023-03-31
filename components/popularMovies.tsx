@@ -16,8 +16,8 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(false);
     const { isLoading, setIsLoading } = useSearch();
-    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
     const carousel = useRef(null);
 
     useEffect(() => {
@@ -29,6 +29,17 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 setIsLoading(false);
             });
     }, [])
+
+    useEffect(() => {
+        const checkIsMobile = () => {
+            setIsMobile(window.innerWidth < 500);
+        };
+        checkIsMobile();
+        window.addEventListener("resize", checkIsMobile);
+        return () => {
+            window.removeEventListener("resize", checkIsMobile);
+        };
+    }, []);
 
     const handleInfoMouseEnter = (mediaId: number) => {
         setSelectedMovieId(mediaId);
