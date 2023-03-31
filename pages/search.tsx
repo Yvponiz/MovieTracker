@@ -19,7 +19,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [lists, setLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
-
+  const [inputValue, setInputValue] = useState<string>("");
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState<boolean>(false);
@@ -41,7 +41,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    router.push(`/results?q=${searchTerm}`);
+    router.push(`/results?q=${inputValue}`);
   };
 
   const handleOutsideClick = (e: React.MouseEvent) => {
@@ -110,8 +110,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         <SearchForm
           onSubmit={handleSubmit}
-          inputValue={searchTerm}
-          setInputValue={searchTerm}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
 
         {!isLoggedIn && <p>{message}</p>}

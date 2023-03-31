@@ -1,4 +1,5 @@
 import Image from "next/image";
+import router from "next/router";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -37,10 +38,14 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
         setMediaInfo(false);
     };
 
+    const handleCardClick = (id: number) => {
+        router.push(`/mediaInfo?id=${id}`);
+    }
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <div
             key={media.id}
             className='popular-card'
+            onClick={ ()=>handleCardClick(media.id)}
         >
             <div className="popular-card-poster"
                 style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}

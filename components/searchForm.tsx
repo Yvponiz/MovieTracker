@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export const SearchForm = ({ onSubmit, inputValue, setInputValue }: any): JSX.Element => {
+export const SearchForm = ({ onSubmit, searchTerm, setSearchTerm }: any): JSX.Element => {
   
   return (
     <form onSubmit={onSubmit} className='search-form'>
@@ -13,8 +13,8 @@ export const SearchForm = ({ onSubmit, inputValue, setInputValue }: any): JSX.El
       <input
         type="text"
         placeholder="Search"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)} />
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)} />
     </form>
   );
 };

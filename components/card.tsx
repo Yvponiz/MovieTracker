@@ -3,7 +3,7 @@ import { CSSProperties, FunctionComponent, useState } from "react";
 import { Credits, Media } from "../models/media";
 
 export type MediaCardProps = {
-    media?: Media;
+    media?: Media | null;
     credits?: Credits[];
     className: string;
     children?: React.ReactNode;

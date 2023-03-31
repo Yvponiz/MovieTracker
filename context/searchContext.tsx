@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, FunctionComponent, useContext, useState } from "react";
 
 type SearchContextType = {
   searchTerm: string;
@@ -17,11 +17,11 @@ export const useSearch = () => {
   return context;
 };
 
-type SearchProviderProps = {
+interface SearchProviderProps  {
   children: React.ReactNode;
 };
 
-export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
+export const SearchProvider: FunctionComponent<SearchProviderProps> = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

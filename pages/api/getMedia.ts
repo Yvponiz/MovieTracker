@@ -9,7 +9,7 @@ export default async function handler(
   res: NextApiResponse<MovieSearchResults>
 ) {
   const key = process.env.API_KEY;
-  const query = req.query.q;
+  const query = req.query.id;
   const response = await fetch(`
   https://api.themoviedb.org/3/movie/${query}?api_key=${key}&language=en-US
   `)

@@ -19,7 +19,10 @@ a {
 }
 
 main {
-  max-width: 916px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
   height: 100vh;
 }
 
@@ -423,6 +426,22 @@ main {
   border-radius: 10px;
   height: 340px;
   width: 180px;
+  cursor: pointer;
+}
+
+.popular-card-poster:hover::after {
+  border-radius: 10px;
+  height: 340px;
+  width: 180px;
+  cursor: pointer;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .popular-card-content-bottom {
@@ -572,6 +591,66 @@ main {
   width: 100px;
   height: 40px;
   padding: 10px;
+}
+
+/*==================== MEDIA INFO ====================*/
+
+.media-page-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 85%;
+  height: 100%;
+  margin: 10px 30px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 25px;
+  padding: 20px;
+}
+
+.media-page-wrapper img {
+  border-radius: 15px;
+}
+
+.media-page-wrapper h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  text-decoration: underline;
+}
+
+.media-page-wrapper h3 {
+  font-size: 2.5rem;
+}
+
+.media-page-wrapper .rating-div {
+  gap: 5px;
+  width: 120px;
+  height: 80px;
+  border-radius: 50px;
+}
+
+.media-page-wrapper p {
+  font-size: 2rem
+}
+
+.media-page-wrapper .info-text {
+  max-width: 800px;
+}
+
+.media-page-poster {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+.media-page-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  height: inherit;
 }
 
 /*==================== LOGIN ====================*/
@@ -1157,7 +1236,7 @@ main {
     margin: 0;
   }
 
-  .list-div .info-text{
+  .list-div .info-text {
     height: 200px;
   }
 
@@ -1171,6 +1250,37 @@ main {
     font-size: medium;
     margin-top: 5px;
   }
+
+  /*MEDIA INFO*/
+  .media-page-wrapper {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .media-page-wrapper h1 {
+    font-size: 1.5rem;
+    margin: 10px 40px;
+  }
+
+  .media-page-wrapper p {
+    font-size: 1.5rem;
+  }
+
+  .media-page-wrapper h3 {
+    font-size: 1.5rem;
+  }
+
+  .media-page-wrapper .rating-div {
+    gap: 5px;
+    width: 90px;
+    height: 50px;
+    border-radius: 50px;
+  }
+
+  .media-page-info {
+    gap: 10px;
+  }
+  
 
   /*LAYOUT*/
   .layout {

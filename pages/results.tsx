@@ -120,7 +120,6 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         setIsLoading(true);
         setSearchTerm(inputValue);
     };
-    // router.push(`/results?q=${inputValue}`);
 
     return (
         <Layout isLoggedIn={isLoggedIn}>
@@ -129,8 +128,8 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
                 <SearchForm
                     onSubmit={handleSubmit}
-                    inputValue={inputValue}
-                    setInputValue={setInputValue}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
                 />
 
                 <h2>Search Results for `{searchTerm}`</h2>
