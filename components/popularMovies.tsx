@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { useSearch } from "../context/searchContext";
 import { Media } from "../models/media";
 import { UserList } from "../models/user";
 
@@ -14,7 +15,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { isLoading, setIsLoading } = useSearch();
     const carousel = useRef(null);
 
     useEffect(() => {

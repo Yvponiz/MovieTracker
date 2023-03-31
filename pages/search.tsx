@@ -10,22 +10,23 @@ import { SearchForm } from "../components/searchForm";
 import TrendingMovies from "../components/trendingMovies";
 import PopularMovies from "../components/popularMovies";
 import router from "next/router";
+import { useSearch } from "../context/searchContext";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
 }
 
 const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
-  const [searchResult, setSearchResult] = useState<Media[]>([]);
   const [lists, setLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
-  const [inputValue, setInputValue] = useState<string>("");
+
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { searchTerm, setSearchTerm, isLoading, setIsLoading } = useSearch();
+
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -40,7 +41,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    router.push(`/results?q=${inputValue}`);
+    router.push(`/results?q=${searchTerm}`);
   };
 
   const handleOutsideClick = (e: React.MouseEvent) => {
@@ -109,8 +110,8 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         <SearchForm
           onSubmit={handleSubmit}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
+          inputValue={searchTerm}
+          setInputValue={searchTerm}
         />
 
         {!isLoggedIn && <p>{message}</p>}

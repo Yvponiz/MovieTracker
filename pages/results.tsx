@@ -7,6 +7,7 @@ import MediaCard from "../components/card";
 import { UserList } from "../models/user";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { SearchForm } from "../components/searchForm";
+import { useSearch } from "../context/searchContext";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
     return commonProps({ req, res })
@@ -14,7 +15,6 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 
 const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     const router = useRouter();
-    const searchTerm = router.query.q;
     const [searchResults, setSearchResults] = useState<Media[]>([]);
     const [creditResults, setCreditResults] = useState<Credits[]>([])
     const [lists, setLists] = useState<UserList[]>([]);
@@ -25,7 +25,8 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     const [inputValue, setInputValue] = useState<string>("");
     const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
     const [blur, setBlur] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { searchTerm, setSearchTerm, isLoading, setIsLoading } = useSearch();
 
     const fetchLists = () => {
         fetch(`/api/getLists?userId=${id}`)
@@ -117,8 +118,9 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        router.push(`/results?q=${inputValue}`);
+        setSearchTerm(inputValue);
     };
+    // router.push(`/results?q=${inputValue}`);
 
     return (
         <Layout isLoggedIn={isLoggedIn}>

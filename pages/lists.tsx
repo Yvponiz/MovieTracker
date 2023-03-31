@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { listCardSelectedStyle } from '../styles/selectedCardStyle';
 import { SearchForm } from '../components/searchForm';
 import router from 'next/router';
+import { useSearch } from '../context/searchContext';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -20,18 +21,17 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [userLists, setUserLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
-  const [inputValue, setInputValue] = useState<string>("");
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState<boolean>(false);
   const [listTitleClick, setListTitleClick] = useState<boolean>(false);
   const [mediaInfo, setMediaInfo] = useState<boolean>(false);
   const [mediaWatchedStatus, setMediaWatchedStatus] = useState<Record<number, boolean>>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { searchTerm, setSearchTerm, isLoading, setIsLoading } = useSearch();
 
   const [blur, setBlur] = useState<boolean>(false);
   const createListRef = useRef<HTMLDivElement>(null);
-  const carousel = useRef(null);
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
   const fetchLists = useCallback(() => {
@@ -175,7 +175,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    router.push(`/results?q=${inputValue}`);
+    router.push(`/results?q=${searchTerm}`);
 };
 
   useEffect(() => {
@@ -223,8 +223,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
             <SearchForm
               onSubmit={handleSubmit}
-              inputValue={inputValue}
-              setInputValue={setInputValue}
+              inputValue={searchTerm}
+              setInputValue={searchTerm}
             />
 
             {userLists.map((userList) => (
