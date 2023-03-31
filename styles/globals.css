@@ -65,9 +65,8 @@ main {
 
 /*==================== CARDS ====================*/
 #cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
   width: calc(100% - 20px);
 }
