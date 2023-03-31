@@ -13,13 +13,13 @@ const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
     return (
         <nav>
             <ul>
-                <li className={router.pathname === '/home' ? 'active' : ''}>
+                <li className={router.pathname === '/' ? 'active' : ''}>
                     <Link href='/'>Home</Link>
                 </li>
                 <li className={router.pathname === '/lists' ? 'active' : ''} >
                     <Link href='/lists'>Lists</Link>
                 </li>
-                <li className={router.pathname === '/search' ? 'active' : ''}>
+                <li className={router.pathname === '/search' || router.pathname.startsWith('/results') ? 'active' : ''}>
                     <Link href='/search'>Search</Link>
                 </li>
                 <li className={router.pathname === '/profile' ? 'active' : ''}>

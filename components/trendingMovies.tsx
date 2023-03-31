@@ -111,6 +111,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
 
     return (
         <div className="trending-carousel">
+            <h2>Trending movies & series</h2>
             <AliceCarousel
                 ref={carousel}
                 items={TrendingItems}

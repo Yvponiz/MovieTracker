@@ -27,10 +27,9 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [listTitleClick, setListTitleClick] = useState<boolean>(false);
   const [mediaInfo, setMediaInfo] = useState<boolean>(false);
   const [mediaWatchedStatus, setMediaWatchedStatus] = useState<Record<number, boolean>>({});
+  const [blur, setBlur] = useState<boolean>(false);
 
   const { searchTerm, setSearchTerm, isLoading, setIsLoading } = useSearch();
-
-  const [blur, setBlur] = useState<boolean>(false);
   const createListRef = useRef<HTMLDivElement>(null);
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
@@ -223,8 +222,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
             <SearchForm
               onSubmit={handleSubmit}
-              inputValue={searchTerm}
-              setInputValue={searchTerm}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
             />
 
             {userLists.map((userList) => (

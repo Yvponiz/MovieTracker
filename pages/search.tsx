@@ -1,25 +1,22 @@
-import Image from "next/image";
 import Layout from "../components/layout";
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
-import { useState, useEffect, FormEvent, SyntheticEvent, useContext, useRef } from "react";
+import { useState, useEffect, FormEvent, SyntheticEvent, useContext, useRef, FunctionComponent } from "react";
 import { Media } from "../models/media";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
-import MediaCard from "../components/card";
 import { SearchForm } from "../components/searchForm";
 import TrendingMovies from "../components/trendingMovies";
 import PopularMovies from "../components/popularMovies";
 import router from "next/router";
-import { useSearch } from "../context/searchContext";
+import { useSearch, SearchProvider  } from "../context/searchContext";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
 }
 
-const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
+const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
   const [lists, setLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
-  const [inputValue, setInputValue] = useState<string>("");
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [addedToList, setAddedToList] = useState<boolean>(false);
@@ -41,7 +38,7 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    router.push(`/results?q=${inputValue}`);
+    router.push(`/results?q=${searchTerm}`);
   };
 
   const handleOutsideClick = (e: React.MouseEvent) => {
@@ -116,16 +113,19 @@ const Search: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
         {!isLoggedIn && <p>{message}</p>}
 
-        <h2>Trending movies & series</h2>
         <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
-
-        <h2>What&apos;s Popular </h2>
-        <div className="popular-div">
-          <PopularMovies isLoggedIn={isLoggedIn} lists={lists} />
-        </div>
+        <PopularMovies isLoggedIn={isLoggedIn} lists={lists} />
       </div>
     </Layout>
   );
 };
 
-export default Search;
+const SearchPage: NextPage<UserProps> = (props) => {
+  return (
+    <SearchProvider>
+      <Search {...props} />
+    </SearchProvider>
+  );
+};
+
+export default SearchPage;

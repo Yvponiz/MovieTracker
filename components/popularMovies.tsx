@@ -17,6 +17,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
     const [mediaInfo, setMediaInfo] = useState<boolean>(false);
     const { isLoading, setIsLoading } = useSearch();
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
     const carousel = useRef(null);
 
     useEffect(() => {
@@ -41,11 +42,12 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     const handleCardClick = (id: number) => {
         router.push(`/mediaInfo?id=${id}`);
     }
+
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <div
             key={media.id}
             className='popular-card'
-            onClick={ ()=>handleCardClick(media.id)}
+            onClick={() => handleCardClick(media.id)}
         >
             <div className="popular-card-poster"
                 style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
@@ -72,7 +74,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
 
             <div className="popular-card-content-bottom">
                 <h3>{media.original_title}</h3>
-                
+
                 <div className="media-year">
                     <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
 
@@ -94,19 +96,22 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
     };
 
     return (
-        <div className="popular-carousel">
-            <AliceCarousel
-                ref={carousel}
-                items={PopularItems}
-                responsive={responsive}
-                mouseTracking
-                animationDuration={800}
-                disableDotsControls
-                disableButtonsControls
-                autoWidth
-                animationType="fadeout"
-                infinite
-            />
+        <div className="popular-div">
+            <h2>What&apos;s Popular </h2>
+            <div className="popular-carousel">
+                <AliceCarousel
+                    ref={carousel}
+                    items={PopularItems}
+                    responsive={responsive}
+                    mouseTracking
+                    animationDuration={800}
+                    disableDotsControls
+                    disableButtonsControls={isMobile}
+                    autoWidth
+                    animationType="fadeout"
+                    infinite
+                />
+            </div>
         </div>
     )
 }

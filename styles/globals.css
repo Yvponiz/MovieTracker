@@ -39,6 +39,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
 .container main {
@@ -48,6 +49,7 @@ main {
   align-items: center;
   font-size: larger;
   font-weight: 900;
+  padding: 0;
 }
 
 .greet {
@@ -265,11 +267,7 @@ main {
   padding: 10px;
 }
 
-.searchPageContainer h2 {
-  font-size: 2rem;
-  margin: 20px 45px;
-  align-self: flex-start;
-}
+
 
 .search-results-page {
   display: flex;
@@ -417,8 +415,10 @@ main {
   width: 95%;
   padding: 20px;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  background-image: linear-gradient(to right, rgba(40, 40, 40, 0.1), rgba(40, 40, 40, 0), rgba(40, 40, 40, 0.1));
+}
+
+.popular-div h2 {
+  font-size: 2rem;
 }
 
 .popular-card {
@@ -486,10 +486,27 @@ main {
   align-self: flex-end;
 }
 
+.popular-carousel {
+  padding: 25px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  background-image: linear-gradient(to right, rgba(40, 40, 40, 0.1), rgba(40, 40, 40, 0), rgba(40, 40, 40, 0.1));
+}
 
 .popular-carousel li {
   margin-right: 20px;
 }
+
+.popular-carousel h2 {
+  margin: 10px;
+  font-size: 2rem;
+}
+
+.trending-carousel h2 {
+  margin: 10px;
+  font-size: 2rem;
+}
+
 
 .trending-card {
   width: 600px;
@@ -638,7 +655,8 @@ main {
 .media-page-poster {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 20px;
   align-items: center;
   height: 100%;
 }
@@ -650,6 +668,37 @@ main {
   align-items: center;
   gap: 30px;
   height: inherit;
+}
+
+.media-page-info .search-card-cast {
+  width: 100%;
+  padding: 15px;
+}
+
+.media-page-info .search-card-cast li {
+  font-size: 1.3rem;
+}
+
+.media-page-info .search-card-cast h3 {
+  font-size: 2rem;
+  margin: 5px;
+}
+
+.media-page-poster ul {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  list-style: none;
+  color: grey;
+  font-size: 1.5rem;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.media-page-poster p {
+  font-size: 1.3rem;
+  text-align: center;
 }
 
 /*==================== LOGIN ====================*/
@@ -827,6 +876,14 @@ main {
   color: red;
 }
 
+.list-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .list-page {
   display: flex;
   flex-direction: column;
@@ -937,16 +994,12 @@ main {
     padding: 20px;
   }
 
-  .container {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
-
   .container main {
     font-size: medium;
     font-weight: normal;
     text-align: center;
+    justify-self: flex-start;
+    width: 100%;
   }
 
   .greet {
@@ -960,8 +1013,8 @@ main {
   }
 
   #cards .card {
-    height: 200px;
-    width: 250px;
+    height: 120px;
+    width: 170px;
   }
 
   .card-content p {
@@ -979,7 +1032,7 @@ main {
     margin: 10px;
   }
 
-  .search-forminput {
+  .search-form input {
     font-size: 16px;
     padding: 5px;
     width: 100px;
@@ -1001,11 +1054,6 @@ main {
     font-size: 15px;
     padding: 5px;
     text-align: center;
-  }
-
-  .searchPageContainer h2 {
-    font-size: 1.3rem;
-    margin: 20px 10px;
   }
 
   .search-card {
@@ -1254,6 +1302,8 @@ main {
   .media-page-wrapper {
     flex-direction: column;
     justify-content: center;
+    margin: 0;
+    width: 100%;
   }
 
   .media-page-wrapper h1 {
@@ -1279,7 +1329,7 @@ main {
   .media-page-info {
     gap: 10px;
   }
-  
+
 
   /*LAYOUT*/
   .layout {
