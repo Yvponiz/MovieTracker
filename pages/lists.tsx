@@ -9,6 +9,8 @@ import commonProps, { UserProps } from '../utils/commonProps';
 import MediaCard from '../components/card';
 import Link from 'next/link';
 import { listCardSelectedStyle } from '../styles/selectedCardStyle';
+import { SearchForm } from '../components/searchForm';
+import router from 'next/router';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -18,11 +20,15 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   const [userLists, setUserLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [showCreateListDiv, setShowCreateListDiv] = useState<boolean>(false);
   const [listTitleClick, setListTitleClick] = useState<boolean>(false);
   const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+  const [mediaWatchedStatus, setMediaWatchedStatus] = useState<Record<number, boolean>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [blur, setBlur] = useState<boolean>(false);
   const createListRef = useRef<HTMLDivElement>(null);
   const carousel = useRef(null);
@@ -121,10 +127,18 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const handleCheckboxChange = (
     event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; },
-    state: { watched: boolean, media: Media, listName: string }
+    watched: boolean,
+    media: Media,
+    listName: string
   ) => {
+    const updateData = {
+      watched,
+      media,
+      listName
+    };
+
     fetch(`/api/updateWatched?userId=${id}`, {
-      body: JSON.stringify(state),
+      body: JSON.stringify(updateData),
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -147,9 +161,22 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     setBlur((prevBlur) => !prevBlur);
   };
 
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if (selectedMovieId !== null) {
+      setSelectedMovieId(null);
+      setBlur(false);
+    }
+  };
+
   const handleCheckClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   }
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    router.push(`/results?q=${inputValue}`);
+};
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -177,32 +204,47 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   return (
     <Layout isLoggedIn={isLoggedIn}>
+      {blur && <div className="blur" onClick={handleOutsideClick}></div>}
+
       <div className='list-page-wrapper'>
         {!isLoggedIn ? <p>{message}</p>
           :
           <div className='list-page'>
-            {userLists.length === 0 ?
+
+            {userLists.length === 0 &&
               <div className='no-list'>
                 <p>{message}</p>
-              </div> : <></>}
+              </div>
+            }
+
             <div className='submit-button' onClick={handleShowCreateList}>
               <button className='list-button'>Create List</button>
             </div>
 
+            <SearchForm
+              onSubmit={handleSubmit}
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+            />
+
             {userLists.map((userList) => (
               <div className='list-div' key={userList.name}>
-
                 <div className='list-name' title='Click to delete list!' onClick={(e) => handleTitleClick(e)}>
                   <h2>{userList.name}</h2>
-                  {listTitleClick && <button
-                    onClick={() => handleDeleteList({ listName: userList.name })}
-                    title='Delete list'
-                  >X
-                  </button>}
+                  {listTitleClick &&
+                    <button
+                      onClick={() => handleDeleteList({ listName: userList.name })}
+                      title='Delete list'
+                    >X </button>}
+                  {userList.items.length === 0 &&
+                    <div className='no-list'>
+                      <span>List empty</span>
+                    </div>
+                  }
                 </div>
 
                 <div className='list-div-items'>
-                  {userList.items.length > 0 ? (
+                  {userList.items.length > 0 && (
                     userList.items.map(media => (
                       <MediaCard key={media.id} media={media}
                         style={listCardSelectedStyle({ isMobile: isMobile, selectedMovieId, watched: media.watched }, media.id)}
@@ -221,9 +263,11 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                           </button>
                         }
 
-                        <input type='checkbox' checked={media.watched ? true : false}
-                          onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }}
-                          onClick={(e) => { handleCheckClick(e) }}
+                        <input
+                          type="checkbox"
+                          checked={mediaWatchedStatus.hasOwnProperty(media.id) ? mediaWatchedStatus[media.id] : media.watched}
+                          onChange={(e) => { handleCheckboxChange(e, e.target.checked, media, userList.name); }}
+                          onClick={(e) => { handleCheckClick(e); }}
                         />
 
                         {mediaInfo && selectedMovieId === media.id && (
@@ -234,16 +278,10 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
                       </MediaCard>
                     ))
-                  ) : (
-                    <div className='no-list'>
-                      <span>List empty</span>
-                      <Link href='/search'>Search</Link>
-                    </div>
                   )}
                 </div>
               </div>
             ))}
-
           </div>}
 
         {showCreateListDiv &&

@@ -82,7 +82,7 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         }));
     };
 
-    const handleAddToListClick = (e: React.MouseEvent, state: { listName: string, media: Media }) => {
+    const handleAddToListClick = (e: React.MouseEvent, state: { listName: string, media: Media, credits: Credits[] }) => {
         e.stopPropagation();
         fetchLists();
 
@@ -90,7 +90,8 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             {
                 body: JSON.stringify({
                     listName: state.listName,
-                    media: state.media
+                    media: state.media,
+                    credits: state.credits
                 }),
                 method: "POST",
                 headers: {
@@ -165,7 +166,7 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                                         </select>
 
                                         <button
-                                            onClick={(e) => { handleAddToListClick(e, { ...state, media }) }}
+                                            onClick={(e) => { handleAddToListClick(e, { ...state, media, credits: creditResults }) }}
                                             style={{ backgroundColor: addedToList ? "green" : "" }}
                                         >
                                             {addedToList ? "Added!" : "Add to list"}
