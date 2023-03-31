@@ -175,92 +175,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
   }, [createListRef, userLists]);
 
-  const responsive = {
-    0: { items: 1 },
-    568: { items: 4 },
-    1024: { items: 4 },
-  };
-
-  const ListItems = userLists?.map(userList => {
-    const MediaItems = userList?.items.map(media => (
-      <MediaCard key={media.id} media={media}
-        style={listCardSelectedStyle({ isMobile: isMobile, selectedMovieId, watched: media.watched }, media.id)}
-        onClick={() => handleCardClick(media.id)}
-        setMediaInfo={setMediaInfo}
-        selectedMovieId={selectedMovieId}
-        className=''
-        isLoggedIn={isLoggedIn}
-      >
-        {selectedMovieId === media.id && <button
-          onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}
-        >
-          Remove
-        </button>}
-
-        <input type='checkbox' checked={media.watched ? true : false}
-          onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }}
-          onClick={(e) => { handleCheckClick(e) }}
-        />
-
-        {mediaInfo && selectedMovieId === media.id && (
-          <div className="info-text">
-            {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-          </div>
-        )}
-
-      </MediaCard>
-    ));
-
-    return (
-
-      <div className='list-div' key={userList.name}>
-        <div className='list-name' title='Click to delete list!' onClick={(e) => handleTitleClick(e)}>
-          <h2>{userList.name}</h2>
-          {listTitleClick && <button
-            onClick={() => handleDeleteList({ listName: userList.name })}
-            title='Delete list'
-          >X
-          </button>}
-        </div>
-        <div className='list-carousel'>
-          {userList.items.length > 0
-            ?
-            <AliceCarousel
-              ref={carousel}
-              items={MediaItems}
-              responsive={responsive}
-              mouseTracking
-              animationDuration={800}
-              paddingLeft={50}
-              paddingRight={50}
-              disableDotsControls
-              infinite
-              controlsStrategy="alternate"
-            />
-            :
-            <div className='no-list'>
-              <span>List empty</span>
-              <Link href='/search'>Search</Link>
-            </div>
-          }
-        </div>
-      </div>
-    );
-  });
-
-  /*const ImageRows = [];
-  for (let i = 0; i < ImageItems.length; i += 2) {
-    ImageRows.push(ImageItems.slice(i, i + 2));
-  }*/
-
-  /*const ImageRows = useMemo(() => {
-  const rows = [];
-  for (let i = 0; i < ImageItems.length; i += 2) {
-    rows.push(ImageItems.slice(i, i + 2));
-  }
-  return rows;
-}, [ImageItems]);*/
-
   return (
     <Layout isLoggedIn={isLoggedIn}>
       <div className='list-page-wrapper'>
@@ -275,7 +189,61 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               <button className='list-button'>Create List</button>
             </div>
 
-            {ListItems}
+            {userLists.map((userList) => (
+              <div className='list-div' key={userList.name}>
+
+                <div className='list-name' title='Click to delete list!' onClick={(e) => handleTitleClick(e)}>
+                  <h2>{userList.name}</h2>
+                  {listTitleClick && <button
+                    onClick={() => handleDeleteList({ listName: userList.name })}
+                    title='Delete list'
+                  >X
+                  </button>}
+                </div>
+
+                <div className='list-div-items'>
+                  {userList.items.length > 0 ? (
+                    userList.items.map(media => (
+                      <MediaCard key={media.id} media={media}
+                        style={listCardSelectedStyle({ isMobile: isMobile, selectedMovieId, watched: media.watched }, media.id)}
+                        onClick={() => handleCardClick(media.id)}
+                        setMediaInfo={setMediaInfo}
+                        selectedMovieId={selectedMovieId}
+                        className={`search-card${selectedMovieId === media.id ? " expanded-search-card" : ""}`}
+                        isLoggedIn={isLoggedIn}
+                      >
+                        {selectedMovieId === media.id &&
+                          <button
+                            onClick={(e) => { handleRemoveFromList(e, { ...state, listName: userList.name, media }) }}
+                            className='remove-list-button'
+                          >
+                            Remove
+                          </button>
+                        }
+
+                        <input type='checkbox' checked={media.watched ? true : false}
+                          onChange={(e) => { handleCheckboxChange(e, { ...state, listName: userList.name, watched: e.target.checked, media }) }}
+                          onClick={(e) => { handleCheckClick(e) }}
+                        />
+
+                        {mediaInfo && selectedMovieId === media.id && (
+                          <div className="info-text">
+                            {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+                          </div>
+                        )}
+
+                      </MediaCard>
+                    ))
+                  ) : (
+                    <div className='no-list'>
+                      <span>List empty</span>
+                      <Link href='/search'>Search</Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
           </div>}
 
         {showCreateListDiv &&

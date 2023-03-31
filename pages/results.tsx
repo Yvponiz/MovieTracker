@@ -27,6 +27,16 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     const [blur, setBlur] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const fetchLists = () => {
+        fetch(`/api/getLists?userId=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    setLists(data.lists);
+                }
+            });
+    };
+
     useEffect(() => {
         if (searchTerm) {
             fetch(`/api/searchMedia?q=${searchTerm}`)
@@ -39,15 +49,11 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         }
     }, [searchTerm]);
 
-    const fetchLists = () => {
-        fetch(`/api/getLists?userId=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    setLists(data.lists);
-                }
-            });
-    };
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchLists();
+        }
+    }, [])
 
     const handleCardClick = (mediaId: number) => {
         setSelectedMovieId((prevSelectedMovieId) =>
