@@ -114,7 +114,7 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
 
     return (
-        <Layout>
+        <Layout isLoggedIn={isLoggedIn}>
             <div className="search-results-page">
                 {blur && <div className="blur" onClick={handleOutsideClick}></div>}
 

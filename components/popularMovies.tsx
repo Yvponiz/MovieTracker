@@ -44,6 +44,15 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
             <div className="popular-card-poster"
                 style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
             >
+                {isLoggedIn && <div className="add-button">
+                    <Image
+                        src='/icons/add-icon.svg'
+                        width={30}
+                        height={30}
+                        alt='add icon'
+                    />
+                </div>}
+
                 <div className="media-score">
                     <Image
                         src='/icons/imdb-logo.svg'
@@ -56,22 +65,12 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
             </div>
 
             <div className="popular-card-content-bottom">
-
                 <h3>{media.original_title}</h3>
-
+                
                 <div className="media-year">
                     <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
 
                 </div>
-
-                {isLoggedIn && <div className="add-button">
-                    <Image
-                        src='/icons/add-icon.svg'
-                        width={30}
-                        height={30}
-                        alt='add icon'
-                    />
-                </div>}
             </div>
 
             {mediaInfo && selectedMovieId === media.id && (

@@ -305,7 +305,7 @@ main {
   z-index: 100;
 }
 
-.expanded-search-card .search-card-poster{
+.expanded-search-card .search-card-poster {
   height: 400px;
   width: 300px;
 }
@@ -351,15 +351,16 @@ main {
   width: 100%;
 }
 
-.search-card-cast ul{
+.search-card-cast ul {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: center;
   list-style: none;
   padding: 0;
   color: grey;
 }
 
-.search-card-cast h3{
+.search-card-cast h3 {
   font-size: 1rem;
 }
 
@@ -445,6 +446,9 @@ main {
 }
 
 .popular-card-poster {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: relative;
   background-size: cover;
   background-repeat: no-repeat;
@@ -453,6 +457,14 @@ main {
   height: 240px;
   width: 180px;
 }
+
+.popular-card .add-button {
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+  align-self: flex-end;
+}
+
 
 .popular-carousel li {
   margin-right: 20px;
@@ -905,38 +917,86 @@ main {
     margin: 20px 10px;
   }
 
-  .search-result-div {
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
+  .search-card {
+    height: 150px;
+    width: 300px;
   }
 
-  .search-card {
+  .expanded-search-card {
+    position: relative;
+    height: 300px;
+    background-color: rgba(40, 40, 40, 0.9);
+    z-index: 100;
+  }
+
+  .expanded-search-card .search-card-poster {
     height: 200px;
-    width: 150px;
+    width: 130px;
   }
 
   .expanded-search-card:nth-child(odd) {
-    transform: scale(1.4) translateX(40%);
+    transform: scale(1.2);
   }
 
   .expanded-search-card:nth-child(even) {
-    transform: scale(1.4) translateX(-40%);
+    transform: scale(1.2);
   }
 
   .search-card-content {
-    margin: 20px;
-    height: 80%;
-    z-index: 2;
+    margin-left: 10px;
   }
 
-  .search-card-content-left h3 {
+  .search-card-content .media-year p {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .search-card-content-top h3 {
+    font-size: 1rem;
+  }
+
+  .search-card-content-top .rating-div {
+    font-size: 1.0rem;
+  }
+
+  .search-results-page {
+    padding: 0;
+    margin: 0 40px;
+  }
+
+  .search-results-page h2 {
     font-size: 1.2rem;
+  }
+
+  .search-result-div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .search-card-cast h3 {
+    font-size: 0.8rem;
+    margin: 5px 0 0;
+  }
+
+  .search-card-cast ul {
+    font-size: 0.6rem;
   }
 
   .search-card .info-text {
     height: 100px;
     width: 150px;
-    font-size: 2px;
+    font-size: 0.8rem;
+  }
+
+  .trending-card .add-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .popular-card .add-button {
+    width: 30px;
+    height: 30px;
   }
 
   #add-to-list button {

@@ -27,6 +27,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
         credits,
         isLoading
     } = props;
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
     return (
         <>
@@ -45,8 +46,8 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                         <Image
                             className="search-card-poster"
                             src={`https://www.themoviedb.org/t/p/original${media.poster_path}`}
-                            width={200}
-                            height={300}
+                            width={isMobile ? 100 : 200}
+                            height={isMobile ? 150 : 300}
                             alt={'media poster'}
                         />
                     }
@@ -58,8 +59,8 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                             <div className="rating-div">
                                 <Image
                                     src='/icons/star.svg'
-                                    height={20}
-                                    width={20}
+                                    height={isMobile ? 15 : 20}
+                                    width={isMobile ? 15 : 20}
                                     alt='star icon'
                                 />
                                 <p>{media.vote_average?.toPrecision(2)}</p>
@@ -73,11 +74,13 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                             }
                         </div>
 
-                        <div className="info-text">
-                            {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-                        </div>
+                        {className === "search-card"  && isMobile? <></> :
+                            <div className="info-text">
+                                {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+                            </div>
+                        }
 
-                        {selectedMovieId === media.id &&
+                        {!isMobile && selectedMovieId === media.id &&
                             <div className="search-card-cast">
                                 <h3>Cast</h3>
                                 <ul>
