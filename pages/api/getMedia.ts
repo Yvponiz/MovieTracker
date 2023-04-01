@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as dotenv from "dotenv";
-import { MediaPage } from '../../models/mediaPage';
 
 dotenv.config();
 

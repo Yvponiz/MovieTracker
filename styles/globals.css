@@ -522,12 +522,26 @@ main {
   cursor: pointer;
 }
 
+.trending-card:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  border-radius: 15px;
+}
+
+
 .trending-card-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   margin: 25px;
   height: 100%;
+  z-index: 2;
 }
 
 .trending-card-content-left {
@@ -593,6 +607,28 @@ main {
 
 .trending-carousel li {
   margin-right: 15px;
+}
+
+.trailers-section{
+  width: 95%;
+}
+
+.trailers-section h3{
+  font-size: 2rem;
+}
+
+.trailers-div{
+  display: flex;
+  gap: 20px;
+  overflow: scroll;
+  border-radius: 15px;
+  scrollbar-width: 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+}
+
+.trailers-div iframe {
+  border-radius: 15px;
 }
 
 #lists {
@@ -1195,6 +1231,11 @@ main {
     width: 220px;
     font-size: 1.2rem;
   }
+
+  .trailers-section h3{
+    font-size: 1.3rem;
+  }
+  
 
   .info-icon {
     width: 20px;
