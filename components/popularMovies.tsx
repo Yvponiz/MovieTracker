@@ -114,7 +114,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                     ref={carousel}
                     items={PopularItems}
                     responsive={responsive}
-                    mouseTracking
+                    mouseTracking={isMobile}
                     animationDuration={800}
                     disableDotsControls
                     disableButtonsControls={isMobile}

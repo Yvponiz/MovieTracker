@@ -9,6 +9,7 @@ import TrendingMovies from "../components/trendingMovies";
 import PopularMovies from "../components/popularMovies";
 import router from "next/router";
 import { useSearch, SearchProvider  } from "../context/searchContext";
+import Trailers from "../components/trailers";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -115,6 +116,7 @@ const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
 
         <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
         <PopularMovies isLoggedIn={isLoggedIn} lists={lists} />
+        <Trailers/>
       </div>
     </Layout>
   );

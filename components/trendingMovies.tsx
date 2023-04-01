@@ -105,7 +105,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 ref={carousel}
                 items={TrendingItems}
                 responsive={responsive}
-                mouseTracking
+                mouseTracking={isMobile}
                 animationDuration={800}
                 disableDotsControls
                 disableButtonsControls={isMobile}
@@ -113,6 +113,8 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 paddingRight={70}
                 autoWidth
                 animationType="fadeout"
+                autoPlay
+                autoPlayInterval={2000}
             />
         </div>
     )
