@@ -19,7 +19,7 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
   }, []);
 
   return (
-    <Layout>
+    <Layout isLoggedIn={isLoggedIn}>
       <div className='container'>
         <main>
           {isLoggedIn ? <span className='greet'>Welcome {username}</span> : <></>}
