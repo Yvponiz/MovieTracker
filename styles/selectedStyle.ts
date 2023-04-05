@@ -4,13 +4,13 @@ interface styleParams {
     isMobile: boolean;
     selectedMovieId: number | null;
     watched?: boolean;
+    clicked?: boolean
 }
 
-export const openSelectedStyle = ({ isMobile, selectedMovieId }: styleParams, media: Media): React.CSSProperties => ({
+export const addButtonStyle = ({ isMobile, selectedMovieId }: styleParams, media: Media): React.CSSProperties => ({
     height: isMobile ? "300px" : "300px",
     width: isMobile ? "260px" : "300px",
-    transition: "all 0.1s ease-in-out",
-    backgroundImage: `url(https://www.themoviedb.org/t/p/original${media.poster_path})`
+    transition: "all 0.3s ease-in-out",
 });
 
 export const listCardSelectedStyle = ({ selectedMovieId, isMobile, watched }: styleParams, mediaId: number): React.CSSProperties => ({

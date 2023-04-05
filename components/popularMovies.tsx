@@ -1,21 +1,23 @@
 import Image from "next/image";
+import Link from "next/link";
 import router from "next/router";
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { CSSProperties, FunctionComponent, useEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { useSearch } from "../context/searchContext";
 import { Media } from "../models/media";
 import { UserList } from "../models/user";
+import AddButton from "./addButton";
 
 type Props = {
+    id: string | undefined
     isLoggedIn: boolean;
     lists: UserList[];
 }
 
-const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
+const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
-    const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-    const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+    const [clickedButton, setClickedButton] = useState<number | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const { isLoading, setIsLoading } = useSearch();
     const carousel = useRef(null);
@@ -28,7 +30,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 setTrendingResult(data.results);
                 setIsLoading(false);
             });
-    }, [])
+    }, [setIsLoading])
 
     useEffect(() => {
         const checkIsMobile = () => {
@@ -41,64 +43,91 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
         };
     }, []);
 
-    const handleInfoMouseEnter = (mediaId: number) => {
-        setSelectedMovieId(mediaId);
-        setMediaInfo(true);
-    };
 
-    const handleInfoMouseLeave = () => {
-        setMediaInfo(false);
+    const handleButtonClick = (e: React.MouseEvent, mediaId: number) => {
+        e.stopPropagation();
+        setClickedButton((prevClickedButton) => (prevClickedButton === mediaId ? null : mediaId));
     };
-
-    const handleCardClick = (id: number) => {
-        router.push(`/mediaInfo?id=${id}`);
-    }
 
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
-        <div
-            key={media.id}
-            className='popular-card'
-            onClick={() => handleCardClick(media.id)}
-        >
-            <div className="popular-card-poster"
-                style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
-            >
-                {isLoggedIn && <div className="add-button">
-                    <Image
-                        src='/icons/add-icon.svg'
-                        width={30}
-                        height={30}
-                        alt='add icon'
-                    />
-                </div>}
+        <>
+            {isMobile ? (
+                <Link href={`/mediaInfo?id=${media.id}`} key={media.id}>
+                    <div
+                        className='popular-card'
+                    >
+                        <div className="popular-card-poster"
+                            style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                        >
+                            <div className="media-score">
+                                <Image
+                                    src='/icons/imdb-logo.svg'
+                                    height={30}
+                                    width={40}
+                                    alt='imdb logo'
+                                />
+                                <p>{media.vote_average?.toPrecision(2)}</p>
+                            </div>
+                        </div>
+                        <div className="popular-card-content-bottom">
+                            <h3>{media.original_title}</h3>
 
-                <div className="media-score">
-                    <Image
-                        src='/icons/imdb-logo.svg'
-                        height={30}
-                        width={40}
-                        alt='imdb logo'
-                    />
-                    <p>{media.vote_average?.toPrecision(2)}</p>
-                </div>
-            </div>
+                            <div className="media-year">
+                                <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+                            </div>
+                        </div>
 
-            <div className="popular-card-content-bottom">
-                <h3>{media.original_title}</h3>
+                    </div>
+                </Link>
+            ) : (
+                <div
+                    className='popular-card'
+                >
+                    <div className="popular-card-poster"
+                        style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                    >
+                        {isLoggedIn &&
+                            <div
+                                className={`popular-card-poster add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
+                                onClick={(e) => handleButtonClick(e, media.id)}
+                            >
+                                <AddButton
+                                    id={id}
+                                    media={media}
+                                    imgHeight={30}
+                                    imgWidth={30}
+                                    lists={lists}
+                                    clickedButton={clickedButton}
+                                />
+                            </div>
+                        }
 
-                <div className="media-year">
-                    <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+                        <div className="media-score">
+                            <Image
+                                src='/icons/imdb-logo.svg'
+                                height={30}
+                                width={40}
+                                alt='imdb logo'
+                            />
+                            <p>{media.vote_average?.toPrecision(2)}</p>
+                        </div>
+                    </div>
 
-                </div>
-            </div>
+                    <div className="popular-card-content-bottom">
+                        <Link href={`/mediaInfo?id=${media.id}`}>
+                            <h3>{media.original_title}</h3>
+                        </Link>
 
-            {mediaInfo && selectedMovieId === media.id && (
-                <div className="info-text">
-                    {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
+                        <div className="media-year">
+                            <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+
+                        </div>
+                    </div>
                 </div>
             )}
-        </div>
+        </>
     ))
+
 
     const responsive = {
         0: { items: 1 },

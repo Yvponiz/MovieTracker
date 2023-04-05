@@ -164,7 +164,12 @@ main {
 }
 
 ::-webkit-scrollbar {
-  width: none;
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
 }
 
 .info-icon {
@@ -283,7 +288,9 @@ main {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  grid-gap: 10px;
+  justify-items: center;
+  align-items: center;
 }
 
 .search-card {
@@ -294,7 +301,7 @@ main {
   transition: transform 0.2s ease-in-out, all 0.3s;
   z-index: 1;
   height: 300px;
-  width: 800px;
+  width: 700px;
   cursor: pointer;
 }
 
@@ -339,10 +346,16 @@ main {
 .search-card-content {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
   margin-left: 15px;
   z-index: 2;
+}
+
+.search-card-content .media-year p {
+  margin: 5px;
 }
 
 .search-card-content-top {
@@ -358,40 +371,50 @@ main {
   align-items: center;
   list-style: none;
   padding: 0;
+  margin: 0;
   color: grey;
+  font-size: 0.8rem;
 }
 
 .search-card-cast h3 {
   font-size: 1rem;
+  margin: 0;
 }
 
 .search-card-content-top h3 {
   display: flex;
-  font-size: 2rem;
+  font-size: 1.6rem;
   margin: 15px 0 0;
   align-items: center;
+  cursor: pointer;
 }
 
 .search-card .info-text {
   font-size: 1rem;
   width: 100%;
-  height: 220px;
+  height: 150px;
 }
 
 .search-card .info-text p {
   margin: 0;
 }
 
-#add-to-list button {
-  height: 40px;
-  border: none;
-  border-radius: 10px;
+#add-to-list {
+  display: flex;
+  gap: 30px;
+  align-items: center;
 }
 
 #add-to-list select {
-  height: 40px;
   border: none;
-  border-radius: 10px;
+  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0);
+  margin: 10px;
+  font-size: 1rem;
+}
+
+#add-to-list select option {
+  color: black;
 }
 
 .rating-div {
@@ -425,10 +448,9 @@ main {
   border-radius: 10px;
   height: 340px;
   width: 180px;
-  cursor: pointer;
 }
 
-.popular-card-poster:hover::after {
+.popular-card:hover::after {
   border-radius: 10px;
   height: 340px;
   width: 180px;
@@ -444,15 +466,22 @@ main {
 }
 
 .popular-card-content-bottom {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: flex-start;
+  z-index: 2;
 }
 
 .popular-card h3 {
   font-size: 1rem;
   margin: 5px;
+  cursor: pointer;
+}
+
+.popular-card h3:hover {
+  text-decoration: underline;
 }
 
 .popular-card .media-year p {
@@ -479,10 +508,7 @@ main {
   width: 180px;
 }
 
-.popular-card .add-button {
-  width: 40px;
-  height: 40px;
-  margin: 10px;
+.popular-card-button {
   align-self: flex-end;
 }
 
@@ -519,7 +545,6 @@ main {
   flex-direction: column;
   justify-content: flex-end;
   margin-right: 10px;
-  cursor: pointer;
 }
 
 .trending-card:hover::after {
@@ -549,6 +574,7 @@ main {
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
+  max-width: 400px;
 }
 
 .trending-card-content-left * {
@@ -558,6 +584,10 @@ main {
 .trending-card-content-left h3 {
   font-size: 1.7rem;
   font-weight: 700;
+}
+
+.trending-card-content-left h3:hover {
+  text-decoration: underline;
 }
 
 .trending-card-content-left p {
@@ -577,10 +607,10 @@ main {
 }
 
 .info-text {
-  border-radius: 15px;
   text-align: center;
-  scrollbar-width: none;
-  overflow: scroll;
+  overflow-y: scroll;
+  scrollbar-color: grey black;
+  scrollbar-width: thin;
   text-overflow: ellipsis;
   white-space: pre-wrap;
   display: -webkit-box;
@@ -596,9 +626,50 @@ main {
   justify-content: center;
   border-radius: 50px;
   background-color: rgba(255, 255, 255, 0.2);
-  width: 50px;
-  height: 50px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out, all 0.3s;
+  z-index: 2;
+}
+
+.expanded-add-button {
+  position: relative;
+  z-index: 100;
+  transition: all 0.2s ease-in-out, all 0.3s;
+}
+
+.trending-card-content .add-button {
+  height: 50px;
+  width: 50px;
+}
+
+.popular-card-poster .add-button {
+  width: 30px;
+  height: 30px;
+  align-self: flex-end;
+  margin: 10px;
+}
+
+.results-card-button.add-button {
+  height: 50px;
+  width: 50px;
+  margin: 10px;
+  align-self: flex-end;
+}
+
+.trending-card-content.expanded-add-button {
+  width: 200px;
+}
+
+.popular-card-poster.expanded-add-button {
+  width: 150px;
+}
+
+.results-card-button.expanded-add-button {
+  width: 200px;
+}
+
+.trending-card-content.expanded-add-button img {
+  margin-right: 20px;
 }
 
 .trending-carousel {
@@ -609,17 +680,17 @@ main {
   margin-right: 15px;
 }
 
-.trailers-section{
+.trailers-section {
   width: 95%;
 }
 
-.trailers-section h3{
+.trailers-section h3 {
   font-size: 2rem;
 }
 
-.trailers-div{
+.trailers-div {
   display: flex;
-  gap: 20px;
+  gap: 30px;
   overflow: scroll;
   border-radius: 15px;
   scrollbar-width: 2px;
@@ -627,14 +698,18 @@ main {
   padding: 20px;
 }
 
-.trailers-div iframe {
+.trailer {
+  background-color: rgba(40, 40, 40, 0.3);
   border-radius: 15px;
+  padding: 15px;
 }
 
-#lists {
-  width: 100px;
-  height: 40px;
-  padding: 10px;
+.trailer h3 {
+  margin: 5px;
+}
+
+.trailers-div iframe {
+  border-radius: 15px;
 }
 
 /*==================== MEDIA INFO ====================*/
@@ -843,6 +918,9 @@ main {
 }
 
 .list-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 15px;
   width: 90%;
@@ -890,7 +968,6 @@ main {
 
 .list-name {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
@@ -899,9 +976,10 @@ main {
 }
 
 .list-name button {
-  height: 30px;
-  width: 30px;
-  color: red;
+  height: 25px;
+  width: 25px;
+  display: flex;
+  justify-content: center;
 }
 
 .list-page-wrapper {
@@ -927,6 +1005,7 @@ main {
   border: none;
   border-radius: 30px;
   background-color: rgb(20, 20, 20);
+  cursor: pointer;
 }
 
 .remove-list-button:hover {
@@ -1115,7 +1194,7 @@ main {
 
   .search-card-content .media-year p {
     font-size: 1rem;
-    margin: 0;
+    margin: 5px 0;
   }
 
   .search-card-content-top h3 {
@@ -1161,7 +1240,7 @@ main {
     height: 40px;
   }
 
-  .popular-card .add-button {
+  .popular-card-button {
     width: 30px;
     height: 30px;
   }
@@ -1232,10 +1311,10 @@ main {
     font-size: 1.2rem;
   }
 
-  .trailers-section h3{
+  .trailers-section h3 {
     font-size: 1.3rem;
   }
-  
+
 
   .info-icon {
     width: 20px;
@@ -1299,13 +1378,8 @@ main {
   }
 
   .list-div input[type="checkbox"] {
-    margin-top: 10px;
     height: 15px;
     width: 15px;
-  }
-
-  .list-div h3 {
-    margin: 5px;
   }
 
   .list-div p {
@@ -1315,6 +1389,7 @@ main {
 
   .list-div .info-text {
     height: 200px;
+    text-align: left;
   }
 
   .remove-list-button {

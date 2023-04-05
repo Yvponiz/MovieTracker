@@ -1,17 +1,15 @@
 import type { NextApiRequest, NextApiResponse, NextPage } from 'next'
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import AliceCarousel from 'react-alice-carousel';
-import "react-alice-carousel/lib/alice-carousel.css";
 import Layout from '../components/layout';
 import { Media } from '../models/media';
 import { UserList } from '../models/user';
 import commonProps, { UserProps } from '../utils/commonProps';
 import MediaCard from '../components/card';
-import Link from 'next/link';
-import { listCardSelectedStyle } from '../styles/selectedCardStyle';
 import { SearchForm } from '../components/searchForm';
 import router from 'next/router';
 import { useSearch } from '../context/searchContext';
+import { listCardSelectedStyle } from '../styles/selectedStyle';
+import Image from 'next/image';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
   return commonProps({ req, res })
@@ -116,6 +114,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         if (data.status === "success") {
           setMessage(data.message.join("\n"));
           fetchLists();
+          setBlur(false);
         }
         else if (data.status === "error") {
           setShowMessage(!showMessage);
@@ -173,9 +172,8 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     router.push(`/results?q=${searchTerm}`);
-};
+  };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -229,19 +227,30 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
             {userLists.map((userList) => (
               <div className='list-div' key={userList.name}>
                 <div className='list-name' title='Click to delete list!' onClick={(e) => handleTitleClick(e)}>
+
                   <h2>{userList.name}</h2>
+
                   {listTitleClick &&
                     <button
                       onClick={() => handleDeleteList({ listName: userList.name })}
                       title='Delete list'
-                    >X </button>}
-                  {userList.items.length === 0 &&
-                    <div className='no-list'>
-                      <span>List empty</span>
-                    </div>
+                    >
+                      <Image
+                        src={'/icons/delete-icon.svg'}
+                        height={20}
+                        width={20}
+                        alt={'delete icon'}
+                      />
+                    </button>
                   }
+
                 </div>
 
+                {userList.items.length === 0 &&
+                  <div className='no-list'>
+                    <span>List empty</span>
+                  </div>
+                }
                 <div className='list-div-items'>
                   {userList.items.length > 0 && (
                     userList.items.map(media => (
@@ -262,12 +271,15 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                           </button>
                         }
 
-                        <input
-                          type="checkbox"
-                          checked={mediaWatchedStatus.hasOwnProperty(media.id) ? mediaWatchedStatus[media.id] : media.watched}
-                          onChange={(e) => { handleCheckboxChange(e, e.target.checked, media, userList.name); }}
-                          onClick={(e) => { handleCheckClick(e); }}
-                        />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <input
+                            type="checkbox"
+                            checked={mediaWatchedStatus.hasOwnProperty(media.id) ? mediaWatchedStatus[media.id] : media.watched}
+                            onChange={(e) => { handleCheckboxChange(e, e.target.checked, media, userList.name); }}
+                            onClick={(e) => { handleCheckClick(e); }}
+                          />
+                          {media.watched ? <p style={{ color: 'green' }}>Watched</p> : <p>Not watched</p>}
+                        </div>
 
                         {mediaInfo && selectedMovieId === media.id && (
                           <div className="info-text">
