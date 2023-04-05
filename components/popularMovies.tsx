@@ -128,6 +128,17 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
         </>
     ))
 
+    const slidePrev = () => {
+        // @ts-ignore: This error is intentionally ignored
+        carousel.current && carousel.current.slidePrev();
+    };
+
+    const slideNext = () => {
+        // @ts-ignore: This error is intentionally ignored
+        carousel.current && carousel.current.slideNext();
+    };
+
+
 
     const responsive = {
         0: { items: 1 },
@@ -146,11 +157,31 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
                     mouseTracking={isMobile}
                     animationDuration={800}
                     disableDotsControls
-                    disableButtonsControls={isMobile}
+                    disableButtonsControls
                     autoWidth
                     animationType="fadeout"
                     infinite
                 />
+
+                <div className="arrow-div">
+                    <div className="arrow" onClick={slidePrev}>
+                        <Image
+                            src={"/icons/arrow-left.svg"}
+                            height={20}
+                            width={20}
+                            alt={"left arrow"}
+                        />
+                    </div>
+
+                    <div className="arrow" onClick={slideNext}>
+                        <Image
+                            src={"/icons/arrow-right.svg"}
+                            height={20}
+                            width={20}
+                            alt={"right arrow"}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )

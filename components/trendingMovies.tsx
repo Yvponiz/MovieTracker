@@ -48,6 +48,16 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
         setClickedButton((prevClickedButton) => (prevClickedButton === mediaId ? null : mediaId));
     };
 
+    const slidePrev = () => {
+        // @ts-ignore: This error is intentionally ignored
+        carousel.current && carousel.current.slidePrev();
+    };
+
+    const slideNext = () => {
+        // @ts-ignore: This error is intentionally ignored
+        carousel.current && carousel.current.slideNext();
+    };
+
     const TrendingItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <>
             {isMobile ?
@@ -150,15 +160,35 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
                 mouseTracking={isMobile}
                 animationDuration={800}
                 disableDotsControls
-                disableButtonsControls={isMobile}
+                disableButtonsControls
                 paddingLeft={10}
                 paddingRight={70}
                 autoWidth
                 animationType="fadeout"
-                // autoPlay
+                autoPlay
                 autoPlayInterval={2000}
                 infinite
             />
+
+            <div className="arrow-div">
+                <div className="arrow" onClick={slidePrev}>
+                    <Image
+                        src={"/icons/arrow-left.svg"}
+                        height={20}
+                        width={20}
+                        alt={"left arrow"}
+                    />
+                </div>
+
+                <div className="arrow" onClick={slideNext}>
+                    <Image
+                        src={"/icons/arrow-right.svg"}
+                        height={20}
+                        width={20}
+                        alt={"right arrow"}
+                    />
+                </div>
+            </div>
         </div>
     )
 }
