@@ -385,6 +385,7 @@ main {
   font-size: 1.6rem;
   margin: 15px 0 0;
   align-items: center;
+  cursor: pointer;
 }
 
 .search-card .info-text {
@@ -539,7 +540,6 @@ main {
   flex-direction: column;
   justify-content: flex-end;
   margin-right: 10px;
-  cursor: pointer;
 }
 
 .trending-card:hover::after {
@@ -579,6 +579,10 @@ main {
 .trending-card-content-left h3 {
   font-size: 1.7rem;
   font-weight: 700;
+}
+
+.trending-card-content-left h3:hover {
+  text-decoration: underline;
 }
 
 .trending-card-content-left p {

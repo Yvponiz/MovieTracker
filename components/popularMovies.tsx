@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import router from "next/router";
 import { CSSProperties, FunctionComponent, useEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
@@ -42,9 +43,6 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
         };
     }, []);
 
-    const handleCardClick = (id: number) => {
-        router.push(`/mediaInfo?id=${id}`);
-    }
 
     const handleButtonClick = (e: React.MouseEvent, mediaId: number) => {
         e.stopPropagation();
@@ -52,50 +50,50 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
     };
 
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
-        <div
-            key={media.id}
-            className='popular-card'
-            onClick={() => handleCardClick(media.id)}
-        >
-            <div className="popular-card-poster"
-                style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+        <Link href={`/mediaInfo?id=${media.id}`} key={media.id}>
+            <div
+                className='popular-card'
             >
-                {isLoggedIn &&
-                    <div
-                        className={`popular-card-poster add-button${clickedButton === media.id  ? " expanded-add-button" : "" }`}
-                        onClick={(e) => handleButtonClick(e, media.id)}
-                    >
-                        <AddButton
-                            id={id}
-                            media={media}
-                            imgHeight={30}
-                            imgWidth={30}
-                            lists={lists}
-                            clickedButton={clickedButton}
+                <div className="popular-card-poster"
+                    style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                >
+                    {isLoggedIn &&
+                        <div
+                            className={`popular-card-poster add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
+                            onClick={(e) => handleButtonClick(e, media.id)}
+                        >
+                            <AddButton
+                                id={id}
+                                media={media}
+                                imgHeight={30}
+                                imgWidth={30}
+                                lists={lists}
+                                clickedButton={clickedButton}
+                            />
+                        </div>
+                    }
+
+                    <div className="media-score">
+                        <Image
+                            src='/icons/imdb-logo.svg'
+                            height={30}
+                            width={40}
+                            alt='imdb logo'
                         />
+                        <p>{media.vote_average?.toPrecision(2)}</p>
                     </div>
-                }
+                </div>
 
-                <div className="media-score">
-                    <Image
-                        src='/icons/imdb-logo.svg'
-                        height={30}
-                        width={40}
-                        alt='imdb logo'
-                    />
-                    <p>{media.vote_average?.toPrecision(2)}</p>
+                <div className="popular-card-content-bottom">
+                    <h3>{media.original_title}</h3>
+
+                    <div className="media-year">
+                        <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+
+                    </div>
                 </div>
             </div>
-
-            <div className="popular-card-content-bottom">
-                <h3>{media.original_title}</h3>
-
-                <div className="media-year">
-                    <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
-
-                </div>
-            </div>
-        </div>
+        </Link>
     ))
 
     const responsive = {

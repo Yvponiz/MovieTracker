@@ -54,7 +54,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
                     setIsLoading(false);
                 });
         }
-    }, [movieId]);
+    }, [movieId, setIsLoading]);
 
     useEffect(() => {
         const checkIsMobile = () => {

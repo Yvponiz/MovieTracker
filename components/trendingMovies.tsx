@@ -7,6 +7,7 @@ import { Media } from "../models/media";
 import { UserList } from "../models/user";
 import router from "next/router";
 import AddButton from "./addButton";
+import Link from "next/link";
 
 type Props = {
     id: string | undefined;
@@ -42,10 +43,6 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
         };
     }, []);
 
-    const handleCardClick = (id: number) => {
-        router.push(`/mediaInfo?id=${id}`);
-    }
-
     const handleButtonClick = (e: React.MouseEvent, mediaId: number) => {
         e.stopPropagation();
         setClickedButton((prevClickedButton) => (prevClickedButton === mediaId ? null : mediaId));
@@ -56,11 +53,12 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
             key={media.id}
             className='trending-card'
             style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
-            onClick={() => handleCardClick(media.id)}
         >
             <div className="trending-card-content">
                 <div className="trending-card-content-left">
-                    {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                    <Link href={`/mediaInfo?id=${media.id}`}>
+                        {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                    </Link>
 
                     <div className="media-year">
                         {media.media_type === "movie" ?
