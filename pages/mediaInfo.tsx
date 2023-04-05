@@ -75,7 +75,6 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
     return (
         <Layout>
             <main>
-
                 {isMobile ?
                     <div className="media-page-wrapper">
                         <h1>
@@ -124,6 +123,20 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
                                 </ul>
                             </div>
                         </div>
+                        {isLoggedIn &&
+                                <div
+                                    className={`results-card-button add-button${clickedButton === media?.id ? " expanded-add-button" : ""}`}
+                                    onClick={(e) => { handleButtonClick(e, media?.id) }}
+                                >
+                                    <AddButton
+                                        media={media as Media}
+                                        id={id} lists={lists}
+                                        clickedButton={clickedButton}
+                                        imgHeight={30}
+                                        imgWidth={30}
+                                    />
+                                </div>
+                            }
                     </div>
                     :
                     <div className="media-page-wrapper">

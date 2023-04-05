@@ -49,52 +49,89 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
     };
 
     const TrendingItems = trendingResult?.slice(0, 10).map((media: Media) => (
-        <div
-            key={media.id}
-            className='trending-card'
-            style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
-        >
-            <div className="trending-card-content">
-                <div className="trending-card-content-left">
-                    <Link href={`/mediaInfo?id=${media.id}`}>
-                        {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
-                    </Link>
+        <>
+            {isMobile ?
+                <Link href={`/mediaInfo?id=${media.id}`} key={media.id}>
+                    <div
+                        key={media.id}
+                        className='trending-card'
+                        style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                    >
+                        <div className="trending-card-content">
+                            <div className="trending-card-content-left">
+                                <Link href={`/mediaInfo?id=${media.id}`}>
+                                    {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                                </Link>
 
-                    <div className="media-year">
-                        {media.media_type === "movie" ?
-                            <p>{new Date(`${media.release_date}`).getFullYear()}</p>
-                            : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
+                                <div className="media-year">
+                                    {media.media_type === "movie" ?
+                                        <p>{new Date(`${media.release_date}`).getFullYear()}</p>
+                                        : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
+                                    }
+                                </div>
+
+                                <div className="media-score">
+                                    <Image
+                                        src='/icons/imdb-logo.svg'
+                                        height={30}
+                                        width={40}
+                                        alt='imdb logo'
+                                    />
+                                    <p>{media.vote_average?.toPrecision(2)} rating</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+                :
+                <div
+                    key={media.id}
+                    className='trending-card'
+                    style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                >
+                    <div className="trending-card-content">
+                        <div className="trending-card-content-left">
+                            <Link href={`/mediaInfo?id=${media.id}`}>
+                                {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                            </Link>
+
+                            <div className="media-year">
+                                {media.media_type === "movie" ?
+                                    <p>{new Date(`${media.release_date}`).getFullYear()}</p>
+                                    : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
+                                }
+                            </div>
+
+                            <div className="media-score">
+                                <Image
+                                    src='/icons/imdb-logo.svg'
+                                    height={30}
+                                    width={40}
+                                    alt='imdb logo'
+                                />
+                                <p>{media.vote_average?.toPrecision(2)} rating</p>
+                            </div>
+                        </div>
+
+                        {isLoggedIn &&
+                            <div
+                                className={`trending-card-content add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
+                                onClick={(e) => { handleButtonClick(e, media.id) }}
+                            >
+                                <AddButton
+                                    id={id}
+                                    media={media}
+                                    imgHeight={30}
+                                    imgWidth={30}
+                                    lists={lists}
+                                    clickedButton={clickedButton}
+                                />
+                            </div>
                         }
                     </div>
-
-                    <div className="media-score">
-                        <Image
-                            src='/icons/imdb-logo.svg'
-                            height={30}
-                            width={40}
-                            alt='imdb logo'
-                        />
-                        <p>{media.vote_average?.toPrecision(2)} rating</p>
-                    </div>
                 </div>
-
-                {isLoggedIn &&
-                    <div
-                        className={`trending-card-content add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
-                        onClick={(e) => { handleButtonClick(e, media.id) }}
-                    >
-                        <AddButton
-                            id={id}
-                            media={media}
-                            imgHeight={30}
-                            imgWidth={30}
-                            lists={lists}
-                            clickedButton={clickedButton}
-                        />
-                    </div>
-                }
-            </div>
-        </div>
+            }
+        </>
     ))
 
     const responsive = {

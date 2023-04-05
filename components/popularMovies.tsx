@@ -50,51 +50,84 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
     };
 
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
-        <Link href={`/mediaInfo?id=${media.id}`} key={media.id}>
-            <div
-                className='popular-card'
-            >
-                <div className="popular-card-poster"
-                    style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
-                >
-                    {isLoggedIn &&
-                        <div
-                            className={`popular-card-poster add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
-                            onClick={(e) => handleButtonClick(e, media.id)}
+        <>
+            {isMobile ? (
+                <Link href={`/mediaInfo?id=${media.id}`} key={media.id}>
+                    <div
+                        className='popular-card'
+                    >
+                        <div className="popular-card-poster"
+                            style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
                         >
-                            <AddButton
-                                id={id}
-                                media={media}
-                                imgHeight={30}
-                                imgWidth={30}
-                                lists={lists}
-                                clickedButton={clickedButton}
-                            />
+                            <div className="media-score">
+                                <Image
+                                    src='/icons/imdb-logo.svg'
+                                    height={30}
+                                    width={40}
+                                    alt='imdb logo'
+                                />
+                                <p>{media.vote_average?.toPrecision(2)}</p>
+                            </div>
                         </div>
-                    }
+                        <div className="popular-card-content-bottom">
+                            <h3>{media.original_title}</h3>
 
-                    <div className="media-score">
-                        <Image
-                            src='/icons/imdb-logo.svg'
-                            height={30}
-                            width={40}
-                            alt='imdb logo'
-                        />
-                        <p>{media.vote_average?.toPrecision(2)}</p>
-                    </div>
-                </div>
-
-                <div className="popular-card-content-bottom">
-                    <h3>{media.original_title}</h3>
-
-                    <div className="media-year">
-                        <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+                            <div className="media-year">
+                                <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+                            </div>
+                        </div>
 
                     </div>
+                </Link>
+            ) : (
+                <div
+                    className='popular-card'
+                >
+                    <div className="popular-card-poster"
+                        style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
+                    >
+                        {isLoggedIn &&
+                            <div
+                                className={`popular-card-poster add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
+                                onClick={(e) => handleButtonClick(e, media.id)}
+                            >
+                                <AddButton
+                                    id={id}
+                                    media={media}
+                                    imgHeight={30}
+                                    imgWidth={30}
+                                    lists={lists}
+                                    clickedButton={clickedButton}
+                                />
+                            </div>
+                        }
+
+                        <div className="media-score">
+                            <Image
+                                src='/icons/imdb-logo.svg'
+                                height={30}
+                                width={40}
+                                alt='imdb logo'
+                            />
+                            <p>{media.vote_average?.toPrecision(2)}</p>
+                        </div>
+                    </div>
+
+                    <div className="popular-card-content-bottom">
+                        <Link href={`/mediaInfo?id=${media.id}`}>
+                            <h3>{media.original_title}</h3>
+                        </Link>
+
+                        <div className="media-year">
+                            <p>{new Date(`${media.release_date}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', })}</p>
+
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </Link>
+            )}
+        </>
     ))
+
 
     const responsive = {
         0: { items: 1 },

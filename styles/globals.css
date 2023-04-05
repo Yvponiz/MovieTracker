@@ -347,6 +347,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
   margin-left: 15px;
@@ -447,7 +448,6 @@ main {
   border-radius: 10px;
   height: 340px;
   width: 180px;
-  cursor: pointer;
 }
 
 .popular-card:hover::after {
@@ -477,6 +477,11 @@ main {
 .popular-card h3 {
   font-size: 1rem;
   margin: 5px;
+  cursor: pointer;
+}
+
+.popular-card h3:hover {
+  text-decoration: underline;
 }
 
 .popular-card .media-year p {
@@ -685,12 +690,22 @@ main {
 
 .trailers-div {
   display: flex;
-  gap: 20px;
+  gap: 30px;
   overflow: scroll;
   border-radius: 15px;
   scrollbar-width: 2px;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
+}
+
+.trailer {
+  background-color: rgba(40, 40, 40, 0.3);
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.trailer h3 {
+  margin: 5px;
 }
 
 .trailers-div iframe {
@@ -903,6 +918,9 @@ main {
 }
 
 .list-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 15px;
   width: 90%;
@@ -950,7 +968,6 @@ main {
 
 .list-name {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
@@ -959,9 +976,10 @@ main {
 }
 
 .list-name button {
-  height: 30px;
-  width: 30px;
-  color: red;
+  height: 25px;
+  width: 25px;
+  display: flex;
+  justify-content: center;
 }
 
 .list-page-wrapper {
@@ -1176,7 +1194,7 @@ main {
 
   .search-card-content .media-year p {
     font-size: 1rem;
-    margin: 0;
+    margin: 5px 0;
   }
 
   .search-card-content-top h3 {
@@ -1360,13 +1378,8 @@ main {
   }
 
   .list-div input[type="checkbox"] {
-    margin-top: 10px;
     height: 15px;
     width: 15px;
-  }
-
-  .list-div h3 {
-    margin: 5px;
   }
 
   .list-div p {
@@ -1376,6 +1389,7 @@ main {
 
   .list-div .info-text {
     height: 200px;
+    text-align: left;
   }
 
   .remove-list-button {
