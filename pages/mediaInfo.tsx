@@ -1,21 +1,47 @@
-import { NextPage } from "next";
+import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import { FunctionComponent, useEffect, useState } from "react";
 import Layout from "../components/layout";
 import { useRouter } from "next/router";
 import { MediaPage } from "../models/mediaPage";
 import { SearchProvider, useSearch } from "../context/searchContext";
 import Image from "next/image";
-import { Credits } from "../models/media";
+import { Credits, Media } from "../models/media";
+import AddButton from "../components/addButton";
+import commonProps, { UserProps } from "../utils/commonProps";
+import { UserList } from "../models/user";
 
-type MediaProps = MediaPage;
+export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
+    return commonProps({ req, res })
+}
 
-const MediaInfo: FunctionComponent<MediaProps> = ({ }) => {
+type MediaProps = MediaPage & UserProps;
+
+const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
     const [media, setMedia] = useState<MediaPage>()
     const [credits, setCredits] = useState<Credits>();
-    const { isLoading, setIsLoading } = useSearch();
+    const [lists, setLists] = useState<UserList[]>([]);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const [clickedButton, setClickedButton] = useState<number | null>(null);
+    const { isLoading, setIsLoading } = useSearch();
     const router = useRouter();
     const movieId = router.query.id;
+
+    const fetchLists = () => {
+        fetch(`/api/getLists?userId=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    setLists(data.lists);
+                }
+            });
+    };
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchLists();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         setIsLoading(false);
@@ -40,6 +66,11 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ }) => {
             window.removeEventListener("resize", checkIsMobile);
         };
     }, []);
+
+    const handleButtonClick = (e: React.MouseEvent, mediaId: any) => {
+        e.stopPropagation();
+        setClickedButton((prevClickedButton) => (prevClickedButton === mediaId ? null : mediaId));
+    };
 
     return (
         <Layout>
@@ -73,7 +104,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ }) => {
                                             width={20}
                                             alt={'rating logo'}
                                         />
-                                        <h3>{media?.vote_average.toFixed(1)}</h3>
+                                        <h3>{media?.vote_average?.toFixed(1)}</h3>
                                     </div>
                                     <p>{`"${media?.tagline}"`}</p>
                                     <ul>{media?.genres.map((genre) => <li key={genre.id}> {genre.name} </li>)}</ul>
@@ -128,7 +159,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ }) => {
                                         width={30}
                                         alt={'rating logo'}
                                     />
-                                    <h3>{media?.vote_average.toFixed(1)}</h3>
+                                    <h3>{media?.vote_average?.toFixed(1)}</h3>
                                 </div>
                             </h1>
                             <p className="info-text">{media?.overview}</p>
@@ -141,6 +172,21 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ }) => {
                                     )}
                                 </ul>
                             </div>
+
+                            {isLoggedIn &&
+                                <div
+                                    className={`results-card-button add-button${clickedButton === media?.id ? " expanded-add-button" : ""}`}
+                                    onClick={(e) => { handleButtonClick(e, media?.id) }}
+                                >
+                                    <AddButton
+                                        media={media as Media}
+                                        id={id} lists={lists}
+                                        clickedButton={clickedButton}
+                                        imgHeight={30}
+                                        imgWidth={30}
+                                    />
+                                </div>
+                            }
                         </div>
                     </div>
                 }

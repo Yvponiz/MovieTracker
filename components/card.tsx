@@ -54,7 +54,7 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
 
                     <div className="search-card-content">
                         <div className="search-card-content-top">
-                            {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                            <h3>{media.media_type === "movie" ? media.title : media?.name || media?.title}</h3>
 
                             <div className="rating-div">
                                 <Image
@@ -68,19 +68,16 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
                         </div>
 
                         <div className="media-year">
-                            {media.media_type === "movie" ?
-                                <p>{new Date(`${media.release_date}`).getFullYear()}</p>
-                                : <p>{new Date(`${media.first_air_date}`).getFullYear()}</p>
-                            }
+                            <p>{new Date(`${media.release_date ?? media.first_air_date}`).getFullYear()}</p>
                         </div>
 
-                        {className === "search-card"  && isMobile? <></> :
+                        {className === "search-card" && isMobile ? <></> :
                             <div className="info-text">
                                 {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
                             </div>
                         }
 
-                        {!isMobile && selectedMovieId === media.id &&
+                        {!isMobile && selectedMovieId === media.id && credits &&
                             <div className="search-card-cast">
                                 <h3>Cast</h3>
                                 <ul>

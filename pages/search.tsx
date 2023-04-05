@@ -1,14 +1,13 @@
 import Layout from "../components/layout";
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import { useState, useEffect, FormEvent, SyntheticEvent, useContext, useRef, FunctionComponent } from "react";
-import { Media } from "../models/media";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { UserList } from "../models/user";
 import { SearchForm } from "../components/searchForm";
 import TrendingMovies from "../components/trendingMovies";
 import PopularMovies from "../components/popularMovies";
 import router from "next/router";
-import { useSearch, SearchProvider  } from "../context/searchContext";
+import { useSearch, SearchProvider } from "../context/searchContext";
 import Trailers from "../components/trailers";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
@@ -17,14 +16,11 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 
 const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
   const [lists, setLists] = useState<UserList[]>([]);
-  const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-  const [addedToList, setAddedToList] = useState<boolean>(false);
   const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
-  const { searchTerm, setSearchTerm, isLoading, setIsLoading } = useSearch();
-
+  const { searchTerm, setSearchTerm } = useSearch();
 
   const fetchLists = () => {
     fetch(`/api/getLists?userId=${id}`)
@@ -38,7 +34,6 @@ const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     router.push(`/results?q=${searchTerm}`);
   };
 
@@ -47,46 +42,6 @@ const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
       setSelectedMovieId(null);
       setBlur(false);
     }
-  };
-
-  const handleAddToListClick = (e: React.MouseEvent, state: { listName: string, media: Media }) => {
-    e.stopPropagation();
-    fetchLists();
-
-    fetch(`/api/addToList?userId=${id}`,
-      {
-        body: JSON.stringify({
-          listName: state.listName,
-          media: state.media
-        }),
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).catch((response) => response.json())
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setAddedToList(addedToList => !addedToList);
-        }
-        else if (data.status === "error") {
-          setShowMessageDiv(!showMessageDiv);
-          setMessage(data.errors.join("\n"));
-          setTimeout(() => {
-            setShowMessageDiv(!showMessageDiv);
-            setMessage('');
-          }, 1000);
-        }
-      })
-  };
-
-  const handleSelect = (e: SyntheticEvent<HTMLSelectElement, Event>) => {
-    e.stopPropagation();
-    const { value } = e.currentTarget;
-    changeState((prevState) => ({
-      ...prevState,
-      listName: value,
-    }));
   };
 
   useEffect(() => {
@@ -114,9 +69,9 @@ const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
 
         {!isLoggedIn && <p>{message}</p>}
 
-        <TrendingMovies isLoggedIn={isLoggedIn} lists={lists} />
-        <PopularMovies isLoggedIn={isLoggedIn} lists={lists} />
-        <Trailers/>
+        <TrendingMovies isLoggedIn={isLoggedIn} id={id} lists={lists} />
+        <PopularMovies isLoggedIn={isLoggedIn} id={id} lists={lists} />
+        <Trailers />
       </div>
     </Layout>
   );
@@ -124,9 +79,7 @@ const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
 
 const SearchPage: NextPage<UserProps> = (props) => {
   return (
-    <SearchProvider>
-      <Search {...props} />
-    </SearchProvider>
+    <Search {...props} />
   );
 };
 

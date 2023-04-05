@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
-import { useRouter } from "next/router";
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Credits, Media } from "../models/media";
 import Layout from "../components/layout";
 import MediaCard from "../components/card";
@@ -8,21 +7,18 @@ import { UserList } from "../models/user";
 import commonProps, { UserProps } from "../utils/commonProps";
 import { SearchForm } from "../components/searchForm";
 import { useSearch } from "../context/searchContext";
+import AddButton from '../components/addButton';
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
     return commonProps({ req, res })
 }
 
 const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
-    const router = useRouter();
     const [searchResults, setSearchResults] = useState<Media[]>([]);
     const [creditResults, setCreditResults] = useState<Credits[]>([])
     const [lists, setLists] = useState<UserList[]>([]);
     const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-    const [state, changeState] = useState({ listName: '', media: {} })
-    const [addedToList, setAddedToList] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>('');
-    const [inputValue, setInputValue] = useState<string>("");
+    const [clickedButton, setClickedButton] = useState<number | null>(null);
     const [showMessageDiv, setShowMessageDiv] = useState<boolean>(false);
     const [blur, setBlur] = useState<boolean>(false);
 
@@ -39,6 +35,13 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
     };
 
     useEffect(() => {
+        if (isLoggedIn) {
+            fetchLists();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         if (searchTerm) {
             fetch(`/api/searchMedia?q=${searchTerm}`)
                 .then((res) => res.json())
@@ -48,23 +51,18 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                     setIsLoading(false);
                 });
         }
-    }, [searchTerm]);
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            fetchLists();
-        }
-    }, [])
+    }, [searchTerm, setIsLoading]);
 
     const handleCardClick = (mediaId: number) => {
         setSelectedMovieId((prevSelectedMovieId) =>
             prevSelectedMovieId === mediaId ? null : mediaId
         );
         setBlur((prevBlur) => !prevBlur);
+    };
 
-        const firstListName = lists[0]?.name || '';
-        changeState({ listName: firstListName, media: {} });
-        setAddedToList(false);
+    const handleButtonClick = (e: React.MouseEvent, mediaId: number) => {
+        e.stopPropagation();
+        setClickedButton((prevClickedButton) => (prevClickedButton === mediaId ? null : mediaId));
     };
 
     const handleOutsideClick = (e: React.MouseEvent) => {
@@ -74,52 +72,11 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
         }
     };
 
-    const handleSelect = (e: SyntheticEvent<HTMLSelectElement, Event>) => {
-        e.stopPropagation();
-        const { value } = e.currentTarget;
-        changeState((prevState) => ({
-            ...prevState,
-            listName: value,
-        }));
-    };
-
-    const handleAddToListClick = (e: React.MouseEvent, state: { listName: string, media: Media, credits: Credits[] }) => {
-        e.stopPropagation();
-        fetchLists();
-
-        fetch(`/api/addToList?userId=${id}`,
-            {
-                body: JSON.stringify({
-                    listName: state.listName,
-                    media: state.media,
-                    credits: state.credits
-                }),
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).catch((response) => response.json())
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    setAddedToList(addedToList => !addedToList);
-                }
-                else if (data.status === "error") {
-                    setShowMessageDiv(!showMessageDiv);
-                    setMessage(data.errors.join("\n"));
-                    setTimeout(() => {
-                        setShowMessageDiv(!showMessageDiv);
-                        setMessage('');
-                    }, 1000);
-                }
-            })
-    };
-
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setSearchTerm(inputValue);
+        setSearchTerm(searchTerm);
     };
+
 
     return (
         <Layout isLoggedIn={isLoggedIn}>
@@ -145,37 +102,21 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
                             selectedMovieId={selectedMovieId}
                             isLoading={isLoading}
                         >
-                            {selectedMovieId === media.id && isLoggedIn && (
-                                <div id="add-to-list">
-                                    <div>
-                                        <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
-                                            id="lists" name="lists" required
-                                            onClick={(e) => handleSelect(e)}
-                                        >
-                                            {lists.length === 0 ?
-                                                <option>No Lists</option>
-                                                :
-                                                lists?.map((list) =>
-                                                    <option
-                                                        key={list.name}
-                                                        value={list.name}
-                                                    >
-                                                        {list.name}
-                                                    </option>
-                                                )
-                                            }
-                                        </select>
-
-                                        <button
-                                            onClick={(e) => { handleAddToListClick(e, { ...state, media, credits: creditResults }) }}
-                                            style={{ backgroundColor: addedToList ? "green" : "" }}
-                                        >
-                                            {addedToList ? "Added!" : "Add to list"}
-                                        </button>
-
-                                    </div>
+                            {isLoggedIn &&
+                                <div
+                                    className={`results-card-button add-button${clickedButton === media.id ? " expanded-add-button" : ""}`}
+                                    onClick={(e) => { handleButtonClick(e, media.id) }}
+                                >
+                                    <AddButton
+                                        id={id}
+                                        media={media}
+                                        imgHeight={30}
+                                        imgWidth={30}
+                                        lists={lists}
+                                        clickedButton={clickedButton}
+                                    />
                                 </div>
-                            )}
+                            }
                         </MediaCard>
                     ))}
                 </div>

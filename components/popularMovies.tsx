@@ -1,21 +1,22 @@
 import Image from "next/image";
 import router from "next/router";
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { CSSProperties, FunctionComponent, useEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { useSearch } from "../context/searchContext";
 import { Media } from "../models/media";
 import { UserList } from "../models/user";
+import AddButton from "./addButton";
 
 type Props = {
+    id: string | undefined
     isLoggedIn: boolean;
     lists: UserList[];
 }
 
-const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
+const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
     const [trendingResult, setTrendingResult] = useState<Media[]>([]);
-    const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-    const [mediaInfo, setMediaInfo] = useState<boolean>(false);
+    const [clickedButton, setClickedButton] = useState<number | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const { isLoading, setIsLoading } = useSearch();
     const carousel = useRef(null);
@@ -28,7 +29,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
                 setTrendingResult(data.results);
                 setIsLoading(false);
             });
-    }, [])
+    }, [setIsLoading])
 
     useEffect(() => {
         const checkIsMobile = () => {
@@ -41,18 +42,14 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
         };
     }, []);
 
-    const handleInfoMouseEnter = (mediaId: number) => {
-        setSelectedMovieId(mediaId);
-        setMediaInfo(true);
-    };
-
-    const handleInfoMouseLeave = () => {
-        setMediaInfo(false);
-    };
-
     const handleCardClick = (id: number) => {
         router.push(`/mediaInfo?id=${id}`);
     }
+
+    const handleButtonClick = (e: React.MouseEvent, mediaId: number) => {
+        e.stopPropagation();
+        setClickedButton((prevClickedButton) => (prevClickedButton === mediaId ? null : mediaId));
+    };
 
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <div
@@ -63,14 +60,21 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
             <div className="popular-card-poster"
                 style={{ backgroundImage: isLoading ? `url(/icons/loading.svg)` : `url(https://www.themoviedb.org/t/p/original${media.poster_path})` }}
             >
-                {isLoggedIn && <div className="add-button">
-                    <Image
-                        src='/icons/add-icon.svg'
-                        width={30}
-                        height={30}
-                        alt='add icon'
-                    />
-                </div>}
+                {isLoggedIn &&
+                    <div
+                        className={`popular-card-poster add-button${clickedButton === media.id  ? " expanded-add-button" : "" }`}
+                        onClick={(e) => handleButtonClick(e, media.id)}
+                    >
+                        <AddButton
+                            id={id}
+                            media={media}
+                            imgHeight={30}
+                            imgWidth={30}
+                            lists={lists}
+                            clickedButton={clickedButton}
+                        />
+                    </div>
+                }
 
                 <div className="media-score">
                     <Image
@@ -91,12 +95,6 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, lists }) => {
 
                 </div>
             </div>
-
-            {mediaInfo && selectedMovieId === media.id && (
-                <div className="info-text">
-                    {media.overview ? <p>{media.overview}</p> : <p>{`Aye man, I couldn't find no summary`}</p>}
-                </div>
-            )}
         </div>
     ))
 
