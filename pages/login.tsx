@@ -54,7 +54,7 @@ const Login: NextPage = () => {
             <button className="submit-button">Sign up</button>
           </Link>
 
-          {showError ? <p className="error">{error}</p> : <></>}
+          {showError && <p className="error">{error}</p>}
         </form>
       </div>
     </Layout>

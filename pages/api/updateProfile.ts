@@ -10,16 +10,25 @@ export default async function updateProfile(
 ) {
     try {
         await client.connect();
-        const { username, newUsername, newEmail } = req.body;
+        const { username, newUsername, newEmail, confEmail } = req.body;
         const database = client.db("movietracker");
         const usersCollection = database.collection<User>('users');
-        
+        const user = await usersCollection.findOne({username});
+
         const updateFields: any = {};
         if (newUsername) {
             updateFields.username = newUsername;
         }
         if (newEmail) {
             updateFields.email = newEmail;
+        }
+        if(user?.email === newEmail){
+            res.status(404).json({ status: "error", errors: ["New email can't be the same as the old one"] });
+
+        }
+        if (newEmail !== confEmail){
+            res.status(404).json({ status: "error", errors: ["Both email must be identical"] });
+            return;
         }
 
         const result = await usersCollection.updateOne({ username }, { $set: updateFields });

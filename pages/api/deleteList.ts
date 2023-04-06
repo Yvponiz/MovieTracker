@@ -10,14 +10,14 @@ export default async function deleteList(
     try {
         await client.connect();
 
-        const { listName } = req.body;
+        const { listId } = req.body;
         const userId = new ObjectId((req.query.userId)?.toString());
         const database = client.db("movietracker");
         const usersCollection = database.collection<User>('users');
 
         const result = await usersCollection.updateOne(
             { _id: userId },
-            { $pull: { lists: { name: listName } } }
+            { $pull: { lists: { id: listId } } }
         );
 
         if (result.acknowledged) {

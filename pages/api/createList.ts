@@ -2,6 +2,8 @@ import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { User, UserList } from "../../models/user";
 import client from "../../utils/DButils";
+import { nanoid } from 'nanoid';
+
 
 export default async function createList(
     req: NextApiRequest,
@@ -20,7 +22,24 @@ export default async function createList(
             return
         }
 
+        const user = await usersCollection.findOne({ _id: userId });
+
+        if (user) {
+            const updatedLists = user?.lists?.map((list: UserList) => {
+                if (!list.id) {
+                    list.id = nanoid();
+                }
+                return list;
+            });
+
+            await usersCollection.updateOne(
+                { _id: userId },
+                { $set: { lists: updatedLists } }
+            );
+        }
+
         const newList: UserList = {
+            id: nanoid(),
             name: listName,
             items: []
         };

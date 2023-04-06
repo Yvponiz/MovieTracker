@@ -75,7 +75,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
       })
   }, [fetchLists, id, showMessage]);
 
-  const handleDeleteList = useCallback((state: { listName: string }) => {
+  const handleDeleteList = useCallback((state: { listId: string }) => {
     fetch(`/api/deleteList?userId=${id}`, {
       body: JSON.stringify(state),
       method: "POST",
@@ -232,7 +232,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
                   {listTitleClick &&
                     <button
-                      onClick={() => handleDeleteList({ listName: userList.name })}
+                      onClick={() => handleDeleteList({ listId: userList.id })}
                       title='Delete list'
                     >
                       <Image
@@ -302,8 +302,6 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
               <input onChange={(event) => changeState({ ...state, listName: event.target.value })} type="text" name="list-name" id="list-name" required />
               <button onClick={(event) => handleCreateList(event, state)}>Create</button>
             </form>
-
-            {showMessage && <p className='error'>{message}</p>}
           </div>
         }
       </div>

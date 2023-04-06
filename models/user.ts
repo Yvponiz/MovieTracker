@@ -1,5 +1,6 @@
 import { Media } from "./media"
 export interface UserList {
+    id: string;
     name: string;
     items: Media[];
 }

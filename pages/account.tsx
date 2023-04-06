@@ -4,7 +4,7 @@ import commonProps, { UserProps } from "../utils/commonProps";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { UserList } from "../models/user";
 import Image from "next/image";
-import Router from "next/router";
+import { useRouter } from "next/router";
 
 export function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
     return commonProps({ req, res })
@@ -13,18 +13,22 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [showMessage, setShowMessage] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>('');
+    const [passwordMessage, setPasswordMessage] = useState<string>('');
+    const [listsMessage, setListsMessage] = useState<string>('');
+    const [showError, setShowError] = useState(false);
+    const [error, setError] = useState('');
     const [userLists, setUserLists] = useState<UserList[]>([]);
     const [state, changeState] = useState({
         username: username,
         newUsername: '',
         email: email,
         newEmail: '',
+        confEmail: '',
         password: '',
         newPassword: '',
         confPassword: ''
     })
-    const router = Router;
+    const router = useRouter();
 
     const fetchLists = useCallback(() => {
         fetch(`/api/getLists?userId=${id}`)
@@ -32,8 +36,8 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
             .then(data => {
                 if (data.status === 'empty') {
                     console.log(data.messages)
-                    setShowMessage(!showMessage);
-                    setMessage(data.messages.join("\n"));
+                    setShowMessage(true);
+                    setListsMessage(data.messages.join("\n"));
                 }
                 else if (data.status === 'success') {
                     setUserLists(data.lists as UserList[]);
@@ -48,6 +52,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
 
     const handleActive = (index: number) => {
         setActiveIndex(index);
+        setShowMessage(false)
     }
 
     function handleProfileChanges(event: FormEvent) {
@@ -64,9 +69,12 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
             .then((data) => {
                 if (data.status === "success") {
                     router.push('/account')
+                    changeState({ ...state, newEmail: '', confEmail: '', newUsername: '' });
+                    setShowError(false);
                 }
                 else if (data.status === "error") {
-
+                    setShowError(true);
+                    setError(data.errors.join('\n'));
                 }
             })
     }
@@ -84,10 +92,31 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.status === "success") {
-
+                    setShowError(false)
+                    setShowMessage(true);
+                    changeState({ ...state, password: '', newPassword: '', confPassword: '' });
+                    setPasswordMessage('Password Changed');
                 }
                 else if (data.status === "error") {
+                    setShowMessage(false);
+                    setShowError(true);
+                    setError(data.errors.join('\n'));
+                }
+            })
+    }
 
+    function handleDeleteList(state: { listId: string }) {
+        fetch(`/api/deleteList?userId=${id}`, {
+            body: JSON.stringify(state),
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).catch((response) => response.json())
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    fetchLists();
                 }
             })
     }
@@ -136,10 +165,10 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                     />
                                 </div>
                                 <div className="account-sections-field">
-                                    <label htmlFor="newUsername">New Username</label>
+                                    <label htmlFor="newUsername">New username</label>
                                     <input
                                         onChange={(event) => changeState({ ...state, newUsername: event.target.value })}
-                                        type="text" id="newUsername" name="newUsername"
+                                        type="text" id="newUsername" name="newUsername" value={state.newUsername}
                                     />
                                 </div>
 
@@ -151,14 +180,24 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                 </div>
 
                                 <div className="account-sections-field">
-                                    <label htmlFor="newEmail">New Email</label>
+                                    <label htmlFor="newEmail">New email</label>
                                     <input
                                         onChange={(event) => changeState({ ...state, newEmail: event.target.value })}
-                                        type="text" id="newEmail" name="newEmail"
+                                        type="text" id="newEmail" name="newEmail" value={state.newEmail}
+                                    />
+                                </div>
+
+                                <div className="account-sections-field">
+                                    <label htmlFor="confEmail">Confirm new email</label>
+                                    <input
+                                        onChange={(event) => changeState({ ...state, confEmail: event.target.value })}
+                                        type="text" id="confEmail" name="confEmail" value={state.confEmail}
                                     />
                                 </div>
 
                                 <button onClick={(event) => handleProfileChanges(event)}>Save Changes</button>
+
+                                {showError && <p className="error">{error}</p>}
                             </form>
                         }
 
@@ -168,7 +207,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                     <label htmlFor="password">Password</label>
                                     <input
                                         onChange={(event) => changeState({ ...state, password: event.target.value })}
-                                        type="password" id="password" name="password"
+                                        type="password" id="password" name="password" value={state.password}
                                     />
                                 </div>
 
@@ -176,7 +215,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                     <label htmlFor="newPassword">New Password</label>
                                     <input
                                         onChange={(event) => changeState({ ...state, newPassword: event.target.value })}
-                                        type="password" id="password" name="password"
+                                        type="password" id="newPassword" name="newPassword" value={state.newPassword}
                                     />
                                 </div>
 
@@ -184,20 +223,22 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                     <label htmlFor="password">Confirm Password</label>
                                     <input
                                         onChange={(event) => changeState({ ...state, confPassword: event.target.value })}
-                                        type="password" id="conf-password" name="conf-password"
+                                        type="password" id="conf-password" name="conf-password" value={state.confPassword}
                                     />
                                 </div>
 
                                 <button onClick={(event) => handlePasswordChange(event)}>Change password</button>
+                                {showMessage && <p className="success">{passwordMessage}</p>}
+                                {showError && <p className="error">{error}</p>}
                             </form>
                         }
 
                         {activeIndex === 2 &&
                             <ul>
-                                {showMessage ? message :
+                                {showMessage ? <p>{listsMessage}</p>  :
                                     userLists?.map((list) => (
                                         <li key={list.name}>
-                                            {list.name}
+                                            <p>{list.name}</p>
                                             <select name="lists" id="lilsts">
                                                 {list?.items.length === 0 ?
                                                     <option> No items</option>
@@ -207,11 +248,14 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                                     ))
                                                 }
                                             </select>
-                                            <Image
-                                                src={"/icons/delete-icon.svg"}
-                                                height={30}
-                                                width={30}
-                                                alt={"delete icon"} />
+                                            <div onClick={() => handleDeleteList({ listId: list.id })}>
+                                                <Image
+                                                    src={"/icons/delete-icon.svg"}
+                                                    height={30}
+                                                    width={30}
+                                                    alt={"delete icon"}
+                                                />
+                                            </div>
                                         </li>
                                     ))}
                             </ul>
