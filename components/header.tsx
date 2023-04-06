@@ -13,24 +13,29 @@ const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
     return (
         <nav>
             <ul>
-                <li className={router.pathname === '/' ? 'active' : ''}>
-                    <Link href='/'>Home</Link>
-                </li>
-                <li className={router.pathname === '/lists' ? 'active' : ''} >
-                    <Link href='/lists'>Lists</Link>
-                </li>
-                <li className={router.pathname === '/search' || router.pathname.startsWith('/results') ? 'active' : ''}>
-                    <Link href='/search'>Search</Link>
-                </li>
-                <li className={router.pathname === '/profile' ? 'active' : ''}>
-                    <Link href='/profile'>Profile</Link>
-                </li>
-                <li className={router.pathname === '/login' ? 'active' : ''}>
-                    {isLoggedIn ?
-                        <Link href='/api/logout'>Logout</Link> :
-                        <Link href='/login'>Login</Link>
-                    }
-                </li>
+                <Link href='/'>
+                    <li className={router.pathname === '/' ? 'active' : ''}>Home</li>
+                </Link>
+                <Link href='/lists'>
+                    <li className={router.pathname === '/lists' ? 'active' : ''}>Lists</li>
+                </Link>
+                <Link href='/search'>
+                    <li className={router.pathname === '/search' || router.pathname.startsWith('/results') ? 'active' : ''}>Search</li>
+                </Link>
+                {isLoggedIn &&
+                    <Link href='/account'>
+                        <li className={router.pathname === '/account' ? 'active' : ''}>Account</li>
+                    </Link>
+                }
+                {isLoggedIn ?
+                    <Link href='/api/logout'>
+                        <li>Logout</li>
+                    </Link>
+                    :
+                    <Link href='/login'>
+                        <li className={router.pathname === '/login' ? 'active' : ''}>Login</li>
+                    </Link>
+                }
             </ul>
         </nav>
     )

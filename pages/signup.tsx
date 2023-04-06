@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react"
+import Layout from "../components/layout";
 
 const SignUp: NextPage = () => {
   const router = useRouter();
@@ -28,9 +29,9 @@ const SignUp: NextPage = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          if(showError){setShowError(!showError)}
+          if (showError) { setShowError(!showError) }
           setShowSuccess(!showSuccess);
-          setTimeout(()=> router.push('/login'), 1000);
+          setTimeout(() => router.push('/login'), 1000);
         }
         else if (data.status === "error") {
           setShowError(!showError);
@@ -40,28 +41,30 @@ const SignUp: NextPage = () => {
   }
 
   return (
-    <div className="login-page">
-      <form className="form">
-        <h1>Signup</h1>
+    <Layout>
+      <div className="login-page">
+        <form className="form">
+          <h1>Signup</h1>
 
-        <label htmlFor="username">Username</label>
-        <input onChange={(event) => changeState({ ...state, username: event.target.value })} type="text" id="username" name="username" required />
+          <label htmlFor="username">Username</label>
+          <input onChange={(event) => changeState({ ...state, username: event.target.value })} type="text" id="username" name="username" required />
 
-        <label htmlFor="email">Email</label>
-        <input onChange={(event) => changeState({ ...state, email: event.target.value })} type="text" id="email" name="email" required />
+          <label htmlFor="email">Email</label>
+          <input onChange={(event) => changeState({ ...state, email: event.target.value })} type="text" id="email" name="email" required />
 
-        <label htmlFor="password">Password</label>
-        <input onChange={(event) => changeState({ ...state, password: event.target.value })} type="password" id="password" name="password" required />
+          <label htmlFor="password">Password</label>
+          <input onChange={(event) => changeState({ ...state, password: event.target.value })} type="password" id="password" name="password" required />
 
-        <label htmlFor="password">Confirm Password</label>
-        <input onChange={(event) => changeState({ ...state, confPassword: event.target.value })} type="password" id="conf-password" name="conf-password" required />
+          <label htmlFor="password">Confirm Password</label>
+          <input onChange={(event) => changeState({ ...state, confPassword: event.target.value })} type="password" id="conf-password" name="conf-password" required />
 
-        <button className="submit-button" onClick={(event) => handleSubmit(event, state)}>Sign up</button>
-        
-        {showError ? <p className="error">{error}</p> : <></>}
-        {showSuccess ? <p className="success">Account Created</p> : <></>}
-      </form>
-    </div>
+          <button className="submit-button" onClick={(event) => handleSubmit(event, state)}>Sign up</button>
+
+          {showError ? <p className="error">{error}</p> : <></>}
+          {showSuccess ? <p className="success">Account Created</p> : <></>}
+        </form>
+      </div>
+    </Layout>
   )
 }
 

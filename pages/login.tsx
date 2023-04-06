@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import router from "next/router";
 import { FormEvent, useState } from "react"
+import Layout from "../components/layout";
 
 const Login: NextPage = () => {
   const [showError, setShowError] = useState(false);
@@ -34,28 +35,29 @@ const Login: NextPage = () => {
   }
 
   return (
+    <Layout>
+      <div className="login-page">
+        <form className="form">
+          <h1>Login</h1>
 
-    <div className="login-page">
-      <form className="form">
-        <h1>Login</h1>
+          <label htmlFor="username">Username</label>
+          <input onChange={(event) => changeState({ ...state, username: event.target.value })} type="text" id="username" name="username" required />
 
-        <label htmlFor="username">Username</label>
-        <input onChange={(event) => changeState({ ...state, username: event.target.value })} type="text" id="username" name="username" required />
+          <label htmlFor="password">Password</label>
+          <input onChange={(event) => changeState({ ...state, password: event.target.value })} type="password" id="password" name="password" required />
 
-        <label htmlFor="password">Password</label>
-        <input onChange={(event) => changeState({ ...state, password: event.target.value })} type="password" id="password" name="password" required />
+          <button className="submit-button" onClick={(event) => onSubmit(event, state)}>Log In</button>
 
-        <button className="submit-button" onClick={(event) => onSubmit(event, state)}>Log In</button>
+          <p>No account? Sign Up</p>
 
-        <p>No account? Sign Up</p>
+          <Link href="/signup">
+            <button className="submit-button">Sign up</button>
+          </Link>
 
-        <Link href="/signup" className="submit-button">
-          <button>Sign up</button>
-        </Link>
-
-        {showError ? <p className="error">{error}</p> : <></>}
-      </form>
-    </div>
+          {showError ? <p className="error">{error}</p> : <></>}
+        </form>
+      </div>
+    </Layout>
   )
 }
 
