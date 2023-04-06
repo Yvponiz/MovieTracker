@@ -25,6 +25,7 @@ export default class MemoryStore implements SessionStore {
                 await this.destroy(sid);
                 return null;
             }
+            await this.touch(sid, session); // Update lastAccessed
             return session;
         }
         return null;
@@ -40,17 +41,22 @@ export default class MemoryStore implements SessionStore {
             sessionDocument = {
                 _id: new ObjectId(),
                 uuid: sid,
-                data: JSON.stringify(sess)
+                data: JSON.stringify(sess),
+                expires: sess.cookie.expires?.getTime(),
+                lastAccessed: new Date().getTime()
             };
         }
-        sessionDocument!.uuid = sid
-        sessionDocument!.data = JSON.stringify(sess)
+        sessionDocument!.uuid = sid;
+        sessionDocument!.data = JSON.stringify(sess);
+        sessionDocument!.expires = sess.cookie.expires?.getTime();
+        sessionDocument!.lastAccessed = new Date().getTime();
         await sessionCollection.updateOne(
             { _id: new ObjectId(sessionDocument._id) },
             { $set: sessionDocument },
             { upsert: true }
         );
     }
+
 
     async destroy(sid: string) {
         await client.connect();

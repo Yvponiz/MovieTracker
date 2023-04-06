@@ -73,7 +73,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
     };
 
     return (
-        <Layout>
+        <Layout isLoggedIn={isLoggedIn}>
             <main>
                 {isMobile ?
                     <div className="media-page-wrapper">
