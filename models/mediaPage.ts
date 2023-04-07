@@ -35,10 +35,12 @@ export interface MediaPage {
     backdrop_path?: string | null;
     belongs_to_collection: Collection;
     budget: number;
+    first_air_date?: string;
     genres: Genre[];
     homepage: string;
     id: number;
     imdb_id: string;
+    name?: string;
     original_language?: string;
     original_title?: string;
     overview?: string;

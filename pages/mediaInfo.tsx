@@ -24,7 +24,9 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
     const [clickedButton, setClickedButton] = useState<number | null>(null);
     const { isLoading, setIsLoading } = useSearch();
     const router = useRouter();
-    const movieId = router.query.id;
+    const mediaId = router.query.id;
+    const mediaType = router.query.media_type;
+
 
     const fetchLists = () => {
         fetch(`/api/getLists?userId=${id}`)
@@ -45,16 +47,18 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
 
     useEffect(() => {
         setIsLoading(false);
-        if (movieId) {
-            fetch(`/api/getMedia?id=${movieId}`)
+        if (mediaId && mediaType) {
+            const fetchUrl = mediaType === "tv" ? `/api/getTv?id=${mediaId}` : `/api/getMovie?id=${mediaId}`;
+            fetch(fetchUrl)
                 .then((res) => res.json())
                 .then((data) => {
                     setMedia(data.results as MediaPage);
-                    setCredits(data.credits as Credits)
+                    setCredits(data.credits as Credits);
                     setIsLoading(false);
                 });
         }
-    }, [movieId, setIsLoading]);
+    }, [mediaId, mediaType, setIsLoading]);
+    
 
     useEffect(() => {
         const checkIsMobile = () => {
@@ -78,7 +82,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
                 {isMobile ?
                     <div className="media-page-wrapper">
                         <h1>
-                            {`${media?.title} (${new Date(`${media?.release_date}`).getFullYear()})`}
+                        {`${media?.title ?? media?.name}  (${new Date(`${media?.release_date ?? media?.first_air_date}`).getFullYear()})`}
                         </h1>
                         <div className="media-page-poster">
                             {isLoading ?
@@ -164,7 +168,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
 
                         <div className="media-page-info">
                             <h1 style={{ display: 'flex', alignItems: 'center' }}>
-                                {`${media?.title} (${new Date(`${media?.release_date}`).getFullYear()})`}
+                                {`${media?.title ?? media?.name}  (${new Date(`${media?.release_date ?? media?.first_air_date}`).getFullYear()})`}
                                 <div className="rating-div">
                                     <Image
                                         src={'/icons/star.svg'}

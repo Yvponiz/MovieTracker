@@ -9,7 +9,6 @@ const Trailers: FunctionComponent = () => {
         fetch(`/api/getTrailer`)
             .then(response => response.json())
             .then(data => {
-                console.log(data.moviesWithTrailers);
                 setTrailers(data.moviesWithTrailers);
             });
     }, []);

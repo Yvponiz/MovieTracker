@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CSSProperties, FunctionComponent, useState } from "react";
 import { Credits, Media } from "../models/media";
+import Link from "next/link";
 
 export type MediaCardProps = {
     media?: Media | null;
@@ -29,6 +30,10 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
     } = props;
     const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
 
+    const handlePropagation = (e: React.MouseEvent) => {
+        e.stopPropagation();
+    }
+
     return (
         <>
             {media &&
@@ -54,7 +59,9 @@ const MediaCard: FunctionComponent<MediaCardProps> = (props: MediaCardProps) => 
 
                     <div className="search-card-content">
                         <div className="search-card-content-top">
-                            <h3>{media.media_type === "movie" ? media.title : media?.name || media?.title}</h3>
+                            <Link href={`/mediaInfo?id=${media.id}&media_type=${media.media_type}`} onClick={(e)=>{handlePropagation(e)}}>
+                                {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
+                            </Link>
 
                             <div className="rating-div">
                                 <Image

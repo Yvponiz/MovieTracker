@@ -69,7 +69,7 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
                     >
                         <div className="trending-card-content">
                             <div className="trending-card-content-left">
-                                <Link href={`/mediaInfo?id=${media.id}`}>
+                                <Link href={`/mediaInfo?id=${media.id}&media_type=${media.media_type}`}>
                                     {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
                                 </Link>
 
@@ -101,9 +101,10 @@ const TrendingMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => 
                 >
                     <div className="trending-card-content">
                         <div className="trending-card-content-left">
-                            <Link href={`/mediaInfo?id=${media.id}`}>
+                            <Link href={`/mediaInfo?id=${media.id}&media_type=${media.media_type}`}>
                                 {media.media_type === "movie" ? <h3>{media.title}</h3> : <h3>{media.name}</h3>}
                             </Link>
+
 
                             <div className="media-year">
                                 {media.media_type === "movie" ?

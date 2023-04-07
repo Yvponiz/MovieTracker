@@ -52,7 +52,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
     const PopularItems = trendingResult?.slice(0, 10).map((media: Media) => (
         <>
             {isMobile ? (
-                <Link href={`/mediaInfo?id=${media.id}`} key={media.id}>
+                <Link href={`/mediaInfo?id=${media.id}&media_type=${media.media_type}`} key={media.id}>
                     <div
                         className='popular-card'
                     >
@@ -114,7 +114,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
                     </div>
 
                     <div className="popular-card-content-bottom">
-                        <Link href={`/mediaInfo?id=${media.id}`}>
+                        <Link href={`/mediaInfo?id=${media.id}&media_type=${media.media_type}`}>
                             <h3>{media.original_title}</h3>
                         </Link>
 
