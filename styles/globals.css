@@ -1066,9 +1066,39 @@ select {
 
 /*==================== ACCOUNT ====================*/
 .account-wrapper {
+  display: flex;
+  flex-direction: column;
   width: 75%;
   min-height: 100vh;
 }
+
+.delete-account-button {
+  height: 30px;
+  width: 400px;
+  background-color: rgba(0, 0, 0, 0.0);
+  border:solid 0.5px grey;
+  border-radius: 5px;
+  margin: 20px 0;
+  align-self: center;
+  color: #df0043;
+}
+
+.delete-account-button:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.confirmation-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+}
+
+.confirmation-dialog button{
+ cursor: pointer;
+}
+
 
 .account-sections-button {
   display: flex;
@@ -1135,10 +1165,10 @@ select {
 .account-sections button {
   height: 30px;
   width: 400px;
-  /* background-color: rgba(60, 60, 60, 0.2); */
   border-radius: 5px;
   border: none;
   margin: 20px 0;
+  cursor: pointer;
 }
 
 .account-sections-field {
@@ -1170,7 +1200,7 @@ select {
   list-style: none;
 }
 
-.account-sections p{
+.account-sections p {
   align-self: center;
 }
 
@@ -1612,6 +1642,11 @@ select {
 
   .account-sections li select {
     width: 200px;
+  }
+
+  .delete-account-button {
+    height: 30px;
+    width: 300px;
   }
 
   /*MEDIA INFO*/

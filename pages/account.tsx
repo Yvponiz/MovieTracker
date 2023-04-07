@@ -12,6 +12,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 
 const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [showListMessage, setShowListMessage] = useState<boolean>(false);
     const [passwordMessage, setPasswordMessage] = useState<string>('');
@@ -121,6 +122,36 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                 }
             })
     }
+
+    function handleDeleteAccount() {
+        setShowConfirmationDialog(true);
+        { console.log(showConfirmationDialog) }
+    }
+
+    function handleConfirmDelete() {
+        fetch(`/api/deleteAccount?user=${username}`)
+            .then((res) => {
+                if (res.ok) {
+                    router.push('/api/logout');
+                } else {
+                    // Handle the error
+                }
+            });
+
+        setShowConfirmationDialog(false);
+    }
+
+    const ConfirmationDialog = () => {
+        return (
+            <div className="confirmation-dialog">
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <div>
+                    <button onClick={handleConfirmDelete}>Yes, delete my account</button>
+                    <button onClick={() => setShowConfirmationDialog(false)}>Cancel</button>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <Layout isLoggedIn={isLoggedIn}>
@@ -236,7 +267,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
 
                         {activeIndex === 2 &&
                             <ul>
-                                {showListMessage ? <p>{listsMessage}</p>  :
+                                {showListMessage ? <p>{listsMessage}</p> :
                                     userLists?.map((list) => (
                                         <li key={list.name}>
                                             <p>{list.name}</p>
@@ -262,6 +293,15 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                             </ul>
                         }
                     </div>
+
+                    <button
+                        className="delete-account-button"
+                        onClick={handleDeleteAccount}
+                    >
+                        Delete account
+                    </button>
+
+                    {showConfirmationDialog && <ConfirmationDialog />}
                 </div>
             </main>
         </Layout >
