@@ -83,7 +83,6 @@ select {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  width: calc(100% - 20px);
 }
 
 #cards:hover>.card::after {
@@ -923,8 +922,8 @@ select {
   left: 40%;
   top: 50%;
   border-radius: 15px;
-  border: 1px solid white;
-  background-color: var(--bg-color);
+  border: none;
+  background-color: rgba(40, 40, 40, 0.5);
   width: 300px;
   height: 150px;
   z-index: 10;
@@ -940,6 +939,7 @@ select {
   position: relative;
   display: flex;
   gap: 5px;
+  border: none;
 }
 
 .list-button {
@@ -1029,6 +1029,7 @@ select {
   align-items: center;
   width: 100%;
   min-height: 100vh;
+  margin-bottom: 50px;
 }
 
 .remove-list-button {
@@ -1523,9 +1524,8 @@ select {
 
   /*LISTS*/
   .create-list {
+    left: 0;
     border-radius: 10px;
-    border: 1px solid white;
-    background-color: var(--bg-color);
     width: 90%;
     height: auto;
     padding: 15px;

@@ -13,6 +13,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [showMessage, setShowMessage] = useState<boolean>(false);
+    const [showListMessage, setShowListMessage] = useState<boolean>(false);
     const [passwordMessage, setPasswordMessage] = useState<string>('');
     const [listsMessage, setListsMessage] = useState<string>('');
     const [showError, setShowError] = useState(false);
@@ -36,7 +37,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
             .then(data => {
                 if (data.status === 'empty') {
                     console.log(data.messages)
-                    setShowMessage(true);
+                    setShowListMessage(true);
                     setListsMessage(data.messages.join("\n"));
                 }
                 else if (data.status === 'success') {
@@ -235,7 +236,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
 
                         {activeIndex === 2 &&
                             <ul>
-                                {showMessage ? <p>{listsMessage}</p>  :
+                                {showListMessage ? <p>{listsMessage}</p>  :
                                     userLists?.map((list) => (
                                         <li key={list.name}>
                                             <p>{list.name}</p>
@@ -244,7 +245,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                                     <option> No items</option>
                                                     :
                                                     list?.items?.map((item) => (
-                                                        <option key={item.id}>{item.name}</option>
+                                                        <option key={item.id}>{item.name ?? item.title}</option>
                                                     ))
                                                 }
                                             </select>

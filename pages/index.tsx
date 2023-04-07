@@ -84,9 +84,9 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
               </Link>
             }
 
-            <Link href="" className='card'>
+            <Link href="/account" className='card'>
               <div className='card-content'>
-                <p>Coming Soon</p>
+                <p>Account</p>
                 <Image
                   src='/icons/profile.svg'
                   width={imgSize}
