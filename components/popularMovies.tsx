@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import router from "next/router";
-import { CSSProperties, FunctionComponent, useEffect, useRef, useState } from "react";
+import { CSSProperties, FunctionComponent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { useSearch } from "../context/searchContext";
@@ -22,7 +22,7 @@ const PopularMovies: FunctionComponent<Props> = ({ isLoggedIn, id, lists }) => {
     const { isLoading, setIsLoading } = useSearch();
     const carousel = useRef(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setIsLoading(true);
         fetch(`/api/getPopular`)
             .then(response => response.json())
