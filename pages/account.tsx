@@ -156,6 +156,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
     return (
         <Layout isLoggedIn={isLoggedIn}>
             <main>
+                {isLoggedIn ? 
                 <div className="account-wrapper">
                     <div>
                         <h1>Account</h1>
@@ -302,7 +303,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                     </button>
 
                     {showConfirmationDialog && <ConfirmationDialog />}
-                </div>
+                </div> : <div> <p>You must be logged in to see account</p> </div>}
             </main>
         </Layout >
     )
