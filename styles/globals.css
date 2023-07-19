@@ -453,8 +453,8 @@ select {
   gap: 5px;
   background-color: black;
   border-radius: 30px;
-  height: 20px;
-  width: 50px;
+  height: 30px;
+  width: 70px;
   font-size: 1.4rem;
   margin: 15px;
 }
@@ -876,6 +876,14 @@ select {
   padding: 5px;
   margin-bottom: 10px;
   text-align: center;
+}
+
+.add-to-list-error {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  z-index: 300;
 }
 
 .success {
@@ -1375,6 +1383,10 @@ select {
     width: 300px;
   }
 
+  .search-card-poster {
+   padding: 5px;
+  }
+
   .expanded-search-card {
     position: relative;
     height: 300px;
@@ -1522,10 +1534,17 @@ select {
     font-size: 1.3rem;
   }
 
-
   .info-icon {
     width: 20px;
     height: 20px;
+  }
+
+  .results-card-button.expanded-add-button {
+    width: 150px;
+  }
+
+  #add-to-list {
+    gap: 15px;
   }
 
   /*LOGIN*/
@@ -1581,6 +1600,7 @@ select {
   .list-div-items {
     display: flex;
     flex-direction: column;
+    margin: 0;
   }
 
   .list-div input[type="checkbox"] {
@@ -1723,7 +1743,7 @@ select {
   }
 
   .header nav {
-    transform: scale(0.9);
+    transform: scale(0.8);
   }
 
   .header nav ul {

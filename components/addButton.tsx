@@ -42,7 +42,7 @@ const AddButton: FunctionComponent<AddButtonProps> = (props: AddButtonProps) => 
                     setShowMessageDiv(!showMessageDiv);
                     setMessage(data.errors.join("\n"));
                     setTimeout(() => {
-                        setShowMessageDiv(!showMessageDiv);
+                        setShowMessageDiv(false);
                         setMessage('');
                     }, 1000);
                 }
@@ -59,7 +59,8 @@ const AddButton: FunctionComponent<AddButtonProps> = (props: AddButtonProps) => 
     };
 
     return (
-        <div>
+        <div style={{position:'relative'}}>
+            {showMessageDiv ? <div className="error add-to-list-error">{message}</div> : <div/>}
             {clickedButton == media?.id ?
                 <div id="add-to-list">
                     <select onChange={(e) => changeState({ ...state, listName: e.target.value })}
