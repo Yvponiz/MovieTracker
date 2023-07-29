@@ -12,5 +12,6 @@ export interface User {
     password: string;
     lists?: UserList[];
     userType: "admin" | "normal";
+    lastAccessed?: number | null;
 }
 

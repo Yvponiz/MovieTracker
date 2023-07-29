@@ -7,6 +7,7 @@ export type UserProps = {
     username?: string;
     email?: string;
     userType?: string;
+    lastAccessed?: number;
 };
 
 export default async function getServerSideProps({ req, res }: { req: NextApiRequest, res: NextApiResponse }) {
@@ -19,7 +20,8 @@ export default async function getServerSideProps({ req, res }: { req: NextApiReq
             username: session?.user?.username ?? null,
             email: session?.user?.email ?? null,
             lists: session?.user?.lists ?? null,
-            userType: session?.user?.userType ?? null
+            userType: session?.user?.userType ?? null,
+            lastAccessed: session?.user?.lastAccessed ?? null
         },
     };
 }

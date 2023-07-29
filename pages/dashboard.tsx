@@ -17,6 +17,7 @@ const Dashboard: NextPage<UserProps> = ({ isLoggedIn, userType }) => {
             .then((data) => {
                 if (data.status === "success") {
                     setUsers(data.usersListInfo)
+                    console.log(data.usersListInfo)
                 }
             })
     }, []);
@@ -37,9 +38,22 @@ const Dashboard: NextPage<UserProps> = ({ isLoggedIn, userType }) => {
         );
     };
 
+    const formatDate = (timestamp: number | undefined): string => {
+        if (!timestamp) return "";
+        const date = new Date(timestamp);
+        return date.toLocaleString(); // Customize the format as needed
+    };
+
     return (
         <Layout isLoggedIn={isLoggedIn} userType={userType}>
             <div className="dashboard-wrapper">
+                <ul className="dashboard-titles">
+                    <li>Username</li>
+                    <li>Email</li>
+                    <li>Lists</li>
+                    <li>Last Accessed</li>
+                </ul>
+                
                 {users?.map((user) => (
                     <div className='users-board' key={user.id}>
                         <h2>{user.username}</h2>
@@ -65,6 +79,7 @@ const Dashboard: NextPage<UserProps> = ({ isLoggedIn, userType }) => {
                                 </li>
                             ))}
                         </ul>
+                        <p>{formatDate(user.lastAccessed!)}</p>
                         <button className="delete-account-button">Delete</button>
                     </div>
                 ))}
