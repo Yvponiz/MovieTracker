@@ -49,7 +49,8 @@ export default async function signup(
       username: username,
       email: email,
       password: hashedPassword,
-      lists: []
+      lists: [],
+      userType: 'normal'
     }
     const result = await users.insertOne(newUser);
 

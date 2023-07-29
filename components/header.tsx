@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 
 type HeaderProps = {
     isLoggedIn: boolean;
+    userType: string;
 };
 
-const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
+const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn, userType }) => {
     const router = useRouter();
 
     return (
@@ -27,6 +28,13 @@ const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
                         <li className={router.pathname === '/account' ? 'active' : ''}>Account</li>
                     </Link>
                 }
+
+                {isLoggedIn && userType === 'admin' &&
+                    <Link href='/dashboard'>
+                        <li className={router.pathname === '/dashboard' ? 'active' : ''}>Dashboard</li>
+                    </Link>
+                }
+
                 {isLoggedIn ?
                     <Link href='/api/logout'>
                         <li>Logout</li>
@@ -36,16 +44,17 @@ const ShowHeader: FunctionComponent<HeaderProps> = ({ isLoggedIn }) => {
                         <li className={router.pathname === '/login' ? 'active' : ''}>Login</li>
                     </Link>
                 }
+
             </ul>
         </nav>
     )
 }
 
-export default function Header({ isLoggedIn }: HeaderProps) {
+export default function Header({ isLoggedIn, userType }: HeaderProps) {
 
     return (
         <div className='header'>
-            <ShowHeader isLoggedIn={isLoggedIn} />
+            <ShowHeader isLoggedIn={isLoggedIn} userType={userType} />
         </div>
     )
 }

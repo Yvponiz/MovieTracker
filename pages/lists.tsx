@@ -15,7 +15,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
   return commonProps({ req, res })
 }
 
-const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
+const List: NextPage<UserProps> = ({ isLoggedIn, id, userType }) => {
   const [userLists, setUserLists] = useState<UserList[]>([]);
   const [state, changeState] = useState({ listName: '', media: {} })
   const [message, setMessage] = useState<string>('');
@@ -53,7 +53,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
   const handleCreateList = useCallback((event: FormEvent, state: { listName: string }) => {
     event.preventDefault()
-    fetch(`/api/createList?userId=${id}`, {
+    fetch(`/api/lists/createList?userId=${id}`, {
       body: JSON.stringify(state),
       method: "POST",
       headers: {
@@ -200,7 +200,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id }) => {
   }, [createListRef, userLists]);
 
   return (
-    <Layout isLoggedIn={isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn} userType={userType}>
       {blur && <div className="blur" onClick={handleOutsideClick}></div>}
 
       <div className='list-page-wrapper'>

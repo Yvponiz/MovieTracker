@@ -10,7 +10,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
   return commonProps({ req, res })
 }
 
-const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
+const Home: NextPage<UserProps> = ({ isLoggedIn, username, userType }) => {
   const isMobile = typeof window !== 'undefined' ? window.innerWidth < 500 : false;
   const imgSize = isMobile ? 30 : 50;
 
@@ -19,7 +19,7 @@ const Home: NextPage<UserProps> = ({ isLoggedIn, username }) => {
   }, []);
 
   return (
-    <Layout isLoggedIn={isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn} userType={userType}>
       <div className='container'>
         <main>
           {isLoggedIn ? <span className='greet'>Welcome {username}</span> : <></>}

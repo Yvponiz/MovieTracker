@@ -13,7 +13,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
     return commonProps({ req, res })
 }
 
-const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
+const Results: NextPage<UserProps> = ({ isLoggedIn, id, userType }) => {
     const [searchResults, setSearchResults] = useState<Media[]>([]);
     const [creditResults, setCreditResults] = useState<Credits[]>([])
     const [lists, setLists] = useState<UserList[]>([]);
@@ -79,7 +79,7 @@ const Results: NextPage<UserProps> = ({ isLoggedIn, id }) => {
 
 
     return (
-        <Layout isLoggedIn={isLoggedIn}>
+        <Layout isLoggedIn={isLoggedIn} userType={userType}>
             <div className="search-results-page">
                 {blur && <div className="blur" onClick={handleOutsideClick}></div>}
 

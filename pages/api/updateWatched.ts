@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Media } from "../../models/media";
-import { User, UserList } from "../../models/user";
+import { User } from "../../models/user";
 import client from "../../utils/DButils";
 
 export default async function updateWatched(

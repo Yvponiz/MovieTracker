@@ -10,7 +10,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
     return commonProps({ req, res })
 }
 
-const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
+const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email, userType }) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [showMessage, setShowMessage] = useState<boolean>(false);
@@ -154,7 +154,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
     };
 
     return (
-        <Layout isLoggedIn={isLoggedIn}>
+        <Layout isLoggedIn={isLoggedIn} userType={userType}>
             <main>
                 {isLoggedIn ? 
                 <div className="account-wrapper">
@@ -272,7 +272,7 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
                                     userLists?.map((list) => (
                                         <li key={list.name}>
                                             <p>{list.name}</p>
-                                            <select name="lists" id="lilsts">
+                                            <select name="lists" id="lists">
                                                 {list?.items.length === 0 ?
                                                     <option> No items</option>
                                                     :
@@ -309,4 +309,4 @@ const Account: NextPage<UserProps> = ({ isLoggedIn, id, username, email }) => {
     )
 }
 
-export default Account
+export default Account;

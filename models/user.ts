@@ -3,6 +3,7 @@ export interface UserList {
     id: string;
     name: string;
     items: Media[];
+    isOpen?: boolean;
 }
 export interface User {
     id?: string;
@@ -10,5 +11,6 @@ export interface User {
     email: string;
     password: string;
     lists?: UserList[];
+    userType: "admin" | "normal";
 }
 

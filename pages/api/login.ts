@@ -31,7 +31,8 @@ export default async function login(
             id: user._id,
             username: user.username,
             email: user.email,
-            lists: user.lists
+            lists: user.lists,
+            userType: user.userType
         }
 
         await session.commit();

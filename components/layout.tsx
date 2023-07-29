@@ -6,9 +6,10 @@ import Header from "./header";
 type LayoutProps = {
   children: ReactElement[],
   isLoggedIn: boolean,
+  userType: string
 };
 
-export default function Layout({ children, isLoggedIn, username }: LayoutProps & any) {
+export default function Layout({ children, isLoggedIn, userType }: LayoutProps & any) {
   return (
     <>
       <Head>
@@ -18,7 +19,7 @@ export default function Layout({ children, isLoggedIn, username }: LayoutProps &
       </Head>
 
       <div className="layout">
-        <Header isLoggedIn={isLoggedIn} />
+        <Header isLoggedIn={isLoggedIn} userType={userType} />
         {children}
         <Footer />
       </div>

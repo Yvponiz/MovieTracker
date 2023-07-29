@@ -14,7 +14,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
   return commonProps({ req, res })
 }
 
-const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
+const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id, userType }) => {
   const [lists, setLists] = useState<UserList[]>([]);
   const [message, setMessage] = useState<string>('');
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
@@ -56,7 +56,7 @@ const Search: FunctionComponent<UserProps> = ({ isLoggedIn, id }) => {
   }, []);
 
   return (
-    <Layout isLoggedIn={isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn} userType={userType}>
       <div className="searchPageContainer">
 
         {blur && <div className="blur" onClick={handleOutsideClick}></div>}

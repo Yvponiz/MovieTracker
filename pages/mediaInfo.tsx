@@ -16,7 +16,7 @@ export function getServerSideProps({ req, res }: { req: NextApiRequest, res: Nex
 
 type MediaProps = MediaPage & UserProps;
 
-const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
+const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn, userType }) => {
     const [media, setMedia] = useState<MediaPage>()
     const [credits, setCredits] = useState<Credits>();
     const [lists, setLists] = useState<UserList[]>([]);
@@ -77,7 +77,7 @@ const MediaInfo: FunctionComponent<MediaProps> = ({ id, isLoggedIn }) => {
     };
 
     return (
-        <Layout isLoggedIn={isLoggedIn}>
+        <Layout isLoggedIn={isLoggedIn} userType={userType}>
             <main>
                 {isMobile ?
                     <div className="media-page-wrapper">
