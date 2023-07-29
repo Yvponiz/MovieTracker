@@ -32,9 +32,16 @@ export default async function login(
             username: user.username,
             email: user.email,
             lists: user.lists,
-            userType: user.userType
+            userType: user.userType,
+            lastAccessed: new Date().getTime()
         }
 
+        await usersCollection.updateOne(
+            { _id: user._id },
+            { $set: { lastAccessed: session.user.lastAccessed } }
+        );
+
+        console.log(session.user.lastAccessed);
         await session.commit();
         
         console.log(`User ${user.username} connected`);
