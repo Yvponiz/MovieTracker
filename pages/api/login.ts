@@ -41,7 +41,6 @@ export default async function login(
             { $set: { lastAccessed: session.user.lastAccessed } }
         );
 
-        console.log(session.user.lastAccessed);
         await session.commit();
         
         console.log(`User ${user.username} connected`);

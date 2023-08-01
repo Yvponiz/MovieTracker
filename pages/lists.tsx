@@ -53,7 +53,7 @@ const List: NextPage<UserProps> = ({ isLoggedIn, id, userType }) => {
 
   const handleCreateList = useCallback((event: FormEvent, state: { listName: string }) => {
     event.preventDefault()
-    fetch(`/api/lists/createList?userId=${id}`, {
+    fetch(`/api/createList?userId=${id}`, {
       body: JSON.stringify(state),
       method: "POST",
       headers: {
